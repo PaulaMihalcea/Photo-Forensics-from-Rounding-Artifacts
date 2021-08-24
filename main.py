@@ -22,12 +22,15 @@ def main(args):
         windows = get_blocks(filtered_lum, args.win_size, 8)
 
         # Average 8x8 block generation
-        blocks = []
-        for w in windows:
-            blocks.append(average_block_from_window(w, 8, 8))
+        blocks = np.zeros((windows.shape[0], 8, 8))
+        for i in range(windows.shape[0]):
+            blocks[i] = average_block_from_window(windows[i], 8, 8)
 
         # Expectation-maximization algorithm
-        c = expectation_maximization(blocks, args.stop_threshold)
+        prob_b_in_c1_r, c = expectation_maximization(blocks, args.stop_threshold)
+
+        # Output map
+        # TODO
 
 
 
