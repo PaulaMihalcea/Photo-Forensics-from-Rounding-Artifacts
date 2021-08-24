@@ -27,7 +27,7 @@ def main(args):
             blocks.append(average_block_from_window(w, 8, 8))
 
         # Expectation-maximization algorithm
-        expectation_maximization(blocks, args.stop_threshold)
+        c = expectation_maximization(blocks, args.stop_threshold)
 
 
 

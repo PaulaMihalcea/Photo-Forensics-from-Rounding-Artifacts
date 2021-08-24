@@ -2,6 +2,13 @@ import cv2
 import numpy as np
 
 
+def correlation_2d(x, y):
+
+    corr = np.corrcoef(x, y)[0, 1]
+
+    return corr
+
+
 # E step
 def expectation(prob_b_in_c1, prob_b_in_c2, prob_r_b_in_c1, prob_r_b_in_c2):
     num = prob_r_b_in_c1 * prob_b_in_c1
@@ -44,4 +51,4 @@ def expectation_maximization(blocks, threshold):
 
         diff = abs(c - c_prev)
 
-    return
+    return c
