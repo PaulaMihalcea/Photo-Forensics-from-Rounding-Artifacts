@@ -2,8 +2,6 @@
 ## Author: Paula Mihalcea*
 #### Università degli Studi di Firenze
 
-*Based on a research by S. Agarwal and H. Farid (see [\[1\]](https://doi.org/10.1145/3369412.3395059)).
-
 ---
 
 ![](https://img.shields.io/github/repo-size/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts)
@@ -12,6 +10,8 @@ Many aspects of **JPEG compression** have been successfully used in
 the domain of photo forensics. In particular, artifacts introduced by the choice of rounding operator used to quantize the DCT coefficients can be used to localize tampering and identify specific encoders.
 
 Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this work aims to provide a Python implementation of an **algorithm** to **localize inconsistencies** in these artifacts that arise from a variety of **image manipulations**.
+
+_<sup>*Based on a research by S. Agarwal and H. Farid (see [\[1\]](https://doi.org/10.1145/3369412.3395059)).</sup>_
 
 ## Usage
 
