@@ -58,6 +58,9 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_pat
             # Average probability per pixel
             output_map[j][i] = np.average(current_pixel_probabilities)
 
+    # Normalization
+    output_map *= (255.0 / output_map.max())  # TODO Check this formula's correctness
+
     # Save output map to disk (if requested, otherwise just show it)
     filename, extension = get_filename(img_path)
     if save:

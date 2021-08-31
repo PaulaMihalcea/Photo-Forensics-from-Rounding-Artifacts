@@ -57,7 +57,7 @@ if __name__ == '__main__':
     if args.win_size is None:
         args.win_size = 128
     if args.stop_threshold is None:
-        args.stop_threshold = 1e-2  # TODO Try 1e-2/1e-3
+        args.stop_threshold = 1e-3  # TODO Try 1e-2/1e-3
     if args.save is None:
         args.save = False
     else:
