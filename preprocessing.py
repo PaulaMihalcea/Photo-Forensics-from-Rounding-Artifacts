@@ -82,7 +82,7 @@ def get_windows(img, win_size, stride, block_size):
     for j in range(0, img_h - win_size + 1, stride):
         y.append(j)
 
-    # Variables initialization
+    # Variable initialization
     window_id = 0
     blocks = np.zeros((len(x)*len(y), block_size, block_size))  # Final array of blocks (there is one block per window)
 
@@ -118,7 +118,7 @@ def get_blocks(window, block_size):
         x.append(i)
         y.append(i)
 
-    # Variables initialization
+    # Variable initialization
     window_id = 0
     blocks = np.zeros((len(x)*len(y), block_size, block_size))
 

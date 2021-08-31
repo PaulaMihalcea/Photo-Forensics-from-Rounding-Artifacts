@@ -43,7 +43,7 @@ def maximization(blocks, prob_b_in_c1_r):
 # Expectation-maximization algorithm
 def expectation_maximization(blocks, threshold):
     # Initialize logging array for the differences plot
-    diff_log = []
+    diff_history = []
 
     # Random initialize template c
     c = np.random.uniform(0, 1, (8, 8))
@@ -56,7 +56,7 @@ def expectation_maximization(blocks, threshold):
     c = maximization(blocks, prob_b_in_c1_r)
 
     # Main EM loop
-    while not np.all(diff < threshold):  # Iterate E-M steps until difference is lower than threshold
+    while np.all(diff > threshold):  # Iterate E-M steps until difference is lower than threshold
         # Store last iteration's template
         c_prev = np.copy(c)
 
@@ -68,6 +68,6 @@ def expectation_maximization(blocks, threshold):
 
         # Calculate difference between successive estimates of c
         diff = abs(c - c_prev)
-        diff_log.append(np.average(diff))  # Add the difference matrix' average to the difference log
+        diff_history.append(np.average(diff))  # Add the difference matrix' average to the difference log
 
-    return prob_b_in_c1_r, c, diff_log
+    return prob_b_in_c1_r, c, diff_history

@@ -1,84 +1,67 @@
-import cv2
-import os
-import numpy as np
-import matplotlib.pyplot as plt
 from argparse import ArgumentParser
-from decimal import Decimal
-from preprocessing import average_block_from_window, get_windows, load_image, luminance, mfr
+from preprocessing import get_windows, load_image, luminance, mfr
 from em import expectation_maximization
-from utils import get_filename
-from results import get_template_difference_plot, get_output_map
+from postprocessing import get_template_difference_plot, get_output_map
 
 
 def main(args):
 
+    # Load image
+    print('Loading image... ', end='')
     img = load_image(args.img_path)
+    print('done.')
 
-    if img is None:  # Check that image has been loaded correctly # TODO move into loading function
-        raise IOError('Image loading error.')
-    else:
-        # RGB to YCbCr conversion & luminance channel extraction
-        lum = luminance(img)
+    # RGB to YCbCr conversion & luminance channel extraction
+    print('Luminance extraction... ', end='')
+    lum = luminance(img)
+    print('done.')
 
-        # 3x3 median filter residual
-        filtered_lum = mfr(lum, 3)
+    # 3x3 median filter residual
+    print('Getting median filter residual... ', end='')
+    filtered_lum = mfr(lum, 3)
+    print('done.')
 
-        # Overlapping windows generation
-        blocks, pixel_map = get_windows(filtered_lum, args.win_size, 8, 8)
+    # Average blocks from overlapping windows generation
+    print('Averaging blocks from overlapping windows... ', end='')
+    blocks, blocks_map = get_windows(filtered_lum, args.win_size, 8, 8)
+    print('done.')
 
-        # Expectation-maximization algorithm
-        prob_b_in_c1_r, c, diff_log = expectation_maximization(blocks, args.stop_threshold)
+    # Expectation-maximization algorithm
+    print('Executing EM algorithm... ', end='')
+    prob_b_in_c1_r, c, diff_history = expectation_maximization(blocks, args.stop_threshold)
+    print('done.')
 
-        # Output map
-        # TODO
-        get_output_map(prob_b_in_c1_r, pixel_map, img.shape[1], img.shape[0])
+    # Output map & difference plot
+    print('Generating output map... ', end='')
+    output_map = get_output_map(prob_b_in_c1_r, blocks_map, img.shape[1], img.shape[0], args.save, args.img_path, args.win_size, args.stop_threshold)
+    get_template_difference_plot(diff_history, args.save, args.img_path, args.win_size, args.stop_threshold)
+    print('done.')
 
-        # Plot difference
-        #get_template_difference_plot()  # TODO
-        plt.plot(diff_log)
-        plt.xlabel('EM iteration')
-        plt.ylabel('Average of the difference matrix between successive estimates of c')
-        plt.show()  # TODO Comment out
-
-        # Save results
-        if args.save_result:
-            #save_results(args.img_path,args.win_size,args.stop_threshold)
-            # Create subfolder for current image & configuration
-            filename, extension = get_filename(args.img_path)
-            res_path = 'results/' + filename + '_' + extension + '_' + str(args.win_size) + '_' + '{:.0e}'.format(Decimal(args.stop_threshold))
-
-            try:
-                os.makedirs(res_path)
-            except FileExistsError:  # Directory already exists
-                pass
-
-            # Save files
-            # TODO save more results (output map & co.)
-            plt.savefig(res_path + '/c_diff_plot.png')
-
-
-
-
+    return
 
 
 if __name__ == '__main__':
 
+    # Initialize parser
     parser = ArgumentParser(description='Main script for the "Photo Forensics from Rounding Artifacts" project.')
 
+    # Add parser arguments
     parser.add_argument('img_path', help='Path of the image to be analyzed.')
     parser.add_argument('-ws', '--win_size', type=int, help='Window size in pixel (default: 128 px).')
     parser.add_argument('-st', '--stop_threshold', type=float, help='Expectation-maximization algorithm stop threshold (default: 1e-5).')
-    parser.add_argument('-sv', '--save_result', help='Save the result in the \'results\' folder (default: False).')
+    parser.add_argument('-sv', '--save', help='Save the results in the \'results\' folder (default: False).')
 
     args = parser.parse_args()
 
+    # Set default arguments
     if args.win_size is None:
         args.win_size = 128
     if args.stop_threshold is None:
-        args.stop_threshold = 1e-2  # TODO also try 1e-3/1e-2
-    if args.save_result is None:
-        args.save_result = False
+        args.stop_threshold = 1e-2  # TODO Try 1e-2/1e-3
+    if args.save is None:
+        args.save = False
     else:
-        args.save_result = True
+        args.save = True
 
+    # Run main script
     main(args)
