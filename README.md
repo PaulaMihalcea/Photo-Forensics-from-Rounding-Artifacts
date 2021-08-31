@@ -15,7 +15,21 @@ _<sup>*Based on a research by S. Agarwal and H. Farid (see [\[1\]](https://doi.o
 
 ## Usage
 
-(TODO)
+Run from any terminal specifying the path to the image to be analyzed, as follows:
+
+```
+python3 "path/to/image/image_file.jpg"
+```
+
+Optional arguments:
+- `--win_size`: window size in pixel (default: 256 px);
+- `--stop_threshold`: expectation-maximization algorithm stop threshold (default: 1e-3);
+- `--save`: save the output_map and template differences plot in a \'results\' subfolder (default: False).
+
+_Example call with optional arguments:_
+```
+python3 "path/to/image/image_file.jpg" --win_size=256 --stop_threshold=1e-2 --save=True
+```
 
 ### Requirements
 
@@ -24,6 +38,8 @@ The following Python packages are needed in order to run this project:
 - [`argparse`](https://docs.python.org/3/library/argparse.html)
 - [`numpy`](https://numpy.org/)
 - [`opencv-python`](https://docs.opencv.org/4.5.2/index.html)
+
+This program has been written and tested using [`Python 3.8`](https://www.python.org/downloads/release/python-380/).
 
 ## Bibliography
 [\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114. DOI:[https://doi.org/10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)

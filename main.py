@@ -48,14 +48,14 @@ if __name__ == '__main__':
     # Add parser arguments
     parser.add_argument('img_path', help='Path of the image to be analyzed.')
     parser.add_argument('-ws', '--win_size', type=int, help='Window size in pixel (default: 128 px).')
-    parser.add_argument('-st', '--stop_threshold', type=float, help='Expectation-maximization algorithm stop threshold (default: 1e-5).')
+    parser.add_argument('-st', '--stop_threshold', type=float, help='Expectation-maximization algorithm stop threshold (default: 1e-3).')
     parser.add_argument('-sv', '--save', help='Save the results in the \'results\' folder (default: False).')
 
     args = parser.parse_args()
 
     # Set default arguments
     if args.win_size is None:
-        args.win_size = 128
+        args.win_size = 256
     if args.stop_threshold is None:
         args.stop_threshold = 1e-3  # TODO Try 1e-2/1e-3
     if args.save is None:
