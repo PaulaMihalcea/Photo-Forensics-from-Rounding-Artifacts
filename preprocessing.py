@@ -1,41 +1,17 @@
 import cv2
 import numpy as np
-from numba import jit
-from numba.core.errors import NumbaDeprecationWarning, NumbaPendingDeprecationWarning
-import warnings
-warnings.simplefilter('ignore', category=NumbaDeprecationWarning)
-warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
 
 
 # Load image
 def load_image(img):
     # Load image
-    if isinstance(img, str):  # If input is a file path, load it as an image
-        img = cv2.imread(img)
+    img = cv2.imread(img)
 
-    return img
-
-
-# Adjust image size (uses padding; for square block partitioning)
-#@jit(nopython=False)
-def adjust_size(img, win_size, stride):
-
-    if len(img.shape) == 3:
-        img_h, img_w, _ = img.shape
-    elif len(img.shape) == 2:
-        img_h, img_w = img.shape
+    # Check image correctness
+    if img is not None:
+        return img
     else:
-        return  # TODO Raise error
-
-    if img_h % stride != 0 or img_h % win_size != 0:
-        #img = cv2.copyMakeBorder(img, 0, (img_h - win_size) % stride, 0, 0, cv2.BORDER_REPLICATE)  # TODO
-        img = cv2.copyMakeBorder(img, 0, stride - img_h % stride, 0, 0, cv2.BORDER_REPLICATE)
-
-    if img_w % stride != 0 or img_w % win_size != 0:
-        #img = cv2.copyMakeBorder(img, 0, 0, 0, (img_w - win_size) % stride, cv2.BORDER_REPLICATE)
-        img = cv2.copyMakeBorder(img, 0, 0, 0, stride - img_w % stride, cv2.BORDER_REPLICATE)
-
-    return img
+        raise IOError('Error while loading image: invalid image file or image file path.')
 
 
 # RGB to YCbCr conversion & luminance channel extraction
@@ -57,51 +33,84 @@ def mfr(img, size):
     return residual
 
 
-# Blocks of given size (extracted with given stride)
-#@jit(nopython=False, forceobj=False)
-def get_windows_new(img, win_size, stride, block_size):
-
-    img = adjust_size(img, win_size, stride)
-
+# Get image size (regardless of number of channels)
+def get_image_size(img):
     if len(img.shape) == 3:
         img_h, img_w, _ = img.shape
     elif len(img.shape) == 2:
         img_h, img_w = img.shape
     else:
-        return  # TODO Raise error
+        raise RuntimeError('Incorrect input image shape.')
 
+    return img_w, img_h
+
+
+# Adjust image size (uses padding; for square window partitioning)
+def adjust_size(img, win_size, stride):
+    # Check image size and add padding if needed
+    img_h, img_w = get_image_size(img)
+    if img_h % stride != 0 or img_h % win_size != 0:
+        img = cv2.copyMakeBorder(img, 0, stride - img_h % stride, 0, 0, cv2.BORDER_REPLICATE)
+
+    if img_w % stride != 0 or img_w % win_size != 0:
+        img = cv2.copyMakeBorder(img, 0, 0, 0, stride - img_w % stride, cv2.BORDER_REPLICATE)
+
+    return img
+
+
+# Calculate overlapping windows of given size (extracted with given stride; non-overlapping if stride is zero)
+# and return their average block
+def get_windows(img, win_size, stride, block_size):
+    # Get image size
+    img_h_orig, img_w_orig = get_image_size(img)
+
+    # Initialize blocks map
+    # Each point of the map corresponds to a pixel, and contains a list containing the IDs of the windows containing that pixel
+    blocks_map = np.zeros((img_h_orig, img_w_orig, 0)).tolist()
+
+    # Adjust image size
+    img = adjust_size(img, win_size, stride)
+    img_h, img_w = get_image_size(img)
+
+    # Calculate starting coordinates for each window (top left pixel)
     x = []
     y = []
 
-    for i in range(0, img_w - win_size, stride):
+    for i in range(0, img_w - win_size + 1, stride):
         x.append(i)
 
-    for j in range(0, img_h - win_size, stride):
+    for j in range(0, img_h - win_size + 1, stride):
         y.append(j)
 
-
-    counter = 0
-
-    blocks = np.zeros((len(x)*len(y), block_size, block_size))
+    # Variables initialization
+    window_id = 0
+    blocks = np.zeros((len(x)*len(y), block_size, block_size))  # Final array of blocks (there is one block per window)
 
     for i in y:
         for j in x:
-            win_blocks = get_blocks(img[i:i + win_size, j:j + win_size], block_size)
+            # Get current window blocks
+            current_window_blocks = get_blocks(img[i:i + win_size, j:j + win_size], block_size)
 
-            sum_block = np.sum(win_blocks, axis=0)
+            # Update blocks map
+            for m in range(i, i + win_size):
+                if m < img_h_orig:
+                    for n in range(j, j + win_size):
+                        if n < img_w_orig:
+                            blocks_map[m][n].append(window_id)
 
-            blocks[counter] = sum_block / len(win_blocks)
-            #print('done window ' + str(counter) + '/' + total)
-            counter += 1
+            # Calculate average block for the current window
+            sum_block = np.sum(current_window_blocks, axis=0)
+            blocks[window_id] = sum_block / len(current_window_blocks)
 
-    #blocks = np.array(blocks)
+            # Update ID
+            window_id += 1
 
-    return blocks
+    return blocks, blocks_map
 
 
-# TODO
-#@jit(nopython=False, forceobj=False)
+# Non-overlapping blocks of given size
 def get_blocks(window, block_size):
+    # Calculate starting coordinates for each window (top left pixel)
     x = []
     y = []
 
@@ -109,27 +118,14 @@ def get_blocks(window, block_size):
         x.append(i)
         y.append(i)
 
+    # Variables initialization
+    window_id = 0
     blocks = np.zeros((len(x)*len(y), block_size, block_size))
-    counter = 0
 
+    # Calculate blocks
     for i in y:
         for j in x:
-            blocks[counter] = window[i:i + block_size, j:j + block_size]
-            counter += 1
-
-    #blocks = np.array(blocks, dtype='object')
+            blocks[window_id] = window[i:i + block_size, j:j + block_size]
+            window_id += 1
 
     return blocks
-
-
-# Average 8x8 block from given window
-#@jit(nopython=False)
-def average_block_from_window(window, block_size, block_stride):
-    #win_blocks = get_windows(window, block_size, block_stride, True)
-    win_blocks = get_blocks(window, block_size)
-
-    sum_block = np.sum(win_blocks, axis=0)
-
-    avg_block = sum_block / len(win_blocks)
-
-    return avg_block
