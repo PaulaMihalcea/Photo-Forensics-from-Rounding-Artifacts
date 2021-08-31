@@ -4,31 +4,49 @@ import numpy as np
 import matplotlib.pyplot as plt
 from argparse import ArgumentParser
 from decimal import Decimal
-from preprocessing import average_block_from_window, get_windows, luminance, mfr
+from preprocessing import average_block_from_window, get_windows_new, load_image, luminance, mfr
 from em import expectation_maximization
 from utils import get_filename
 
 
 def main(args):
 
-    img = cv2.imread(args.img_path)
+    img = load_image(args.img_path)
 
-    if img is None:  # Check that image has been loaded correctly
+    if img is None:  # Check that image has been loaded correctly # TODO move into loading function
         raise IOError('Image loading error.')
     else:
         # RGB to YCbCr conversion & luminance channel extraction
         lum = luminance(img)
+        #print('done luminance')
 
         # 3x3 median filter residual
         filtered_lum = mfr(lum, 3)
+        #print('done filter')
 
+
+        # TODO
+        blocks = get_windows_new(filtered_lum, args.win_size, 8, 8)
+        '''
         # Overlapping windows generation
         windows = get_windows(filtered_lum, args.win_size, 8)
+        print('done windows; number of windows:', windows.shape[0])
 
         # Average 8x8 block generation
         blocks = np.zeros((windows.shape[0], 8, 8))
         for i in range(windows.shape[0]):
-            blocks[i] = average_block_from_window(windows[i], 8, 8)
+
+            dis = average_block_from_window(windows[i], 8, 8)  # TODO
+            blocks[i] = dis
+            print('blocks[i] shape:', blocks[i].shape)
+            print('dis shape:', dis.shape)
+            print('windows[i] shape:', windows[i].shape)
+            #blocks[i] = average_block_from_window(windows[i], 8, 8)
+        '''
+        #print('done blocks; total blocks:', blocks.shape[0])
+
+        #print('first block:', blocks[0])  # TODO
+        #print('end of first block')  # TODO
 
         # Expectation-maximization algorithm
         prob_b_in_c1_r, c, diff_log = expectation_maximization(blocks, args.stop_threshold)
@@ -40,6 +58,7 @@ def main(args):
         plt.plot(diff_log)
         plt.xlabel('EM iteration')
         plt.ylabel('Average of the difference matrix between successive estimates of c')
+        print(diff_log)  # TODO
         plt.show()  # TODO Comment out
 
         # Save results
@@ -76,7 +95,7 @@ if __name__ == '__main__':
     if args.win_size is None:
         args.win_size = 128
     if args.stop_threshold is None:
-        args.stop_threshold = 1e-2  # TODO also try 1e-3
+        args.stop_threshold = 1e-3  # TODO also try 1e-3/1e-2
     if args.save_result is None:
         args.save_result = False
     else:
