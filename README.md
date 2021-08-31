@@ -22,13 +22,13 @@ python3 "path/to/image/image_file.jpg"
 ```
 
 Optional arguments:
-- `--win_size`: window size in pixel (default: 256 px);
+- `--win_size`: window size in pixel (default: 256 px; must be a multiple of 8);
 - `--stop_threshold`: expectation-maximization algorithm stop threshold (default: 1e-3);
-- `--save`: save the output_map and template differences plot in a \'results\' subfolder (default: False).
+- `--save`: save the output_map and template differences plot in a \'results\' subfolder (default: false).
 
-_Example call with optional arguments:_
+Example call with optional arguments:
 ```
-python3 "path/to/image/image_file.jpg" --win_size=256 --stop_threshold=1e-2 --save=True
+python3 "images/my_photo.jpg" --win_size=256 --stop_threshold=1e-2 --save=True
 ```
 
 ### Requirements
