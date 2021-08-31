@@ -41,6 +41,9 @@ def maximization(blocks, prob_b_in_c1_r):
 
 
 def expectation_maximization(blocks, threshold):
+    # Initialize logging variables
+    diff_log = []
+
     # Random initialize template c
     c = np.random.uniform(0, 1, (8, 8))
 
@@ -56,6 +59,7 @@ def expectation_maximization(blocks, threshold):
         # M step
         c = maximization(blocks, prob_b_in_c1_r)
 
-        diff = abs(c - c_prev)
+        diff = abs(c - c_prev)  # Update difference between successive estimates of c
+        diff_log.append(np.average(diff))  # Add the difference matrix average to the difference log
 
-    return prob_b_in_c1_r, c
+    return prob_b_in_c1_r, c, diff_log

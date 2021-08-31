@@ -14,7 +14,12 @@ def load_image(img):
 # Adjust image size (uses padding; for square block partitioning)
 def adjust_size(img, win_size, stride):
 
-    img_h, img_w = img.shape
+    if len(img.shape) == 3:
+        img_h, img_w, _ = img.shape
+    elif len(img.shape) == 2:
+        img_h, img_w = img.shape
+    else:
+        return  # TODO Raise error
 
     if img_h % win_size != 0:
         img = cv2.copyMakeBorder(img, 0, (img_h - win_size) % stride, 0, 0, cv2.BORDER_REPLICATE)
@@ -39,31 +44,36 @@ def mfr(img, size):
     # Ref.: https://www.researchgate.net/figure/Median-filter-residual_fig1_341836414
 
     median = cv2.medianBlur(img, size)
-    residual = median - img
+    residual = img - median
 
     return residual
 
 
 # Blocks of given size (extracted with given stride)
-def get_blocks(img, block_size, stride):
+def get_windows(img, win_size, stride):
 
-    adjust_size(img, block_size, stride)
+    adjust_size(img, win_size, stride)
 
-    img_h, img_w = img.shape
+    if len(img.shape) == 3:
+        img_h, img_w, _ = img.shape
+    elif len(img.shape) == 2:
+        img_h, img_w = img.shape
+    else:
+        return  # TODO Raise error
 
     x = []
     y = []
     blocks = []
 
-    for i in range(0, img_w - block_size, stride):
+    for i in range(0, img_w - stride, stride):
         x.append(i)
 
-    for j in range(0, img_h - block_size, stride):
+    for j in range(0, img_h - stride, stride):
         y.append(j)
 
     for i in y:
         for j in x:
-            split = img[i:i + block_size, j:j + block_size]
+            split = img[i:i + win_size, j:j + win_size]
             blocks.append(split)
 
     blocks = np.array(blocks)
@@ -73,7 +83,7 @@ def get_blocks(img, block_size, stride):
 
 # Average 8x8 block from given window
 def average_block_from_window(window, block_size, block_stride):
-    win_blocks = get_blocks(window, block_size, block_stride)
+    win_blocks = get_windows(window, block_size, block_stride)
 
     sum_block = np.sum(win_blocks, axis=0)
 
