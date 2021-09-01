@@ -3,6 +3,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from decimal import Decimal
+from scipy.interpolate import SmoothBivariateSpline
 
 
 # Get filename from path
@@ -40,10 +41,10 @@ def get_subfolder(img_path, win_size, stop_threshold):
 def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_path=None, win_size=None, stop_threshold=None):
 
     # Initialize empty map
-    output_map = np.empty((img_w, img_h))  # TODO w e h non sono invertiti
+    output_map = np.empty((img_w, img_h))  # TODO check
 
     # Start looping through original image pixels
-    for i in range(0, img_w):  # TODO i e j non sono invertiti; w e h non sono invertiti
+    for i in range(0, img_w):
         for j in range(0, img_h):
 
             # Variable initialization
@@ -58,12 +59,15 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_pat
             # Average probability per pixel
             output_map[i][j] = np.average(current_pixel_probabilities)
 
-    # Normalization
-    #output_map *= (255.0 / output_map.max())  # TODO Check this formula's correctness
-    plt.imshow(output_map)  # TODO
+    # Check for NaNs  # TODO use interpolation instead
+    output_map = np.nan_to_num(output_map, nan=0.5)
+
+    #'''
+    plt.imshow(1-output_map)  # TODO duplicate plot; cv2 should be deleted and this function used instead with a greyscale colormap
     plt.clim(0, 1)
     plt.colorbar()
     plt.show()
+    #'''
 
     # Save output map to disk (if requested, otherwise just show it)
     filename, extension = get_filename(img_path)
