@@ -40,26 +40,30 @@ def get_subfolder(img_path, win_size, stop_threshold):
 def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_path=None, win_size=None, stop_threshold=None):
 
     # Initialize empty map
-    output_map = np.empty((img_h, img_w))
+    output_map = np.empty((img_w, img_h))  # TODO w e h non sono invertiti
 
     # Start looping through original image pixels
-    for i in range(0, img_w):
+    for i in range(0, img_w):  # TODO i e j non sono invertiti; w e h non sono invertiti
         for j in range(0, img_h):
 
             # Variable initialization
             current_probability = 0  # Simple counter; keeps track of the probability being processed
-            current_pixel_probabilities = np.empty(len(blocks_map[j][i]))  # Contains all probabilities assigned to each block containing the current pixel (blocks_map[j][i])
+            current_pixel_probabilities = np.empty(len(blocks_map[i][j]))  # Contains all probabilities assigned to each block containing the current pixel (blocks_map[j][i])
 
             # Probability extraction from prob_b_in_c1_r vector
-            for w in blocks_map[j][i]:  # w is the identifier of each window containing the current pixel
+            for w in blocks_map[i][j]:  # w is the identifier of each window containing the current pixel
                 current_pixel_probabilities[current_probability] = prob_b_in_c1_r[w]
                 current_probability += 1
 
             # Average probability per pixel
-            output_map[j][i] = np.average(current_pixel_probabilities)
+            output_map[i][j] = np.average(current_pixel_probabilities)
 
     # Normalization
-    output_map *= (255.0 / output_map.max())  # TODO Check this formula's correctness
+    #output_map *= (255.0 / output_map.max())  # TODO Check this formula's correctness
+    plt.imshow(output_map)  # TODO
+    plt.clim(0, 1)
+    plt.colorbar()
+    plt.show()
 
     # Save output map to disk (if requested, otherwise just show it)
     filename, extension = get_filename(img_path)
