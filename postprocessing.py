@@ -65,19 +65,19 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=Fa
     # plt.show()
 
     # Thresholding & normalization
-    output_map = np.where(output_map > 0.8, 1, 0).astype(np.uint8)
-    output_map = cv2.normalize(output_map, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX,
+    output_map_norm = np.where(output_map > 0.8, 1, 0).astype(np.uint8)
+    output_map_norm = cv2.normalize(output_map_norm, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX,
                                dtype=cv2.CV_32F)  # Normalize output map before saving
 
     # Show output map and/or save it to disk if requested
     filename, extension = get_filename(img_path)
     if show:
         cv2.namedWindow(filename + '.' + extension + ' output map', cv2.WINDOW_NORMAL)
-        cv2.imshow(filename + '.' + extension + ' output map', output_map)
+        cv2.imshow(filename + '.' + extension + ' output map', output_map_norm)
         cv2.waitKey(0)
     if save:
         res_path = get_subfolder(img_path, win_size, stop_threshold)
-        cv2.imwrite(res_path + '/' + filename + '.png', output_map)
+        cv2.imwrite(res_path + '/' + filename + '.png', output_map_norm)
 
     return output_map
 
