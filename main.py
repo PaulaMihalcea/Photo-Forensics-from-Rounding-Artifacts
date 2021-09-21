@@ -37,8 +37,8 @@ def main(args):
 
     # Output map & difference plot
     print('Generating output map... ', end='')
-    output_map = get_output_map(prob_b_in_c1_r, blocks_map, img.shape[1], img.shape[0], args.save, args.img_path, args.win_size, args.stop_threshold, args.interpolate)
-    get_template_difference_plot(diff_history, args.save, args.img_path, args.win_size, args.stop_threshold)
+    output_map = get_output_map(prob_b_in_c1_r, blocks_map, img.shape[1], img.shape[0], args.show, args.save, args.img_path, args.win_size, args.stop_threshold, args.interpolate)
+    get_template_difference_plot(diff_history, args.show_diff_plot, args.save_diff_plot, args.img_path, args.win_size, args.stop_threshold)
     print('done.')
     end = time.time()
 
@@ -58,23 +58,46 @@ if __name__ == '__main__':
     parser.add_argument('-st', '--stop_threshold', type=float, help='Expectation-maximization algorithm stop threshold (default: 1e-3).')
     parser.add_argument('-int', '--interpolate', type=float,
                         help='Interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm (default: False).')
-    parser.add_argument('-sv', '--save', help='Save the results in the \'results\' folder (default: False).')
+    parser.add_argument('-sh', '--show',
+                        help='Show the resulting output map (default: False).')
+    parser.add_argument('-sv', '--save', help='Save the resulting output map in the \'results\' folder (default: False).')
+    parser.add_argument('-shdiff', '--show_diff_plot',
+                        help='Show the plot of the difference between successive estimates of template c (default: False).')
+    parser.add_argument('-svdiff', '--save_diff_plot', help='Save the plot of the difference between successive estimates of template c in the \'results\' folder (default: False).')
 
     args = parser.parse_args()
 
     # Set default arguments
     if args.win_size is None:
         args.win_size = 256
+
     if args.stop_threshold is None:
         args.stop_threshold = 1e-3  # TODO Try 1e-2/1e-3
+
     if args.interpolate == 'True':
         args.interpolate = True
     else:
         args.interpolate = False
+
+    if args.show == 'True':
+        args.show = True
+    else:
+        args.show = False
+
     if args.save == 'True':
         args.save = True
     else:
         args.save = False
+
+    if args.show_diff_plot == 'True':
+        args.show_diff_plot = True
+    else:
+        args.show_diff_plot = False
+
+    if args.save_diff_plot == 'True':
+        args.save_diff_plot = True
+    else:
+        args.save_diff_plot = False
 
     # Run main script
     main(args)

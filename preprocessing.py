@@ -66,7 +66,6 @@ def get_windows(img, win_size, stride, block_size):
     # Adjust image size
     img = adjust_size(img, win_size, stride)
     img_h, img_w = get_image_size(img)
-    print('size:', img_h, img_w, img.shape)
 
     # Calculate starting coordinates for each window (top left pixel)
     x = []
@@ -87,7 +86,6 @@ def get_windows(img, win_size, stride, block_size):
     for i in y:
         for j in x:
             # Get current window blocks
-            #print(i + win_size, j + win_size)
             current_window_blocks = get_blocks(img[i:i + win_size, j:j + win_size], block_size)
 
             # Calculate average block for the current window

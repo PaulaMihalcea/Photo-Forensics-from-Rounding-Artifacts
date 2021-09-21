@@ -38,7 +38,7 @@ def get_subfolder(img_path, win_size, stop_threshold):
 
 
 # Get output map
-def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_path=None, win_size=None, stop_threshold=None, interpolate=False):
+def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=False, img_path=None, win_size=None, stop_threshold=None, interpolate=False):
 
     # Initialize empty map
     output_map = np.empty((img_h, img_w, 2))
@@ -51,35 +51,39 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_pat
         for j in range(0, output_map.shape[1]):
             output_map[i, j, 0] = output_map[i, j, 0] / output_map[i, j, 1]
 
-    output_map = output_map[:, :, 0]
+    output_map = 1 - output_map[:, :, 0]  # Because the map computed so far actually shows the probability that a pixel has not been modified
 
     # Replace NaNs using interpolation
     if interpolate:
         output_mask = np.ma.masked_invalid(output_map).mask
         output_map = interpolate_missing_pixels(output_map, output_mask, 'linear')
 
-    #'''
-    plt.imshow(output_map)  # TODO duplicate plot; cv2 should be deleted and this function used instead with a greyscale colormap
-    plt.clim(0, 1)
-    plt.colorbar()
-    plt.show()
-    #'''
+    # Matplotlib output map plot for debug purposes only
+    # plt.imshow(output_map)
+    # plt.clim(0, 1)
+    # plt.colorbar()
+    # plt.show()
 
-    # Save output map to disk (if requested, otherwise just show it)
+    # Thresholding & normalization
+    output_map = np.where(output_map > 0.8, 1, 0).astype(np.uint8)
+    output_map = cv2.normalize(output_map, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX,
+                               dtype=cv2.CV_32F)  # Normalize output map before saving
+
+    # Show output map and/or save it to disk if requested
     filename, extension = get_filename(img_path)
+    if show:
+        cv2.namedWindow(filename + '.' + extension + ' output map', cv2.WINDOW_NORMAL)
+        cv2.imshow(filename + '.' + extension + ' output map', output_map)
+        cv2.waitKey(0)
     if save:
         res_path = get_subfolder(img_path, win_size, stop_threshold)
         cv2.imwrite(res_path + '/' + filename + '.png', output_map)
-    else:
-        pass  # TODO
-        #cv2.imshow(filename + '.' + extension + ' output map', output_map)
-        #cv2.waitKey(0)
 
     return output_map
 
 
 # Plot difference between successive estimates of template c
-def get_template_difference_plot(diff_history, save=False, img_path=None, win_size=None, stop_threshold=None):
+def get_template_difference_plot(diff_history, show=False, save=False, img_path=None, win_size=None, stop_threshold=None):
 
     # Create plot
     plt.plot(diff_history)
@@ -91,8 +95,7 @@ def get_template_difference_plot(diff_history, save=False, img_path=None, win_si
     if save:
         res_path = get_subfolder(img_path, win_size, stop_threshold)
         plt.savefig(res_path + '/c_diff_plot.png')
-    else:
-        pass
-        #plt.show()# TODO
+    if show:
+        plt.show()
 
     return
