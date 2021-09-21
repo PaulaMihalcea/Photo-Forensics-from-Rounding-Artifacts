@@ -38,12 +38,11 @@ def main(args):
     # Output map & difference plot
     print('Generating output map... ', end='')
     output_map = get_output_map(prob_b_in_c1_r, blocks_map, img.shape[1], img.shape[0], args.save, args.img_path, args.win_size, args.stop_threshold, args.interpolate)
-    print('TIME OUTPUT:', )
     get_template_difference_plot(diff_history, args.save, args.img_path, args.win_size, args.stop_threshold)
     print('done.')
     end = time.time()
 
-    print('\nElapsed time: ', end - start)
+    print('Elapsed time: ' + str('{:.2f}'.format(end - start)) + ' s.')
 
     return
 

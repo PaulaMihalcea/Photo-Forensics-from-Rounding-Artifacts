@@ -1,5 +1,7 @@
 import numpy as np
 
+np.seterr(invalid='ignore')  # Suppress NaN-related warnings
+
 
 # Expectation step
 def expectation(blocks, c, first_iteration=False, prob_r_b_in_c1=0.5):

@@ -44,8 +44,8 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_pat
     output_map = np.empty((img_h, img_w, 2))
 
     for w in blocks_map:  # For each element in the window list...
-        output_map[w[0]:w[0] + win_size, w[1]:w[1] + win_size, 0] += prob_b_in_c1_r[w[2]]
-        output_map[w[0]:w[0] + win_size, w[1]:w[1] + win_size, 1] += 1
+        output_map[w[1]:w[1] + win_size, w[0]:w[0] + win_size, 0] += prob_b_in_c1_r[w[2]]
+        output_map[w[1]:w[1] + win_size, w[0]:w[0] + win_size, 1] += 1
 
     for i in range(0, output_map.shape[0]):  # Average
         for j in range(0, output_map.shape[1]):
@@ -53,16 +53,13 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_pat
 
     output_map = output_map[:, :, 0]
 
-
-
-
     # Replace NaNs using interpolation
     if interpolate:
         output_mask = np.ma.masked_invalid(output_map).mask
         output_map = interpolate_missing_pixels(output_map, output_mask, 'linear')
 
     #'''
-    plt.imshow(1 - output_map)  # TODO duplicate plot; cv2 should be deleted and this function used instead with a greyscale colormap
+    plt.imshow(output_map)  # TODO duplicate plot; cv2 should be deleted and this function used instead with a greyscale colormap
     plt.clim(0, 1)
     plt.colorbar()
     plt.show()
@@ -95,6 +92,7 @@ def get_template_difference_plot(diff_history, save=False, img_path=None, win_si
         res_path = get_subfolder(img_path, win_size, stop_threshold)
         plt.savefig(res_path + '/c_diff_plot.png')
     else:
-        plt.show()
+        pass
+        #plt.show()# TODO
 
     return
