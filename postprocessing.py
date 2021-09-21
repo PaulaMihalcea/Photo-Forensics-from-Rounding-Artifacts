@@ -66,8 +66,7 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=Fa
 
     # Thresholding & normalization
     output_map_norm = np.where(output_map > 0.8, 1, 0).astype(np.uint8)
-    output_map_norm = cv2.normalize(output_map_norm, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX,
-                               dtype=cv2.CV_32F)  # Normalize output map before saving
+    output_map_norm = cv2.normalize(output_map_norm, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)  # Normalize output map before saving
 
     # Show output map and/or save it to disk if requested
     filename, extension = get_filename(img_path)

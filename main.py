@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from preprocessing import get_windows, load_image, luminance, mfr
 from em import expectation_maximization
 from postprocessing import get_output_map, get_template_difference_plot
-from results import get_auc, get_img_ground_truth_path, get_roc
+from results import get_roc_auc
 
 
 def main(args):
@@ -17,7 +17,7 @@ def main(args):
     print('done; image size: ' + str(img.shape[1]) + 'x' + str(img.shape[0]) + '.')
 
     # RGB to YCbCr conversion & luminance channel extraction
-    print('Luminance extraction... ', end='')
+    print('Extracting luminance... ', end='')
     lum = luminance(img)
     print('done.')
 
@@ -46,9 +46,8 @@ def main(args):
     print('Elapsed time: ' + str('{:.2f}'.format(end - start)) + ' s.')
 
     # Compute ROC curve and AUC score
-    img_ground_truth = load_image(get_img_ground_truth_path(args.img_path))
-    fpr, tpr = get_roc(img_ground_truth, output_map)
-    auc = get_auc(fpr, tpr)
+    #fpr, tpr, auc = get_roc_auc(args.img_path, output_map)  # TODO
+    fpr, tpr, auc = None, None, None
 
     return fpr, tpr, auc
 
@@ -60,10 +59,10 @@ if __name__ == '__main__':
 
     # Add parser arguments
     parser.add_argument('img_path', help='Path of the image to be analyzed.')
-    parser.add_argument('-ws', '--win_size', type=int, help='Window size in pixel (default: 128 px).')
+    parser.add_argument('-ws', '--win_size', type=int, help='Window size in pixel (default: 256). Note: must be a multiple of 8.')
     parser.add_argument('-st', '--stop_threshold', type=float, help='Expectation-maximization algorithm stop threshold (default: 1e-3).')
     parser.add_argument('-prob', '--prob_r_b_in_c1', type=float, help='Expectation-maximization algorithm probability of r conditioned by b belonging to C_1 (default: 0.5).')
-    parser.add_argument('-int', '--interpolate', type=float, help='Interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm (default: False).')
+    parser.add_argument('-int', '--interpolate', type=float, help='Interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm (default: False). Warning: slows down the program significantly.')
     parser.add_argument('-sh', '--show', help='Show the resulting output map (default: False).')
     parser.add_argument('-sv', '--save', help='Save the resulting output map in the \'results\' folder (default: False).')
     parser.add_argument('-shdiff', '--show_diff_plot', help='Show the plot of the difference between successive estimates of template c (default: False).')

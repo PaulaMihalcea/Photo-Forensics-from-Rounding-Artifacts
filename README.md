@@ -18,13 +18,19 @@ _<sup>*Based on a research by S. Agarwal and H. Farid (see [\[1\]](https://doi.o
 Run from any terminal specifying the path to the image to be analyzed, as follows:
 
 ```
-python3 "path/to/image/image_file.jpg"
+python3 main.py "path/to/image/image_file.jpg"
 ```
 
 Optional arguments:
-- `--win_size`: window size in pixel (default: 256 px; must be a multiple of 8);
-- `--stop_threshold`: expectation-maximization algorithm stop threshold (default: 1e-3);
-- `--save`: save the output_map and template differences plot in a \'results\' subfolder (default: false).
+- `--win_size`: window size in pixel (default: `256`). Note: must be a multiple of 8.
+- `--stop_threshold`: expectation-maximization algorithm stop threshold (default: `1e-3`);
+
+- `--prob_r_b_in_c1`: expectation-maximization algorithm probability of _r_ conditioned by _b_ belonging to _C<sub>1</sub>_ (default: `0.5`);
+- `--interpolate`: interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm (default: `False`). _Warning: slows down the program significantly_;
+- `--show`: show the resulting output map (default: `False`);
+- `--save`: save the resulting output map in the `results` folder (default: `False`);
+- `--show_diff_plot`: show the plot of the difference between successive estimates of template _c_ (default: `False`);
+- `--save_diff_plot`: save the plot of the difference between successive estimates of template _c_ in the `results` folder (default: `False`).
 
 Example call with optional arguments:
 ```
