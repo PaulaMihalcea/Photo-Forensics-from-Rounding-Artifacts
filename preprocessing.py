@@ -66,7 +66,7 @@ def get_windows(img, win_size, stride, block_size):
 
     # Initialize blocks map
     # Each point of the map corresponds to a pixel, and contains a list containing the IDs of the windows containing that pixel
-    blocks_map = np.zeros((img_h_orig, img_w_orig, 0)).tolist()
+    #blocks_map = np.zeros((img_h_orig, img_w_orig, 0)).tolist()  # TODO
 
     # Adjust image size
     img = adjust_size(img, win_size, stride)
@@ -85,18 +85,30 @@ def get_windows(img, win_size, stride, block_size):
     # Variable initialization
     window_id = 0
     blocks = np.zeros((len(x)*len(y), block_size, block_size))  # Final array of blocks (there is one block per window)
+    blocks_map = np.zeros((len(x)*len(y), 3), dtype=np.int)  # TODO
+    counter = 0
 
     for i in y:
         for j in x:
             # Get current window blocks
             current_window_blocks = get_blocks(img[i:i + win_size, j:j + win_size], block_size)
 
-            # Update blocks map
+            # Update blocks map # TODO questo pezzo è LENTO
+            blocks_map[counter, 0] = j
+            blocks_map[counter, 1] = i
+            blocks_map[counter, 2] = window_id
+            counter +=1
+            '''
+            #counter = 0 # TODO
             for m in range(i, i + win_size):
                 if m < img_h_orig:
                     for n in range(j, j + win_size):
                         if n < img_w_orig:
-                            blocks_map[m][n].append(window_id)
+                            #blocks_map[m][n].append(window_id)  # TODO
+                            np.append(blocks_map[m][n], window_id)  # TODO
+                            #blocks_map[m][n][counter] = window_id  # TODO
+                            #counter += 1
+            '''
 
             # Calculate average block for the current window
             sum_block = np.sum(current_window_blocks, axis=0)

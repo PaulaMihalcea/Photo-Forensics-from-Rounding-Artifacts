@@ -3,7 +3,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from decimal import Decimal
-from scipy.ndimage import gaussian_filter1d
+from interpolate_missing_pixels import interpolate_missing_pixels
 
 
 # Get filename from path
@@ -37,76 +37,32 @@ def get_subfolder(img_path, win_size, stop_threshold):
     return res_path
 
 
-# Interpolate missing pixels (NaNs)
-# Function by StackOverflow user Sam De Meyer, based on user G M's answer:
-# https://stackoverflow.com/a/68558547
-def interpolate_missing_pixels(
-        image: np.ndarray,
-        mask: np.ndarray,
-        method: str = 'nearest',
-        fill_value: int = 0
-):
-    """
-    :param image: a 2D image
-    :param mask: a 2D boolean image, True indicates missing values
-    :param method: interpolation method, one of
-        'nearest', 'linear', 'cubic'.
-    :param fill_value: which value to use for filling up data outside the
-        convex hull of known pixel values.
-        Default is 0, Has no effect for 'nearest'.
-    :return: the image with missing values interpolated
-    """
-
-    from scipy import interpolate
-
-    h, w = image.shape[:2]
-    xx, yy = np.meshgrid(np.arange(w), np.arange(h))
-
-    known_x = xx[~mask]
-    known_y = yy[~mask]
-    known_v = image[~mask]
-    missing_x = xx[mask]
-    missing_y = yy[mask]
-
-    interp_values = interpolate.griddata(
-        (known_x, known_y), known_v, (missing_x, missing_y),
-        method=method, fill_value=fill_value
-    )
-
-    interp_image = image.copy()
-    interp_image[missing_y, missing_x] = interp_values
-
-    return interp_image
-
-
 # Get output map
-def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_path=None, win_size=None, stop_threshold=None):
+def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_path=None, win_size=None, stop_threshold=None, interpolate=False):
 
     # Initialize empty map
-    output_map = np.empty((img_w, img_h))  # TODO check
+    output_map = np.empty((img_h, img_w, 2))
 
-    # Start looping through original image pixels
-    for i in range(0, img_w):
-        for j in range(0, img_h):
+    for w in blocks_map:  # For each element in the window list...
+        output_map[w[0]:w[0] + win_size, w[1]:w[1] + win_size, 0] += prob_b_in_c1_r[w[2]]
+        output_map[w[0]:w[0] + win_size, w[1]:w[1] + win_size, 1] += 1
 
-            # Variable initialization
-            current_probability = 0  # Simple counter; keeps track of the probability being processed
-            current_pixel_probabilities = np.empty(len(blocks_map[i][j]))  # Contains all probabilities assigned to each block containing the current pixel (blocks_map[j][i])
+    for i in range(0, output_map.shape[0]):  # Average
+        for j in range(0, output_map.shape[1]):
+            output_map[i, j, 0] = output_map[i, j, 0] / output_map[i, j, 1]
 
-            # Probability extraction from prob_b_in_c1_r vector
-            for w in blocks_map[i][j]:  # w is the identifier of each window containing the current pixel
-                current_pixel_probabilities[current_probability] = prob_b_in_c1_r[w]
-                current_probability += 1
+    output_map = output_map[:, :, 0]
 
-            # Average probability per pixel
-            output_map[i][j] = np.average(current_pixel_probabilities)
+
+
 
     # Replace NaNs using interpolation
-    output_mask = np.ma.masked_invalid(output_map).mask
-    output_map = interpolate_missing_pixels(output_map, output_mask, 'linear')
+    if interpolate:
+        output_mask = np.ma.masked_invalid(output_map).mask
+        output_map = interpolate_missing_pixels(output_map, output_mask, 'linear')
 
     #'''
-    plt.imshow(1-output_map)  # TODO duplicate plot; cv2 should be deleted and this function used instead with a greyscale colormap
+    plt.imshow(1 - output_map)  # TODO duplicate plot; cv2 should be deleted and this function used instead with a greyscale colormap
     plt.clim(0, 1)
     plt.colorbar()
     plt.show()
@@ -118,8 +74,9 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_pat
         res_path = get_subfolder(img_path, win_size, stop_threshold)
         cv2.imwrite(res_path + '/' + filename + '.png', output_map)
     else:
-        cv2.imshow(filename + '.' + extension + ' output map', output_map)
-        cv2.waitKey(0)
+        pass  # TODO
+        #cv2.imshow(filename + '.' + extension + ' output map', output_map)
+        #cv2.waitKey(0)
 
     return output_map
 

@@ -1,3 +1,4 @@
+import time
 from argparse import ArgumentParser
 from preprocessing import get_windows, load_image, luminance, mfr
 from em import expectation_maximization
@@ -6,11 +7,13 @@ from postprocessing import get_template_difference_plot, get_output_map
 
 def main(args):
 
+    start = time.time()
+
     # Load image
     img_name = args.img_path.split('/')[-1]
     print('Loading image ' + img_name + '... ', end='')
     img = load_image(args.img_path)
-    print('done. Image size: ' + str(img.shape[1]) + 'x' + str(img.shape[0]) + '.')
+    print('done; image size: ' + str(img.shape[1]) + 'x' + str(img.shape[0]) + '.')
 
     # RGB to YCbCr conversion & luminance channel extraction
     print('Luminance extraction... ', end='')
@@ -34,9 +37,13 @@ def main(args):
 
     # Output map & difference plot
     print('Generating output map... ', end='')
-    output_map = get_output_map(prob_b_in_c1_r, blocks_map, img.shape[1], img.shape[0], args.save, args.img_path, args.win_size, args.stop_threshold)
+    output_map = get_output_map(prob_b_in_c1_r, blocks_map, img.shape[1], img.shape[0], args.save, args.img_path, args.win_size, args.stop_threshold, args.interpolate)
+    print('TIME OUTPUT:', )
     get_template_difference_plot(diff_history, args.save, args.img_path, args.win_size, args.stop_threshold)
     print('done.')
+    end = time.time()
+
+    print('\nElapsed time: ', end - start)
 
     return
 
@@ -50,6 +57,8 @@ if __name__ == '__main__':
     parser.add_argument('img_path', help='Path of the image to be analyzed.')
     parser.add_argument('-ws', '--win_size', type=int, help='Window size in pixel (default: 128 px).')
     parser.add_argument('-st', '--stop_threshold', type=float, help='Expectation-maximization algorithm stop threshold (default: 1e-3).')
+    parser.add_argument('-int', '--interpolate', type=float,
+                        help='Interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm (default: False).')
     parser.add_argument('-sv', '--save', help='Save the results in the \'results\' folder (default: False).')
 
     args = parser.parse_args()
@@ -59,6 +68,10 @@ if __name__ == '__main__':
         args.win_size = 256
     if args.stop_threshold is None:
         args.stop_threshold = 1e-3  # TODO Try 1e-2/1e-3
+    if args.interpolate == 'True':
+        args.interpolate = True
+    else:
+        args.interpolate = False
     if args.save == 'True':
         args.save = True
     else:
