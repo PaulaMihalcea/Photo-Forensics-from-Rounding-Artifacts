@@ -3,7 +3,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from decimal import Decimal
-from scipy.interpolate import SmoothBivariateSpline
+from scipy.ndimage import gaussian_filter1d
 
 
 # Get filename from path
@@ -37,6 +37,48 @@ def get_subfolder(img_path, win_size, stop_threshold):
     return res_path
 
 
+# Interpolate missing pixels (NaNs)
+# Function by StackOverflow user Sam De Meyer, based on user G M's answer:
+# https://stackoverflow.com/a/68558547
+def interpolate_missing_pixels(
+        image: np.ndarray,
+        mask: np.ndarray,
+        method: str = 'nearest',
+        fill_value: int = 0
+):
+    """
+    :param image: a 2D image
+    :param mask: a 2D boolean image, True indicates missing values
+    :param method: interpolation method, one of
+        'nearest', 'linear', 'cubic'.
+    :param fill_value: which value to use for filling up data outside the
+        convex hull of known pixel values.
+        Default is 0, Has no effect for 'nearest'.
+    :return: the image with missing values interpolated
+    """
+
+    from scipy import interpolate
+
+    h, w = image.shape[:2]
+    xx, yy = np.meshgrid(np.arange(w), np.arange(h))
+
+    known_x = xx[~mask]
+    known_y = yy[~mask]
+    known_v = image[~mask]
+    missing_x = xx[mask]
+    missing_y = yy[mask]
+
+    interp_values = interpolate.griddata(
+        (known_x, known_y), known_v, (missing_x, missing_y),
+        method=method, fill_value=fill_value
+    )
+
+    interp_image = image.copy()
+    interp_image[missing_y, missing_x] = interp_values
+
+    return interp_image
+
+
 # Get output map
 def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_path=None, win_size=None, stop_threshold=None):
 
@@ -59,8 +101,9 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, save=False, img_pat
             # Average probability per pixel
             output_map[i][j] = np.average(current_pixel_probabilities)
 
-    # Check for NaNs  # TODO use interpolation instead
-    output_map = np.nan_to_num(output_map, nan=0.5)
+    # Replace NaNs using interpolation
+    output_mask = np.ma.masked_invalid(output_map).mask
+    output_map = interpolate_missing_pixels(output_map, output_mask, 'linear')
 
     #'''
     plt.imshow(1-output_map)  # TODO duplicate plot; cv2 should be deleted and this function used instead with a greyscale colormap

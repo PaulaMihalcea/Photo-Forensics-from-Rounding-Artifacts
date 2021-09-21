@@ -7,9 +7,10 @@ from postprocessing import get_template_difference_plot, get_output_map
 def main(args):
 
     # Load image
-    print('Loading image... ', end='')
+    img_name = args.img_path.split('/')[-1]
+    print('Loading image ' + img_name + '... ', end='')
     img = load_image(args.img_path)
-    print('done.')
+    print('done. Image size: ' + str(img.shape[1]) + 'x' + str(img.shape[0]) + '.')
 
     # RGB to YCbCr conversion & luminance channel extraction
     print('Luminance extraction... ', end='')
