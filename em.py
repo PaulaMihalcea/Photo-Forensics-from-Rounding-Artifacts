@@ -4,7 +4,7 @@ np.seterr(invalid='ignore')  # Suppress NaN-related warnings
 
 
 # Expectation step
-def expectation(blocks, c, first_iteration=False, prob_r_b_in_c1=0.5):
+def expectation(blocks, c, prob_r_b_in_c1, first_iteration=False):
 
     # Compute correlation r
     r = np.zeros(blocks.shape[0])
@@ -16,7 +16,7 @@ def expectation(blocks, c, first_iteration=False, prob_r_b_in_c1=0.5):
     prob_b_in_c2 = np.ones(blocks.shape[0]) * 0.5
 
     if first_iteration:  # The first iteration uses arbitrary probabilities
-        prob_r_b_in_c1 = np.ones(blocks.shape[0]) * prob_r_b_in_c1  # TODO Try multiple values
+        prob_r_b_in_c1 = np.ones(blocks.shape[0]) * prob_r_b_in_c1
         prob_r_b_in_c2 = 1 - prob_r_b_in_c1
     else:  # Successive iterations are estimated by the correlation r
         prob_r_b_in_c1 = abs(r)
@@ -43,7 +43,7 @@ def maximization(blocks, prob_b_in_c1_r):
 
 
 # Expectation-maximization algorithm
-def expectation_maximization(blocks, threshold):
+def expectation_maximization(blocks, threshold, prob_r_b_in_c1):
     # Initialize logging array for the differences plot
     diff_history = []
 
@@ -63,7 +63,7 @@ def expectation_maximization(blocks, threshold):
         c_prev = np.copy(c)
 
         # E step
-        prob_b_in_c1_r = expectation(blocks, c)
+        prob_b_in_c1_r = expectation(blocks, c, prob_r_b_in_c1)
 
         # M step
         c = maximization(blocks, prob_b_in_c1_r)

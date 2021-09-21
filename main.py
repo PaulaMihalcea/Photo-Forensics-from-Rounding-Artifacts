@@ -32,7 +32,7 @@ def main(args):
 
     # Expectation-maximization algorithm
     print('Executing EM algorithm... ', end='')
-    prob_b_in_c1_r, c, diff_history = expectation_maximization(blocks, args.stop_threshold)
+    prob_b_in_c1_r, c, diff_history = expectation_maximization(blocks, args.stop_threshold, args.prob_r_b_in_c1)
     print('done.')
 
     # Output map & difference plot
@@ -56,13 +56,11 @@ if __name__ == '__main__':
     parser.add_argument('img_path', help='Path of the image to be analyzed.')
     parser.add_argument('-ws', '--win_size', type=int, help='Window size in pixel (default: 128 px).')
     parser.add_argument('-st', '--stop_threshold', type=float, help='Expectation-maximization algorithm stop threshold (default: 1e-3).')
-    parser.add_argument('-int', '--interpolate', type=float,
-                        help='Interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm (default: False).')
-    parser.add_argument('-sh', '--show',
-                        help='Show the resulting output map (default: False).')
+    parser.add_argument('-st', '--prob_r_b_in_c1', type=float, help='Expectation-maximization algorithm probability of r conditioned by b belonging to C_1 (default: 0.5).')
+    parser.add_argument('-int', '--interpolate', type=float, help='Interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm (default: False).')
+    parser.add_argument('-sh', '--show', help='Show the resulting output map (default: False).')
     parser.add_argument('-sv', '--save', help='Save the resulting output map in the \'results\' folder (default: False).')
-    parser.add_argument('-shdiff', '--show_diff_plot',
-                        help='Show the plot of the difference between successive estimates of template c (default: False).')
+    parser.add_argument('-shdiff', '--show_diff_plot', help='Show the plot of the difference between successive estimates of template c (default: False).')
     parser.add_argument('-svdiff', '--save_diff_plot', help='Save the plot of the difference between successive estimates of template c in the \'results\' folder (default: False).')
 
     args = parser.parse_args()
@@ -73,6 +71,9 @@ if __name__ == '__main__':
 
     if args.stop_threshold is None:
         args.stop_threshold = 1e-3  # TODO Try 1e-2/1e-3
+
+    if args.prob_r_b_in_c1 is None:
+        args.prob_r_b_in_c1 = 0.5
 
     if args.interpolate == 'True':
         args.interpolate = True
