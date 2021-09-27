@@ -9,7 +9,7 @@
 Many aspects of **JPEG compression** have been successfully employed in
 the domain of photo forensics. In particular, artifacts introduced by the choice of the rounding operator used to quantize the DCT coefficients can be used to localize tampering and identify specific encoders.
 
-Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this work aims to provide a Python implementation of an **expectation maximization (EM) algorithm** to **localize inconsistencies** in these artifacts that arise from a variety of **image manipulations**. The resulting output map is computed as described in [\[2\]](https://doi.org/10.1109/WIFS.2017.8267641). Tests and results generated using photos from a Canon EOS 5D Mark II camera, kindly provided by Andrea Mancini [\[3\]](https://www.biso.it/).
+Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this work aims to provide a Python implementation of an **expectation maximization (EM) algorithm** to **localize inconsistencies** in these artifacts that arise from a variety of **image manipulations**. The resulting output map is computed as described in [\[2\]](https://doi.org/10.1109/WIFS.2017.8267641). Tests and results generated using 43 photos from a Canon EOS 5D Mark II camera, kindly provided by Andrea Mancini [\[3\]](https://www.biso.it/).
 
 *Based on a paper by S. Agarwal and H. Farid (see [\[1\]](https://doi.org/10.1145/3369412.3395059)).
 
@@ -33,7 +33,7 @@ Optional arguments:
 
 Example call with optional arguments:
 ```
-python3 "images/my_photo.jpg" --win_size=256 --stop_threshold=1e-2 --save=True
+python3 main.py "images/my_photo.jpg" --win_size=256 --stop_threshold=1e-2 --save=True
 ```
 
 ### Requirements

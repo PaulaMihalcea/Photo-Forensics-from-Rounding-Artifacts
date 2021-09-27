@@ -37,6 +37,14 @@ def get_subfolder(img_path, win_size, stop_threshold):
     return res_path
 
 
+# Output map thresholding & normalization
+def threshold_output_map(output_map):
+    output_map_norm = np.where(output_map > 0.8, 1, 0).astype(np.uint8)  # Thresholding; pixels with probability of being manipulated lower than 80% are masked
+    output_map_norm = cv2.normalize(output_map_norm, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)  # Normalization
+
+    return output_map_norm
+
+
 # Get output map
 def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=False, img_path=None, win_size=None, stop_threshold=None, interpolate=False):
 
@@ -65,8 +73,7 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=Fa
     # plt.show()
 
     # Thresholding & normalization
-    output_map_norm = np.where(output_map > 0.8, 1, 0).astype(np.uint8)
-    output_map_norm = cv2.normalize(output_map_norm, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)  # Normalize output map before saving
+    output_map_norm = threshold_output_map(output_map)
 
     # Show output map and/or save it to disk if requested
     filename, extension = get_filename(img_path)

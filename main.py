@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from preprocessing import get_windows, load_image, luminance, mfr
 from em import expectation_maximization
 from postprocessing import get_output_map, get_template_difference_plot
-from results import get_roc_auc
+from results import get_roc_auc, plot_roc
 
 
 def main(args):
@@ -46,10 +46,10 @@ def main(args):
     print('Elapsed time: ' + str('{:.2f}'.format(end - start)) + ' s.')
 
     # Compute ROC curve and AUC score
-    #fpr, tpr, auc = get_roc_auc(args.img_path, output_map)  # TODO
-    fpr, tpr, auc = None, None, None
+    fpr, tpr, auc = get_roc_auc(args.img_path, output_map)
+    plot_roc(fpr, tpr, auc)
 
-    return fpr, tpr, auc
+    return output_map
 
 
 if __name__ == '__main__':
