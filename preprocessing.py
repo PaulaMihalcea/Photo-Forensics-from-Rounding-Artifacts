@@ -1,17 +1,6 @@
 import cv2
 import numpy as np
-
-
-# Load image
-def load_image(img):
-    # Load image
-    img = cv2.imread(img)
-
-    # Check image correctness
-    if img is not None:
-        return img
-    else:
-        raise IOError('Error while loading image: invalid image file or image file path.')
+from utils import get_image_size
 
 
 # RGB to YCbCr conversion & luminance channel extraction
@@ -33,18 +22,6 @@ def mfr(img, size):
     return residual
 
 
-# Get image size (regardless of number of channels)
-def get_image_size(img):
-    if len(img.shape) == 3:
-        img_h, img_w, _ = img.shape
-    elif len(img.shape) == 2:
-        img_h, img_w = img.shape
-    else:
-        raise RuntimeError('Incorrect input image shape.')
-
-    return img_h, img_w
-
-
 # Adjust image size (uses padding; for square window partitioning)
 def adjust_size(img, win_size, stride):
     # Check image size and add padding if needed
@@ -62,7 +39,7 @@ def adjust_size(img, win_size, stride):
 # Calculate overlapping windows of given size (extracted with given stride; non-overlapping if stride is zero)
 # and return their average block
 # along with their starting coordinates and ID in order to map them to each pixel (for postprocessing)
-def get_windows(img, win_size, stride, block_size):
+def get_average_window_blocks(img, win_size, stride, block_size):
     # Adjust image size
     img = adjust_size(img, win_size, stride)
     img_h, img_w = get_image_size(img)
@@ -86,7 +63,7 @@ def get_windows(img, win_size, stride, block_size):
     for i in y:
         for j in x:
             # Get current window blocks
-            current_window_blocks = get_blocks(img[i:i + win_size, j:j + win_size], block_size)
+            current_window_blocks = get_non_overlapping_blocks(img[i:i + win_size, j:j + win_size], block_size)
 
             # Calculate average block for the current window
             sum_block = np.sum(current_window_blocks, axis=0)
@@ -104,7 +81,7 @@ def get_windows(img, win_size, stride, block_size):
 
 
 # Non-overlapping blocks of given size
-def get_blocks(window, block_size):
+def get_non_overlapping_blocks(window, block_size):
     # Calculate starting coordinates for each window (top left pixel)
     x = []
     y = []
