@@ -13,6 +13,19 @@ Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this
 
 *Based on a research by S. Agarwal and H. Farid (see [\[1\]](https://doi.org/10.1145/3369412.3395059)).
 
+## Contents
+1. [Installation](#installation)
+    - [Requirements](#requirements)
+2. [Usage](#usage)
+    - [Main script](#main-script)
+    - [Manipulation script](#manipulation-script)
+    - [Results script](#results-script)
+    - [Variables test](#variables-test)
+3. [Technical details](#technical-details)
+    - [Testing](#testing)
+4. [Bibliography](#biblipgraphy)
+5. [License](#license)
+
 ## Installation
 
 Being a Python 3 application, this script has a few basic requirements in order to be up and running. In order to install them, the [`pip`](https://packaging.python.org/key_projects/#pip "pip") package installer is recommended, as it allows for the automatic installation of all requirements. Nonetheless, the latter have been listed in order to simplify an eventual manual installation.
@@ -48,10 +61,9 @@ The following Python packages are required in order to run this program. Please 
 | [time](https://docs.python.org/3/library/time.html) | _latest_ |
 | [tqdm](https://github.com/tqdm/tqdm) | _latest_ |
 
-### Testing
-This project has been written and tested using [Python 3.8](https://www.python.org/downloads/release/python-380/) on a Windows 10 Pro machine.
-
 ## Usage
+
+### Main script
 
 Run from a terminal specifying the path to the image to be analyzed, as follows:
 
@@ -63,7 +75,7 @@ Optional arguments:
 - `--win_size`: window size in pixel (default: `256`). Note: must be a multiple of 8.
 - `--stop_threshold`: expectation-maximization algorithm stop threshold (default: `1e-3`);
 - `--prob_r_b_in_c1`: expectation-maximization algorithm probability of _r_ conditioned by _b_ belonging to _C<sub>1</sub>_ (default: `0.5`);
-- `--interpolate`: interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm, using the function from [\[4\]](https://stackoverflow.com/a/68558547) (default: `False`). _Warning: slows down the program significantly_;
+- `--interpolate`: interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm, using the function from [\[4\]](https://stackoverflow.com/a/68558547), otherwise replace them with `0.5` (default: `False`). _Warning: slows down the program significantly_;
 - `--sh`: show the resulting output map (default: `False`);
 - `--sv`: save the resulting output map in the `results` folder (default: `False`);
 - `--sh_diff_plot`: show the plot of the difference between successive estimates of template _c_ (default: `False`);
@@ -74,6 +86,25 @@ Example call with optional arguments:
 python3 main.py "images/my_photo.jpg" --win_size=256 --stop_threshold=1e-2 --save=True
 ```
 
+### Manipulation script
+
+TODO
+
+### Results script
+
+TODO
+
+### Variables test
+
+TODO
+
+## Technical details
+
+TODO
+
+### Testing
+This project has been written and tested using [Python 3.8](https://www.python.org/downloads/release/python-380/) on a Windows 10 Pro machine.
+
 ## Bibliography
 [\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114. DOI:[https://doi.org/10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)
 
@@ -81,7 +112,7 @@ python3 main.py "images/my_photo.jpg" --win_size=256 --stop_threshold=1e-2 --sav
 
 [\[3\]](https://www.biso.it/) Andrea Mancini, UX Designer fixed with www -  [biso.it](https://www.biso.it/)
 
-[\[4\]](https://stackoverflow.com/a/68558547) Sam De Meyer, **Answer to [interpolate missing values 2d python](https://stackoverflow.com/questions/37662180/interpolate-missing-values-2d-python)**, 2021
+[\[4\]](https://stackoverflow.com/a/68558547) Sam De Meyer, **[interpolate missing values 2d python](https://stackoverflow.com/questions/37662180/interpolate-missing-values-2d-python)**, 2021
 
 ## License
-This work is licensed under a [Creative Commons “Attribution-NonCommercial-ShareAlike 4.0 International”](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) license. More details are available in the [LICENSE](./LICENSE) file.
+This work is licensed under a [Creative Commons “Attribution-NonCommercial-ShareAlike 4.0 International”](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) license. More details are available in the [LICENSE](./LICENSE) file. All rights reserved to the original paper's authors. 

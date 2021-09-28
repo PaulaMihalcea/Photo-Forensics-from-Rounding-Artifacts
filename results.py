@@ -3,5 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from manipulation import median_filter
 
+# TODO (everything)
 img_path = 'ciao'
 img_median = median_filter(img_path, 3)

@@ -102,7 +102,7 @@ if __name__ == '__main__':
         args.win_size = 256
 
     if args.stop_threshold is None:
-        args.stop_threshold = 1e-3  # TODO Try 1e-2/1e-3
+        args.stop_threshold = 1e-3
 
     if args.prob_r_b_in_c1 is None:
         args.prob_r_b_in_c1 = 0.5

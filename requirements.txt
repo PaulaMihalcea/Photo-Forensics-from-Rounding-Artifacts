@@ -1,0 +1,14 @@
+argparse
+cv2
+decimal
+matplotlib
+numpy
+os
+pillow
+python~=3.0
+random
+scipy
+sklearn
+sys
+time
+tqdm

@@ -94,8 +94,6 @@ def get_roc_auc(img_path, output_map):
         img_ground_truth = img_ground_truth.flatten()
         output_map = output_map.flatten()
 
-        print('inf:', np.isinf(img_ground_truth).any(), 'nan:', np.isnan(img_ground_truth).any())  # TODO
-
         # ROC curve
         fpr, tpr, _ = roc_curve(img_ground_truth, output_map)
 
