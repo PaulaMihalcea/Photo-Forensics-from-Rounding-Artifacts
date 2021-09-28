@@ -37,7 +37,8 @@ def main(args):
     for file in file_list:
         # Parameters
         img_path = args.dir_path + file
-        filename, _ = get_filename(img_path)
+        filename, extension = get_filename(img_path)
+        progress_bar.set_description('Processing image {}'.format(filename) + '.{}'.format(extension))
 
         # Create subfolders
         if not os.path.exists(args.dir_path + '/manip_jpeg/'):

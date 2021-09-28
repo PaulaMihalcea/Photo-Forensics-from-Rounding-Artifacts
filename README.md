@@ -28,7 +28,7 @@ Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this
 
 ## Installation
 
-Being a Python 3 application, this script has a few basic requirements in order to be up and running. In order to install them, the [`pip`](https://packaging.python.org/key_projects/#pip "pip") package installer is recommended, as it allows for the automatic installation of all requirements. Nonetheless, the latter have been listed in order to simplify an eventual manual installation.
+As a Python 3 application, this project has a few basic requirements in order to be up and running. In order to install them, the [`pip`](https://packaging.python.org/key_projects/#pip "pip") package installer is recommended, as it allows for the automatic installation of all requirements. Nonetheless, the latter have been listed in order to simplify an eventual manual installation.
 
 It is assumed that Python 3 is already installed on the desired system.
 
@@ -88,7 +88,24 @@ python3 main.py "images/my_photo.jpg" --win_size=256 --stop_threshold=1e-2 --sav
 
 ### Manipulation script
 
-TODO
+This script generates **manipulated images** and their respective **ground truth masks** from a given directory (`path/to/images/`) in three specific subdirectories (`path/to/images/manip_jpeg`, `path/to/images/manip_png` and `path/to/images/manip_gt`), as described in [\[1\]](https://doi.org/10.1145/3369412.3395059).
+
+Specifically, for every original image the script generates **80 manipulated images** (ground truth masks excluded), one for each:
+
+- manipulation type:
+  - **copy-move**;
+  - **median filter**: 3x3 OpenCV median filter;
+  - **rotation**: random rotation of 10 to 80 degrees;
+  - **content-aware fill**: OpenCV `inpaint()` function [\[5\]](https://docs.opencv.org/4.5.2/d7/d8b/group__photo__inpaint.html) with Telea method [\[6\]](https://doi.org/10.1080/10867651.2004.10487596);
+- **region size**: 512 px, 256 px, 128 px and 64 px;
+- **JPEG quality**: a random quality chosen from each of the ranges \[60, 70\], \[71, 80\], \[81, 90\] and \[91, 100\];
+- **save format**: PNG and JPEG (OpenCV `imwrite()` function [\[7\]](https://docs.opencv.org/4.5.2/d4/da8/group__imgcodecs.html#gabbc7ef1aa2edfaa87772f1202d67e0ce)).
+
+The script can be run with:
+
+```
+python3 manipulate.py "path/to/images/"
+```
 
 ### Results script
 
@@ -106,13 +123,19 @@ TODO
 This project has been written and tested using [Python 3.8](https://www.python.org/downloads/release/python-380/) on a Windows 10 Pro machine.
 
 ## Bibliography
-[\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114. DOI:[https://doi.org/10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)
+[\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114, DOI:[10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)
 
-[\[2\]](https://doi.org/10.1109/WIFS.2017.8267641) Shruti Agarwal and Hany Farid. 2017. **Photo Forensics from JPEG Dimples.** 2017 IEEE Workshop on Information Forensics and Security (WIFS), pp. 1-6, DOI:[https://doi.org/10.1109/WIFS.2017.8267641](https://doi.org/10.1109/WIFS.2017.8267641)
+[\[2\]](https://doi.org/10.1109/WIFS.2017.8267641) Shruti Agarwal and Hany Farid. 2017. **Photo Forensics from JPEG Dimples.** 2017 IEEE Workshop on Information Forensics and Security (WIFS), pp. 1-6, DOI:[10.1109/WIFS.2017.8267641](https://doi.org/10.1109/WIFS.2017.8267641)
 
 [\[3\]](https://www.biso.it/) Andrea Mancini, UX Designer fixed with www -  [biso.it](https://www.biso.it/)
 
 [\[4\]](https://stackoverflow.com/a/68558547) Sam De Meyer, **[interpolate missing values 2d python](https://stackoverflow.com/questions/37662180/interpolate-missing-values-2d-python)**, 2021
+
+[\[5\]](https://docs.opencv.org/4.5.2/d7/d8b/group__photo__inpaint.html) OpenCV, **Inpainting**, OpenCV Documentation
+
+[\[6\]](https://doi.org/10.1080/10867651.2004.10487596) Alexandru Telea, **An image inpainting technique based on the fast marching method**, Journal of graphics tools, 9(1):23–34, 2004, DOI:[10.1080/10867651.2004.10487596](https://doi.org/10.1080/10867651.2004.10487596)
+
+[\[7\]](https://docs.opencv.org/4.5.2/d4/da8/group__imgcodecs.html#gabbc7ef1aa2edfaa87772f1202d67e0ce) OpenCV, **imwrite()**, OpenCV Documentation
 
 ## License
 This work is licensed under a [Creative Commons “Attribution-NonCommercial-ShareAlike 4.0 International”](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) license. More details are available in the [LICENSE](./LICENSE) file. All rights reserved to the original paper's authors. 

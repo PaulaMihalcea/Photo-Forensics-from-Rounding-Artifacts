@@ -98,7 +98,10 @@ def get_roc_auc(img_path, output_map):
         fpr, tpr, _ = roc_curve(img_ground_truth, output_map)
 
         # AUC score
-        auc = roc_auc_score(img_ground_truth, output_map)
+        try:
+            auc = roc_auc_score(img_ground_truth, output_map)
+        except:
+            auc = None
 
         return fpr, tpr, auc
 

@@ -5,6 +5,7 @@ import sys
 import tqdm
 from argparse import Namespace
 from main import main
+from utils import get_filename
 
 # Setup
 args = Namespace()
@@ -17,12 +18,22 @@ args.show_diff_plot = False
 args.save_diff_plot = False
 
 dir_path = 'img/manip_png/'  # Directory containing images; must end with a slash to avoid errors ("/")
-n = 1  # Number of images to be tested
 
 # Array of values to be tried
+
+# Original values, for powerful machines only
+'''
+n = 10  # Number of images to be tested
 win_sizes = [64, 128, 256]
 stop_thresholds = np.array([1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10])
 probs_r_b_in_c1 = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
+'''
+
+# Less values, for less powerful machines (~2 minutes per image)
+n = 1  # Number of images to be tested
+win_sizes = [64, 128, 256]
+stop_thresholds = np.array([1e-2, 1e-3, 1e-4])
+probs_r_b_in_c1 = np.array([0.1, 0.3, 0.5, 0.7, 0.9])
 
 # File list
 valid_extensions = ['.jpeg', '.jpg', '.jpe', '.jfif', '.jif', '.png']
@@ -37,6 +48,8 @@ progress_bar = tqdm.tqdm(total=len(win_sizes)*len(stop_thresholds)*len(probs_r_b
 # sys.stdout = open(os.devnull, 'w')  # Suppress calls to print(); for debug purposes only
 
 for i in imgs:
+    progress_bar.set_description('Processing image {}'.format(get_filename(i)[0] + '.{}'.format(get_filename(i)[1])))
+
     for ws in win_sizes:
         for st in stop_thresholds:
             for p in probs_r_b_in_c1:
