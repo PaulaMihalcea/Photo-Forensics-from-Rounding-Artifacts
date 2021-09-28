@@ -13,8 +13,7 @@ def main(args):
     print('Photo Forensics from Rounding Artifacts: Python implementation')
     print('Author: Paula Mihalcea')
     print('Version: 1.0')
-    print('Based on a research by S. Agarwal and H. Farid.')
-    print('Details & source code at https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts.')
+    print('Based on a research by S. Agarwal and H. Farid. Details & source code at https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts.')
     print()
 
     progress_bar = tqdm.tqdm(total=100)
@@ -81,7 +80,7 @@ def main(args):
 if __name__ == '__main__':
 
     # Initialize parser
-    parser = ArgumentParser(description='Main script for the "Photo Forensics from Rounding Artifacts" project.')
+    parser = ArgumentParser(description='Main script for the "Photo Forensics from Rounding Artifacts" project. Detects manipulated areas in JPEG images containing rounding artifacts as described in the referenced paper.')
 
     # Add parser arguments
     parser.add_argument('img_path', help='Path of the image to be analyzed.')

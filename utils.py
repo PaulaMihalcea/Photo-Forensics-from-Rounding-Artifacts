@@ -6,11 +6,11 @@ from decimal import Decimal
 # Load image
 def load_image(img_path, raise_IO=True):
     # Load image
-    img_path = cv2.imread(img_path)
+    img = cv2.imread(img_path)
 
     # Check image correctness
-    if img_path is not None:
-        return img_path
+    if img is not None:
+        return img
     elif raise_IO:
         raise IOError('Error while loading image: invalid image file or image file path.')
     else:
@@ -45,20 +45,20 @@ def get_filename(file_path):
     return filename, extension
 
 
-# TODO put gt in separate folder
 # Ground truth image path generator (from original image path)
 def get_img_ground_truth_path(img_path):
 
-    img_name = img_path.split('/')[-1]
+    filename, extension = get_filename(img_path)
+    if '_q' in filename and extension in ['jpg','jpeg', 'jpe', 'jfif', 'jif']:  # Exclude JPEG quality from filename in case of JPEG file with specified quality
+        filename = filename.split('_')[:-1]
 
-    img_ground_truth_name = img_name.split('.')
-    img_ground_truth_name = img_ground_truth_name[0] + '_gt.' + img_ground_truth_name[1]
+    img_ground_truth_name = filename + '_gt.' + extension
 
     img_ground_truth_path = ''
     for el in img_path.split('/')[:-1]:
         img_ground_truth_path += '/' + el
 
-    img_ground_truth_path += '/' + img_ground_truth_name
+    img_ground_truth_path += '/manip_gt/' + img_ground_truth_name
     img_ground_truth_path = img_ground_truth_path[1:]
 
     return img_ground_truth_path
