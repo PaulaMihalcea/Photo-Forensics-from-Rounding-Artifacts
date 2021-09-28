@@ -21,7 +21,6 @@ Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this
     - [Main](#main)
     - [Manipulation](#manipulation)
     - [Results](#results)
-    - [Unknown parameters](#unknown-parameters)
 3. [Bibliography](#bibliography)
 4. [License](#license)
 
@@ -112,18 +111,6 @@ python3 manipulate.py "path/to/images/"
 ### Results
 
 TODO
-
-### Unknown parameters
-
-The `find_unknown_parameters.py` script has been used to determine the best unknown parameters, namely  the EM algorithm stop threshold and P(r<sub>i</sub> | **b**<sub>i</sub> in C<sub>1</sub>). It analyzes a random set of _n_ images from a specified folder using all possible combinations of the following configurations:
-
-- stop thresholds: 1e-2, 1e-3, 1e-4;
-- P(r<sub>i</sub> | **b**<sub>i</sub> in C<sub>1</sub>): 0.1, 0.3, 0.5, 0.7, 0.9.
-
-Although a small number of images has been used because of the overall long computational time required by the main script, it has been deemed that the best default parameters are:
-
-- `stop_threshold = 1e-2`;
-- `prob_r_b_in_c1 = 0.3`.
 
 ## Bibliography
 [\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114, DOI:[10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)
