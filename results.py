@@ -42,8 +42,8 @@ if save:
     args.interpolate = False
     args.show = False
     args.save = False
-    args.show_roc_plot = True
-    args.save_roc_plot = True
+    args.show_roc_plot = False
+    args.save_roc_plot = False
     args.show_diff_plot = False
     args.save_diff_plot = False
 
@@ -79,6 +79,14 @@ if save:
 
         # Append results
         results_jpeg.append([win_size, get_manip_id(manip), quality, auc])
+        if not fpr_jpeg:
+            fpr_jpeg = fpr
+        else:
+            fpr_jpeg += fpr
+        if not tpr_jpeg:
+            tpr_jpeg = tpr
+        else:
+            tpr_jpeg += tpr
 
         # Update progress bar (again)
         progress_bar.update(1)
@@ -88,7 +96,7 @@ if save:
         # Image information
         args.img_path = i
         filename, extension = get_filename(i)
-        win_size, manip, _ = get_image_info(filename, extension)
+        win_size, manip, _ = get_image_info(filename, '.' + extension)
 
         # Update progress bar
         progress_bar.set_description('Processing image {}'.format(filename + '.{}'.format(extension)))
@@ -98,8 +106,14 @@ if save:
 
         # Append results
         results_png.append([win_size, get_manip_id(manip), -1, auc])
-        fpr_png += fpr
-        tpr_png += tpr
+        if not fpr_png:
+            fpr_png = fpr
+        else:
+            fpr_png += fpr
+        if not tpr_png:
+            tpr_png = tpr
+        else:
+            tpr_png += tpr
 
         # Update progress bar (again)
         progress_bar.update(1)
@@ -127,12 +141,12 @@ if save:
 
 # Load results
 else:
-    results_jpeg = np.load(results_jpeg_path)
-    fpr_jpeg = np.load(fpr_jpeg_path)
-    tpr_jpeg = np.load(tpr_jpeg_path)
-    results_png = np.load(results_png_path)
-    fpr_png = np.load(fpr_png_path)
-    tpr_png = np.load(tpr_png_path)
+    results_jpeg = np.load('results/' + results_jpeg_path)
+    fpr_jpeg = np.load('results/' + fpr_jpeg_path)
+    tpr_jpeg = np.load('results/' + tpr_jpeg_path)
+    results_png = np.load('results/' + results_png_path)
+    fpr_png = np.load('results/' + fpr_png_path)
+    tpr_png = np.load('results/' + tpr_png_path)
 
 # ROC curve for all images
 mean_auc_512 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 512, 3], np.mean(results_png[results_png[:, 0] == 512, 3])])])
@@ -145,4 +159,18 @@ tpr_jpeg = tpr_jpeg / len(jpeg_file_list)
 fpr_png = fpr_png / len(png_file_list)
 tpr_png = tpr_png / len(png_file_list)
 
-plot_roc((fpr_jpeg + fpr_png) / 2, (tpr_jpeg + tpr_png) / 2, [mean_auc_512, mean_auc_256, mean_auc_128, mean_auc_64], False, True)
+# Make sure that arrays are the same length
+if len(fpr_jpeg) < len(fpr_png):
+    fpr_sum = np.zeros(len(fpr_png))
+    fpr_sum[:len(fpr_jpeg)] += fpr_jpeg
+else:
+    fpr_sum = np.zeros(len(fpr_jpeg))
+    fpr_sum[:len(fpr_png)] += fpr_png
+if len(tpr_jpeg) < len(tpr_png):
+    tpr_sum = np.zeros(len(tpr_png))
+    tpr_sum[:len(tpr_jpeg)] += tpr_jpeg
+else:
+    tpr_sum = np.zeros(len(tpr_jpeg))
+    tpr_sum[:len(tpr_png)] += tpr_png
+
+plot_roc(fpr_sum / 2, tpr_sum / 2, np.asarray([mean_auc_512, mean_auc_256, mean_auc_128, mean_auc_64]), show=False, save=True)

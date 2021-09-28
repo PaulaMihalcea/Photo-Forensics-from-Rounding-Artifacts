@@ -57,19 +57,20 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=Fa
 # Plot difference between successive estimates of template c
 def get_template_difference_plot(diff_history, show=False, save=False, img_path=None, win_size=None, stop_threshold=None):
 
-    # Create plot
-    plt.plot(diff_history)
-    plt.xlabel('EM iteration')
-    plt.xticks(range(0, len(diff_history)))
-    plt.ylabel('Average of the difference matrix between successive estimates of c')
+    if show or save:
+        # Create plot
+        plt.plot(diff_history)
+        plt.xlabel('EM iteration')
+        plt.xticks(range(0, len(diff_history)))
+        plt.ylabel('Average of the difference matrix between successive estimates of c')
 
-    # Save plot to disk (if requested, otherwise just show it)
-    if save:
-        filename, extension = get_filename(img_path)
-        res_path = get_subfolder(img_path, win_size, stop_threshold)
-        plt.savefig(res_path + '/' + filename + '_c_diff_plot.png')
-    if show:
-        plt.show()
+        # Save plot to disk (if requested, otherwise just show it)
+        if save:
+            filename, extension = get_filename(img_path)
+            res_path = get_subfolder(img_path, win_size, stop_threshold)
+            plt.savefig(res_path + '/' + filename + '_c_diff_plot.png')
+        if show:
+            plt.show()
 
     return
 
@@ -111,7 +112,12 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
     tpr = tpr * 100
 
     # Base plot
-    display = RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=auc)
+    if not isinstance(auc, np.ndarray):
+        auc_mean = auc
+    else:
+        auc_mean = np.mean(auc)
+
+    display = RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=auc_mean)
     display.plot()
 
     # Plot display options
@@ -123,7 +129,7 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
     # Axes labels
     plt.xlabel('False Positive (%)'
                '\n\n'
-               'AUC score: {:.2f}'.format(auc), fontname='Chapman-Regular', fontsize=13, labelpad=15)
+               'AUC score: {:.2f}'.format(auc_mean), fontname='Chapman-Regular', fontsize=13, labelpad=15)
     plt.ylabel('True Positive (%)', fontname='Chapman-Regular', fontsize=13)
     plt.tight_layout()
 
@@ -161,7 +167,7 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
 
     plt.legend(edgecolor='black', fancybox=False, prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1, handles=[line])
 
-    if len(auc) == 4:
+    if isinstance(auc, np.ndarray):
         plt.legend(edgecolor='black', fancybox=False, prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1,
                    handles=[mlines.Line2D([], [], color='red', linestyle='dotted', linewidth=1, label='512'),
                             mlines.Line2D([], [], color='green', linestyle='dashed', linewidth=1, label='256'),
@@ -169,11 +175,17 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
                             mlines.Line2D([], [], color='black', linestyle='solid', linewidth=1, label='64')])
 
     # Show plot and/or save it to disk if requested
-    filename, extension = get_filename(img_path)
+    if img_path != '':
+        filename, _ = get_filename(img_path)
+    else:
+        filename = 'results'
     if show:
         plt.show()
     if save:
-        res_path = get_subfolder(img_path, win_size, stop_threshold)
+        if img_path != '':
+            res_path = get_subfolder(img_path, win_size, stop_threshold)
+        else:
+            res_path = 'results'
         plt.savefig(res_path + '/' + filename + '_roc_plot.png')
 
     return

@@ -52,7 +52,6 @@ The following Python packages are required in order to run this program. Please 
 | [OpenCV](https://opencv.org/) | _latest_ |
 | [os](https://docs.python.org/3/library/os.html) | _latest_ |
 | [Pillow](https://pillow.readthedocs.io/en/stable/) | 8.2.0 |
-| [PyQt5](https://pypi.org/project/PyQt5/) | 5.9.2 |
 | [random](https://docs.python.org/3/library/random.html) | _latest_ |
 | [scikit-learn](https://scikit-learn.org/stable/) | _latest_ |
 | [SciPy](https://www.scipy.org/) | _latest_ |

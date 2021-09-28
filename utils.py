@@ -51,7 +51,7 @@ def get_image_info(filename, extension):
     el = filename.split('_')
 
     # Extract information
-    if extension == '.png':
+    if extension in ['.png']:
         quality = None
         win_size = int(el[-1])
         manip = el[-2]
