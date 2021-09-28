@@ -100,7 +100,7 @@ def get_roc_auc(img_path, output_map):
         try:
             auc = roc_auc_score(img_ground_truth, output_map)
         except:
-            auc = None
+            auc = 0
 
         return fpr, tpr, auc
 

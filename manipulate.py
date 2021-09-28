@@ -29,7 +29,7 @@ def main(args):
     progress_bar = tqdm.tqdm(total=len(file_list)*4*4*5)
 
     # Parameters
-    manipulations = ['copy_move', 'median_filter', 'rotation', 'content_aware_fill']  # Manipulation type
+    manipulations = ['copy-move', 'median-filter', 'rotation', 'content-aware-fill']  # Manipulation type
     roi_sizes = [512, 256, 128, 64]  # Manipulated region (ROI) size
     jpeg_qualities = [(60, 70), (71, 80), (81, 90), (91, 100)]
 
@@ -105,11 +105,11 @@ def manipulate_image(img_path, manipulation, roi_size):
 
     # Apply manipulation
     # Copy-move
-    if manipulation == 'copy_move':
+    if manipulation == 'copy-move':
         manip_img = copy_move(img, roi)
 
     # Median filter
-    elif manipulation == 'median_filter':
+    elif manipulation == 'median-filter':
         manip_img = median_filter(img, roi)
 
     # Rotation
@@ -117,11 +117,11 @@ def manipulate_image(img_path, manipulation, roi_size):
         manip_img = rotate(img_path, roi)
 
     # Content-aware fill
-    elif manipulation == 'content_aware_fill':
+    elif manipulation == 'content-aware-fill':
         manip_img = content_aware_fill(img, ground_truth)
 
     else:
-        raise ValueError('Invalid manipulation method. Possible values: "copy_move", "median_filter", "rotation", "content_aware_fill".')
+        raise ValueError('Invalid manipulation method. Possible values: "copy-move", "median-filter", "rotation", "content-aware-fill".')
 
     return manip_img, ground_truth
 

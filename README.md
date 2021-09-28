@@ -77,7 +77,7 @@ Optional arguments:
 - `--stop_threshold`: expectation-maximization algorithm stop threshold (default: `1e-2`);
 - `--prob_r_b_in_c1`: expectation-maximization algorithm probability of _r_ conditioned by _b_ belonging to _C<sub>1</sub>_ (default: `0.3`);
 - `--interpolate`: interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm, using the function from [\[4\]](https://stackoverflow.com/a/68558547), otherwise replace them with `0.5` (default: `False`). _Warning: slows down the program significantly_;
-- `--sh`: show the resulting output map (default: `False`);
+- `--sh`: show the resulting output map (default: `True`);
 - `--sv`: save the resulting output map in the `results` folder (default: `False`);
 - `--sh_diff_plot`: show the plot of the difference between successive estimates of template _c_ (default: `False`);
 - `--sv_diff_plot`: save the plot of the difference between successive estimates of template _c_ in the `results` folder (default: `False`).

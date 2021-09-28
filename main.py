@@ -54,7 +54,7 @@ def main(args):
     # Compute ROC curve and AUC score
     progress_bar.set_description('Computing AUC score')
     fpr, tpr, auc = get_roc_auc(args.img_path, output_map)
-    if auc is not None:
+    if (args.shroc or args.svroc) and auc != 0:
         plot_roc(fpr, tpr, auc, args.show_roc_plot, args.save_roc_plot, args.img_path, args.win_size, args.stop_threshold)
     progress_bar.update(5)
 
@@ -74,7 +74,7 @@ def main(args):
     else:
         print('Elapsed time: {:.2f} s.'.format(end - start))
 
-    return output_map, auc
+    return output_map, auc, fpr, tpr
 
 
 if __name__ == '__main__':
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     parser.add_argument('-st', '--stop_threshold', type=float, help='Expectation-maximization algorithm stop threshold (default: 1e-2).')
     parser.add_argument('-prob', '--prob_r_b_in_c1', type=float, help='Expectation-maximization algorithm probability of r conditioned by b belonging to C_1 (default: 0.3).')
     parser.add_argument('-int', '--interpolate', type=float, help='Interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm (default: False). Warning: slows down the program significantly.')
-    parser.add_argument('-sh', '--show', help='Show the resulting output map (default: False).')
+    parser.add_argument('-sh', '--show', help='Show the resulting output map (default: True).')
     parser.add_argument('-sv', '--save', help='Save the resulting output map in the \'results\' folder (default: False).')
     parser.add_argument('-shroc', '--show_roc_plot', help='Show the plot of the ROC curve (default: False).')
     parser.add_argument('-svroc', '--save_roc_plot', help='Save the plot of the ROC curve in the \'results\' folder (default: False).')
@@ -112,10 +112,10 @@ if __name__ == '__main__':
     else:
         args.interpolate = False
 
-    if args.show == 'True':
-        args.show = True
-    else:
+    if args.show == 'False':
         args.show = False
+    else:
+        args.show = True
 
     if args.save == 'True':
         args.save = True
