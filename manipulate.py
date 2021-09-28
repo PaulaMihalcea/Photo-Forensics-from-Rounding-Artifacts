@@ -58,10 +58,11 @@ def main(args):
                 else:  # Save the manipulated image in 5 different formats...
                     for q in jpeg_qualities:  # ...JPEG with Q = [60, 70], JPEG with Q = [71, 80], JPEG with Q = [81, 90], JPEG with Q = [91, 100]...
                         quality = random.randint(q[0], q[1])  # For each range of JPEG qualities, a random JPEG quality is chosen in the specified range
-                        cv2.imwrite(args.dir_path + '/manip_jpeg/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_{}'.format(quality) + '.jpeg', manip_image,[int(cv2.IMWRITE_JPEG_QUALITY), quality])  # JPEG
+                        cv2.imwrite(args.dir_path + '/manip_jpeg/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_{}'.format(quality) + '.jpeg', manip_image, [int(cv2.IMWRITE_JPEG_QUALITY), quality])  # JPEG
+                        cv2.imwrite(args.dir_path + '/manip_jpeg/manip_gt/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_gt' + '.png', ground_truth)  # Ground truth (PNG only)
 
-                cv2.imwrite(args.dir_path + '/manip_png/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '.png',manip_image)  # ...and PNG
-                cv2.imwrite(args.dir_path + '/manip_gt/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_gt' + '.png', ground_truth)  # Ground truth (PNG only)
+                cv2.imwrite(args.dir_path + '/manip_png/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '.png', manip_image)  # ...and PNG
+                cv2.imwrite(args.dir_path + '/manip_png/manip_gt/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_gt' + '.png', ground_truth)  # Ground truth
 
                 # Progress bar update
                 progress_bar.update(5)
