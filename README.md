@@ -110,7 +110,7 @@ python3 manipulate.py "path/to/images/"
 
 ### Results
 
-This script generates the plots shown in figures 6 and 7 of [\[1\]](https://doi.org/10.1145/3369412.3395059) (except for figure 7(d), since multiple cameras were unavailable) using the 
+This script generates the plots shown in figures 6 and 7 of [\[1\]](https://doi.org/10.1145/3369412.3395059) (except for figure _7(d)_, since multiple cameras were unavailable) using images manipulated as explained in the same paper.
 
 ## Bibliography
 [\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114, DOI:[10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)

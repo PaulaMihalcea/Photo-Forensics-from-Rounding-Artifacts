@@ -114,8 +114,10 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
     # Base plot
     if not isinstance(auc, np.ndarray):
         auc_mean = auc
+        auc_label = auc
     else:
         auc_mean = np.mean(auc)
+        auc_label = str(auc[0])[:4] + ' (512) , ' + str(auc[1])[:4] + ' (256), ' + str(auc[2])[:4] + ' (128), ' + str(auc[3])[:4] + ' (64)'
 
     display = RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=auc_mean)
     display.plot()
@@ -129,7 +131,7 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
     # Axes labels
     plt.xlabel('False Positive (%)'
                '\n\n'
-               'AUC score: {:.2f}'.format(auc_mean), fontname='Chapman-Regular', fontsize=13, labelpad=15)
+               'AUC score: {}'.format(auc_label), fontname='Chapman-Regular', fontsize=13, labelpad=15)
     plt.ylabel('True Positive (%)', fontname='Chapman-Regular', fontsize=13)
     plt.tight_layout()
 
@@ -139,6 +141,7 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
     plt.tick_params(direction='in', top=True, right=True)
 
     # Legend
+
     if win_size == 512:
         line = mlines.Line2D([], [], color='red', linestyle='dotted', linewidth=1, label=str(win_size))
         plt.gca().lines[0].set_color('red')
@@ -165,10 +168,11 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
         plt.gca().lines[0].set_linestyle('solid')
         plt.gca().lines[0].set_linewidth(1)
 
-    plt.legend(edgecolor='black', fancybox=False, prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1, handles=[line])
+    if not isinstance(auc, np.ndarray):
+        plt.legend(edgecolor='black', fancybox=False, prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1, handles=[line])
 
-    if isinstance(auc, np.ndarray):
-        plt.legend(edgecolor='black', fancybox=False, prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1,
+    else:
+        plt.legend(edgecolor='black', fancybox=False, loc='lower right', prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1,
                    handles=[mlines.Line2D([], [], color='red', linestyle='dotted', linewidth=1, label='512'),
                             mlines.Line2D([], [], color='green', linestyle='dashed', linewidth=1, label='256'),
                             mlines.Line2D([], [], color='blue', linestyle=(0, (3, 1, 1, 1)), linewidth=1, label='128'),

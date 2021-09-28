@@ -16,8 +16,7 @@ jpeg_dir_path = 'img/manip_jpeg/'
 png_dir_path = 'img/manip_png/'
 
 # Save/load data
-save = True
-load = False
+save = False
 
 results_jpeg_path = 'results_jpeg.npy'
 fpr_jpeg_path = 'fpr_jpeg.npy'
@@ -78,15 +77,31 @@ if save:
         output_map, auc, fpr, tpr = main(args)
 
         # Append results
-        results_jpeg.append([win_size, get_manip_id(manip), quality, auc])
-        if not fpr_jpeg:
+        #results_jpeg.append([win_size, get_manip_id(manip), quality, auc])  # TODO
+        results_jpeg.append([win_size, get_manip_id(manip), quality, auc, fpr, tpr])
+        # TODO
+        '''
+        if len(fpr_jpeg) == 0:
             fpr_jpeg = fpr
         else:
-            fpr_jpeg += fpr
-        if not tpr_jpeg:
-            tpr_jpeg = tpr
-        else:
-            tpr_jpeg += tpr
+            if len(fpr_jpeg) < len(fpr):  # Make sure that arrays are the same length
+                fpr_sum = np.zeros(len(fpr))
+                fpr_sum[:len(fpr_jpeg)] += fpr_jpeg
+            else:
+                fpr_sum = np.zeros(len(fpr_jpeg))
+                fpr_sum[:len(fpr)] += fpr
+            fpr_jpeg = fpr_sum
+            if len(tpr_jpeg) == 0:
+                tpr_jpeg = tpr
+            else:
+                if len(tpr_jpeg) < len(tpr):  # Make sure that arrays are the same length
+                    tpr_sum = np.zeros(len(tpr))
+                    tpr_sum[:len(tpr_jpeg)] += tpr_jpeg
+                else:
+                    tpr_sum = np.zeros(len(tpr_jpeg))
+                    tpr_sum[:len(fpr)] += tpr
+                tpr_jpeg = tpr_sum
+        '''
 
         # Update progress bar (again)
         progress_bar.update(1)
@@ -105,15 +120,31 @@ if save:
         output_map, auc, fpr, tpr = main(args)
 
         # Append results
-        results_png.append([win_size, get_manip_id(manip), -1, auc])
-        if not fpr_png:
+        #results_png.append([win_size, get_manip_id(manip), -1, auc])  # TODO
+        results_png.append([win_size, get_manip_id(manip), -1, auc, fpr, tpr])
+        # TODO
+        '''
+        if len(fpr_png) == 0:
             fpr_png = fpr
         else:
-            fpr_png += fpr
-        if not tpr_png:
-            tpr_png = tpr
-        else:
-            tpr_png += tpr
+            if len(fpr_png) < len(fpr):  # Make sure that arrays are the same length
+                fpr_sum = np.zeros(len(fpr))
+                fpr_sum[:len(fpr_png)] += fpr_png
+            else:
+                fpr_sum = np.zeros(len(fpr_png))
+                fpr_sum[:len(fpr)] += fpr
+            fpr_png = fpr_sum
+            if len(tpr_png) == 0:
+                tpr_png = tpr
+            else:
+                if len(tpr_png) < len(tpr):  # Make sure that arrays are the same length
+                    tpr_sum = np.zeros(len(tpr))
+                    tpr_sum[:len(tpr_png)] += tpr_png
+                else:
+                    tpr_sum = np.zeros(len(tpr_png))
+                    tpr_sum[:len(fpr)] += tpr
+                tpr_png = tpr_sum
+        '''
 
         # Update progress bar (again)
         progress_bar.update(1)
@@ -172,5 +203,7 @@ if len(tpr_jpeg) < len(tpr_png):
 else:
     tpr_sum = np.zeros(len(tpr_jpeg))
     tpr_sum[:len(tpr_png)] += tpr_png
+
+print([mean_auc_512, mean_auc_256, mean_auc_128, mean_auc_64])
 
 plot_roc(fpr_sum / 2, tpr_sum / 2, np.asarray([mean_auc_512, mean_auc_256, mean_auc_128, mean_auc_64]), show=False, save=True)
