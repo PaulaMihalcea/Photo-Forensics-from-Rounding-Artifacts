@@ -24,10 +24,12 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=Fa
 
     output_map = 1 - output_map[:, :, 0]  # Because the map computed so far actually shows the probability that a pixel has not been modified
 
-    # Replace NaNs using interpolation
-    if interpolate:
+    # Replace NaNs...
+    if interpolate:  # ...using interpolation...
         output_mask = np.ma.masked_invalid(output_map).mask
         output_map = interpolate_missing_pixels(output_map, output_mask, 'linear')
+    else:  # ...or with a neutral probability (0.5)
+        output_map = np.nan_to_num(output_map, nan=0.5)
 
     '''
     # Matplotlib output map plot (for debug purposes only)
@@ -38,7 +40,7 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=Fa
     '''
 
     # Thresholding & normalization
-    output_map_norm = np.where(output_map > 0.8, 255, 0).astype(np.uint8)  # TPixels with probability of being manipulated lower than 80% are masked
+    output_map_norm = np.where(output_map > 0.8, 255, 0).astype(np.uint8)  # Pixels with probability of being manipulated lower than 80% are masked
 
     # Show output map and/or save it to disk if requested
     filename, extension = get_filename(img_path)
@@ -50,7 +52,7 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=Fa
         res_path = get_subfolder(img_path, win_size, stop_threshold)
         cv2.imwrite(res_path + '/' + filename + '.png', output_map_norm)
 
-    return output_map
+    return output_map_norm
 
 
 # Plot difference between successive estimates of template c
@@ -91,6 +93,8 @@ def get_roc_auc(img_path, output_map):
         # Flattening
         img_ground_truth = img_ground_truth.flatten()
         output_map = output_map.flatten()
+
+        print('inf:', np.isinf(img_ground_truth).any(), 'nan:', np.isnan(img_ground_truth).any())  # TODO
 
         # ROC curve
         fpr, tpr, _ = roc_curve(img_ground_truth, output_map)

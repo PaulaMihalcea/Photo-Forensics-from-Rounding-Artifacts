@@ -11,10 +11,13 @@ args = Namespace()
 args.interpolate = False
 args.show = False
 args.save = False
+args.show_roc_plot = False
+args.save_roc_plot = False
 args.show_diff_plot = False
 args.save_diff_plot = False
-dir_path = 'img/'  # Directory containing images
-n = 3  # Number of images to be tested
+
+dir_path = 'img/manip_png/'  # Directory containing images; must end with a slash to avoid errors ("/")
+n = 1  # Number of images to be tested
 
 # Array of values to be tried
 win_sizes = [64, 128, 256]
@@ -31,18 +34,20 @@ results = []
 
 # Test algorithm
 progress_bar = tqdm.tqdm(total=len(win_sizes)*len(stop_thresholds)*len(probs_r_b_in_c1)*n)
-sys.stdout = open(os.devnull, 'w')  # Suppress calls to print()
-
+# sys.stdout = open(os.devnull, 'w')  # Suppress calls to print(); for debug purposes only
 
 for i in imgs:
     for ws in win_sizes:
         for st in stop_thresholds:
             for p in probs_r_b_in_c1:
+                # Parameters
                 args.img_path = i
                 args.win_size = ws
                 args.stop_threshold = st
                 args.prob_r_b_in_c1 = p
-                _, _, auc = main(args)
+
+                # EM algorithm
+                _, auc = main(args)
 
                 # Append results
                 results.append([ws, st, p, auc])
@@ -50,7 +55,7 @@ for i in imgs:
                 # Update progress bar
                 progress_bar.update(1)
 
-sys.stdout = sys.__stdout__  # Enable calls to print()
+# sys.stdout = sys.__stdout__  # Enable calls to print(); for debug purposes only
 
 # Save results
 save = True

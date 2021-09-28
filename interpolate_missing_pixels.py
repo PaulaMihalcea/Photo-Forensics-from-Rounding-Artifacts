@@ -3,7 +3,6 @@
 # https://stackoverflow.com/a/68558547
 
 
-from scipy import interpolate
 import numpy as np
 
 def interpolate_missing_pixels(

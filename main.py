@@ -74,7 +74,7 @@ def main(args):
     else:
         print('Elapsed time: {:.2f} s.'.format(end - start))
 
-    return output_map
+    return output_map, auc
 
 
 if __name__ == '__main__':
