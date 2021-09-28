@@ -84,7 +84,7 @@ if __name__ == '__main__':
 
     # Add parser arguments
     parser.add_argument('img_path', help='Path of the image to be analyzed.')
-    parser.add_argument('-ws', '--win_size', type=int, help='Window size in pixel (default: 256). Note: must be a multiple of 8.')
+    parser.add_argument('-ws', '--win_size', type=int, help='Window size in pixel (default: 64). Note: must be a multiple of 8.')
     parser.add_argument('-st', '--stop_threshold', type=float, help='Expectation-maximization algorithm stop threshold (default: 1e-3).')
     parser.add_argument('-prob', '--prob_r_b_in_c1', type=float, help='Expectation-maximization algorithm probability of r conditioned by b belonging to C_1 (default: 0.5).')
     parser.add_argument('-int', '--interpolate', type=float, help='Interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm (default: False). Warning: slows down the program significantly.')
@@ -99,7 +99,7 @@ if __name__ == '__main__':
 
     # Set default arguments
     if args.win_size is None:
-        args.win_size = 256
+        args.win_size = 64
 
     if args.stop_threshold is None:
         args.stop_threshold = 1e-3

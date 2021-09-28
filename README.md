@@ -16,15 +16,14 @@ Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this
 ## Contents
 1. [Installation](#installation)
     - [Requirements](#requirements)
-2. [Usage](#usage)
-    - [Main script](#main-script)
-    - [Manipulation script](#manipulation-script)
-    - [Results script](#results-script)
-    - [Variables test](#variables-test)
-3. [Technical details](#technical-details)
     - [Testing](#testing)
-4. [Bibliography](#biblipgraphy)
-5. [License](#license)
+2. [Usage](#usage)
+    - [Main](#main)
+    - [Manipulation](#manipulation)
+    - [Results](#results)
+    - [Unknown parameters](#unknown-parameters)
+3. [Bibliography](#biblipgraphy)
+4. [License](#license)
 
 ## Installation
 
@@ -61,9 +60,12 @@ The following Python packages are required in order to run this program. Please 
 | [time](https://docs.python.org/3/library/time.html) | _latest_ |
 | [tqdm](https://github.com/tqdm/tqdm) | _latest_ |
 
+### Testing
+This project has been written and tested using [Python 3.8](https://www.python.org/downloads/release/python-380/) on a Windows 10 Pro machine.
+
 ## Usage
 
-### Main script
+### Main
 
 Run from a terminal specifying the path to the image to be analyzed, as follows:
 
@@ -72,7 +74,7 @@ python3 main.py "path/to/image/image_file.jpg"
 ```
 
 Optional arguments:
-- `--win_size`: window size in pixel (default: `256`). Note: must be a multiple of 8.
+- `--win_size`: window size in pixel (default: `64`). Note: must be a multiple of 8.
 - `--stop_threshold`: expectation-maximization algorithm stop threshold (default: `1e-3`);
 - `--prob_r_b_in_c1`: expectation-maximization algorithm probability of _r_ conditioned by _b_ belonging to _C<sub>1</sub>_ (default: `0.5`);
 - `--interpolate`: interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm, using the function from [\[4\]](https://stackoverflow.com/a/68558547), otherwise replace them with `0.5` (default: `False`). _Warning: slows down the program significantly_;
@@ -86,7 +88,7 @@ Example call with optional arguments:
 python3 main.py "images/my_photo.jpg" --win_size=256 --stop_threshold=1e-2 --save=True
 ```
 
-### Manipulation script
+### Manipulation
 
 This script generates **manipulated images** and their respective **ground truth masks** from a given directory (`path/to/images/`) in three specific subdirectories (`path/to/images/manip_jpeg`, `path/to/images/manip_png` and `path/to/images/manip_gt`), as described in [\[1\]](https://doi.org/10.1145/3369412.3395059).
 
@@ -107,20 +109,21 @@ The script can be run with:
 python3 manipulate.py "path/to/images/"
 ```
 
-### Results script
+### Results
 
 TODO
 
-### Variables test
+### Unknown
 
-TODO
+The `find_unknown_parameters.py` script has been used to determine the best unknown parameters, namely  the EM algorithm stop threshold and P(r<sub>i</sub> | **b**<sub>i</sub> in C<sub>1</sub>). It analyzes a random set of _n_ images from a specified folder using all possible combinations of the following configurations:
 
-## Technical details
+- stop thresholds: 1e-2, 1e-3, 1e-4;
+- P(r<sub>i</sub> | **b**<sub>i</sub> in C<sub>1</sub>): 0.1, 0.3, 0.5, 0.7, 0.9.
 
-TODO
+Although a small number of images has been used because of the overall long computational time required by the main script, it has been deemed that the best default parameters are:
 
-### Testing
-This project has been written and tested using [Python 3.8](https://www.python.org/downloads/release/python-380/) on a Windows 10 Pro machine.
+- `stop_threshold = 1e-3`;
+- `prob_r_b_in_c1 = 0.5`.
 
 ## Bibliography
 [\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114, DOI:[10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)

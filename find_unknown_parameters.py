@@ -9,6 +9,7 @@ from utils import get_filename
 
 # Setup
 args = Namespace()
+args.win_size = 64
 args.interpolate = False
 args.show = False
 args.save = False
@@ -24,14 +25,12 @@ dir_path = 'img/manip_png/'  # Directory containing images; must end with a slas
 # Original values, for powerful machines only
 '''
 n = 10  # Number of images to be tested
-win_sizes = [64, 128, 256]
 stop_thresholds = np.array([1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10])
 probs_r_b_in_c1 = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
 '''
 
 # Less values, for less powerful machines (~2 minutes per image)
 n = 1  # Number of images to be tested
-win_sizes = [64, 128, 256]
 stop_thresholds = np.array([1e-2, 1e-3, 1e-4])
 probs_r_b_in_c1 = np.array([0.1, 0.3, 0.5, 0.7, 0.9])
 
@@ -44,29 +43,27 @@ imgs = random.sample(file_list, n)
 results = []
 
 # Test algorithm
-progress_bar = tqdm.tqdm(total=len(win_sizes)*len(stop_thresholds)*len(probs_r_b_in_c1)*n)
+progress_bar = tqdm.tqdm(total=len(stop_thresholds)*len(probs_r_b_in_c1)*n)
 # sys.stdout = open(os.devnull, 'w')  # Suppress calls to print(); for debug purposes only
 
 for i in imgs:
     progress_bar.set_description('Processing image {}'.format(get_filename(i)[0] + '.{}'.format(get_filename(i)[1])))
 
-    for ws in win_sizes:
-        for st in stop_thresholds:
-            for p in probs_r_b_in_c1:
-                # Parameters
-                args.img_path = i
-                args.win_size = ws
-                args.stop_threshold = st
-                args.prob_r_b_in_c1 = p
+    for st in stop_thresholds:
+        for p in probs_r_b_in_c1:
+            # Parameters
+            args.img_path = i
+            args.stop_threshold = st
+            args.prob_r_b_in_c1 = p
 
-                # EM algorithm
-                _, auc = main(args)
+            # EM algorithm
+            _, auc = main(args)
 
-                # Append results
-                results.append([ws, st, p, auc])
+            # Append results
+            results.append([st, p, auc])
 
-                # Update progress bar
-                progress_bar.update(1)
+            # Update progress bar
+            progress_bar.update(1)
 
 # sys.stdout = sys.__stdout__  # Enable calls to print(); for debug purposes only
 
