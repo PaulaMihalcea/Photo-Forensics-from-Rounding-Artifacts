@@ -45,8 +45,10 @@ def main(args):
             os.makedirs(args.dir_path + '/manip_jpeg/')
         if not os.path.exists(args.dir_path + '/manip_png/'):
             os.makedirs(args.dir_path + '/manip_png/')
-        if not os.path.exists(args.dir_path + '/manip_gt/'):
-            os.makedirs(args.dir_path + '/manip_gt/')
+        if not os.path.exists(args.dir_path + '/manip_jpeg/manip_gt/'):
+            os.makedirs(args.dir_path + '/manip_jpeg/manip_gt/')
+        if not os.path.exists(args.dir_path + '/manip_png/manip_gt/'):
+            os.makedirs(args.dir_path + '/manip_png/manip_gt/')
 
         for manipulation in manipulations:
             for roi_size in roi_sizes:
@@ -200,6 +202,38 @@ def content_aware_fill(img, ground_truth, method=cv2.INPAINT_TELEA):
     manip_img = cv2.inpaint(manip_img, ground_truth, 3, flags=method)
 
     return manip_img
+
+
+# Manipulation ID
+def get_manip_id(manip_name):
+    if manip_name == 'copy-move':
+        manip_id = 1
+    elif manip_name == 'median-filter':
+        manip_id = 2
+    elif manip_name == 'rotation':
+        manip_id = 3
+    elif manip_name == 'content-aware-fill':
+        manip_id = 4
+    else:
+        raise ValueError('Invalid manipulation method. Possible values: "copy-move", "median-filter", "rotation", "content-aware-fill".')
+
+    return manip_id
+
+
+# Manipulation name
+def get_manip_name(manip_id):
+    if manip_id == 1:
+        manip_name = 'copy-move'
+    elif manip_id == 2:
+        manip_name = 'median-filter'
+    elif manip_id == 3:
+        manip_name = 'rotation'
+    elif manip_id == 4:
+        manip_name = 'content-aware-fill'
+    else:
+        raise ValueError('Invalid manipulation method. Possible values: 1, 2, 3, 4.')
+
+    return manip_name
 
 
 if __name__ == '__main__':

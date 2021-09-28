@@ -69,10 +69,14 @@ def get_image_info(filename, extension):
 def get_img_ground_truth_path(img_path):
 
     filename, extension = get_filename(img_path)
-    if '_q' in filename and extension in ['jpg','jpeg', 'jpe', 'jfif', 'jif']:  # Exclude JPEG quality from filename in case of JPEG file with specified quality
+    if extension in ['jpg','jpeg', 'jpe', 'jfif', 'jif']:  # Exclude JPEG quality from filename in case of JPEG file with specified quality
         filename = filename.split('_')[:-1]
-
-    img_ground_truth_name = filename + '_gt.' + extension
+        img_ground_truth_name = ''
+        for el in filename:
+            img_ground_truth_name += el + '_'
+        img_ground_truth_name = img_ground_truth_name[:-1] + '_gt.png'
+    else:
+        img_ground_truth_name = filename + '_gt.png'
 
     img_ground_truth_path = ''
     for el in img_path.split('/')[:-1]:

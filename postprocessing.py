@@ -161,14 +161,12 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
 
     plt.legend(edgecolor='black', fancybox=False, prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1, handles=[line])
 
-    # TODO multiclass legend
-    '''
-    plt.legend(edgecolor='black', fancybox=False, prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1,
-               handles=[mlines.Line2D([], [], color='red', linestyle='dotted', linewidth=1, label='512'),
-                        mlines.Line2D([], [], color='green', linestyle='dashed', linewidth=1, label='256'),
-                        mlines.Line2D([], [], color='blue', linestyle=(0, (3, 1, 1, 1)), linewidth=1, label='128'),
-                        mlines.Line2D([], [], color='black', linestyle='solid', linewidth=1, label='64')])
-    '''
+    if len(auc) == 4:
+        plt.legend(edgecolor='black', fancybox=False, prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1,
+                   handles=[mlines.Line2D([], [], color='red', linestyle='dotted', linewidth=1, label='512'),
+                            mlines.Line2D([], [], color='green', linestyle='dashed', linewidth=1, label='256'),
+                            mlines.Line2D([], [], color='blue', linestyle=(0, (3, 1, 1, 1)), linewidth=1, label='128'),
+                            mlines.Line2D([], [], color='black', linestyle='solid', linewidth=1, label='64')])
 
     # Show plot and/or save it to disk if requested
     filename, extension = get_filename(img_path)

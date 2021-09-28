@@ -54,7 +54,7 @@ def main(args):
     # Compute ROC curve and AUC score
     progress_bar.set_description('Computing AUC score')
     fpr, tpr, auc = get_roc_auc(args.img_path, output_map)
-    if (args.shroc or args.svroc) and auc != 0:
+    if (args.show_roc_plot or args.save_roc_plot) and auc != 0:
         plot_roc(fpr, tpr, auc, args.show_roc_plot, args.save_roc_plot, args.img_path, args.win_size, args.stop_threshold)
     progress_bar.update(5)
 

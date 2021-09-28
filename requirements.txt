@@ -4,8 +4,9 @@ decimal
 matplotlib
 numpy
 os
-pillow
-python~=3.0
+pillow~=8.2.0
+pyqt~=5.9.2
+python~=3.8
 random
 scipy
 sklearn

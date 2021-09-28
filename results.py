@@ -6,87 +6,143 @@ import sys
 import tqdm
 from argparse import Namespace
 from main import main
+from manipulate import get_manip_id
 from postprocessing import plot_roc
 from utils import get_filename, get_image_info
 
 
-# Setup; uses default parameters
-args = Namespace()
-args.win_size = 256
-args.stop_threshold = 1e-2
-args.interpolate = False
-args.show = False
-args.save = False
-args.show_roc_plot = False
-args.save_roc_plot = False
-args.show_diff_plot = False
-args.save_diff_plot = False
-
-print('Results script...')
-print()
-
 # Images path
-jpeg_dir_path = ''
-png_dir_path = ''
+jpeg_dir_path = 'img/manip_jpeg/'
+png_dir_path = 'img/manip_png/'
 
-# File list
+# Save/load data
+save = True
+load = False
+
+results_jpeg_path = 'results_jpeg.npy'
+fpr_jpeg_path = 'fpr_jpeg.npy'
+tpr_jpeg_path = 'tpr_jpeg.npy'
+results_png_path = 'results_png.npy'
+fpr_png_path = 'fpr_png.npy'
+tpr_png_path = 'tpr_png.npy'
+
+# File lists
 valid_jpeg_extensions = ['.jpeg', '.jpg', '.jpe', '.jfif', '.jif']
 valid_png_extensions = ['.png']
 jpeg_file_list = [jpeg_dir_path + img_file for img_file in os.listdir(jpeg_dir_path) for ext in valid_jpeg_extensions if img_file.endswith(ext)]
 png_file_list = [png_dir_path + img_file for img_file in os.listdir(png_dir_path) for ext in valid_png_extensions if img_file.endswith(ext)]
 
-# Results
-results_jpeg = []
-fpr_jpeg = []
-tpr_jpeg = []
-results_png = []
-fpr_png = []
-tpr_png = []
+# Compute and save results
+if save:
+    # Setup; uses default parameters
+    args = Namespace()
+    args.win_size = 256
+    args.stop_threshold = 1e-2
+    args.prob_r_b_in_c1 = 0.3
+    args.interpolate = False
+    args.show = False
+    args.save = False
+    args.show_roc_plot = True
+    args.save_roc_plot = True
+    args.show_diff_plot = False
+    args.save_diff_plot = False
 
-# Progress bar
-progress_bar = tqdm.tqdm(total=len(jpeg_file_list)*len(png_file_list))
+    print('Results script')
+    print()
 
-# Main loop
-sys.stdout = open(os.devnull, 'w')  # Suppress calls to print()
+    # Results
+    results_jpeg = []
+    fpr_jpeg = []
+    tpr_jpeg = []
+    results_png = []
+    fpr_png = []
+    tpr_png = []
 
-# JPEG images
-for i in jpeg_file_list:
-    # Image information
-    filename, extension = get_filename(i)
-    win_size, manip, quality = get_image_info(filename, extension)
+    # Progress bar
+    progress_bar = tqdm.tqdm(total=len(jpeg_file_list)*len(png_file_list))
 
-    # Update progress bar
-    progress_bar.set_description('Processing image {}'.format(filename + '.{}'.format(extension)))
+    # Main loop
+    #sys.stdout = open(os.devnull, 'w')  # Suppress calls to print()  # TODO
 
-    # Main EM algorithm
-    output_map, auc, fpr, tpr = main(args)
+    # JPEG images
+    for i in jpeg_file_list:
+        # Image information
+        args.img_path = i
+        filename, extension = get_filename(i)
+        win_size, manip, quality = get_image_info(filename, '.' + extension)
 
-    # Append results
-    results_jpeg.append([win_size, manip, quality, auc])
+        # Update progress bar
+        progress_bar.set_description('Processing image {}'.format(filename + '.{}'.format(extension)))
 
-    # Update progress bar (again)
-    progress_bar.update(1)
+        # Main EM algorithm
+        output_map, auc, fpr, tpr = main(args)
 
-# PNG images
-for i in png_file_list:
-    # Image information
-    filename, extension = get_filename(i)
-    win_size, manip, _ = get_image_info(filename, extension)
+        # Append results
+        results_jpeg.append([win_size, get_manip_id(manip), quality, auc])
 
-    # Update progress bar
-    progress_bar.set_description('Processing image {}'.format(filename + '.{}'.format(extension)))
+        # Update progress bar (again)
+        progress_bar.update(1)
 
-    # Main EM algorithm
-    output_map, auc, fpr, tpr = main(args)
+    # PNG images
+    for i in png_file_list:
+        # Image information
+        args.img_path = i
+        filename, extension = get_filename(i)
+        win_size, manip, _ = get_image_info(filename, extension)
 
-    # Append results
-    results_png.append([win_size, manip, -1, auc])
+        # Update progress bar
+        progress_bar.set_description('Processing image {}'.format(filename + '.{}'.format(extension)))
 
-    # Update progress bar (again)
-    progress_bar.update(1)
+        # Main EM algorithm
+        output_map, auc, fpr, tpr = main(args)
 
-sys.stdout = sys.__stdout__  # Enable calls to print()
+        # Append results
+        results_png.append([win_size, get_manip_id(manip), -1, auc])
+        fpr_png += fpr
+        tpr_png += tpr
+
+        # Update progress bar (again)
+        progress_bar.update(1)
+
+    sys.stdout = sys.__stdout__  # Enable calls to print()
+
+    # Results as NumPy arrays
+    results_jpeg = np.asarray(results_jpeg)
+    fpr_jpeg = np.asarray(fpr_jpeg)
+    tpr_jpeg = np.asarray(tpr_jpeg)
+    results_png = np.asarray(results_png)
+    fpr_png = np.asarray(fpr_png)
+    tpr_png = np.asarray(tpr_png)
+
+    # Save results
+    if not os.path.exists('results/'):
+        os.makedirs('results/')
+
+    np.save('results/' + results_jpeg_path, results_jpeg)
+    np.save('results/' + fpr_jpeg_path, fpr_jpeg)
+    np.save('results/' + tpr_jpeg_path, tpr_jpeg)
+    np.save('results/' + results_png_path, results_png)
+    np.save('results/' + fpr_png_path, fpr_png)
+    np.save('results/' + tpr_png_path, tpr_png)
+
+# Load results
+else:
+    results_jpeg = np.load(results_jpeg_path)
+    fpr_jpeg = np.load(fpr_jpeg_path)
+    tpr_jpeg = np.load(tpr_jpeg_path)
+    results_png = np.load(results_png_path)
+    fpr_png = np.load(fpr_png_path)
+    tpr_png = np.load(tpr_png_path)
 
 # ROC curve for all images
-if auc != 0:
-    plot_roc(fpr, tpr, auc, args.show_roc_plot, args.save_roc_plot, args.img_path, args.win_size, args.stop_threshold)
+mean_auc_512 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 512, 3], np.mean(results_png[results_png[:, 0] == 512, 3])])])
+mean_auc_256 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 256, 3], np.mean(results_png[results_png[:, 0] == 256, 3])])])
+mean_auc_128 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 128, 3], np.mean(results_png[results_png[:, 0] == 128, 3])])])
+mean_auc_64 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 64, 3], np.mean(results_png[results_png[:, 0] == 64, 3])])])
+
+fpr_jpeg = fpr_jpeg / len(jpeg_file_list)
+tpr_jpeg = tpr_jpeg / len(jpeg_file_list)
+fpr_png = fpr_png / len(png_file_list)
+tpr_png = tpr_png / len(png_file_list)
+
+plot_roc((fpr_jpeg + fpr_png) / 2, (tpr_jpeg + tpr_png) / 2, [mean_auc_512, mean_auc_256, mean_auc_128, mean_auc_64], False, True)

@@ -9,7 +9,7 @@
 Many aspects of **JPEG compression** have been successfully employed in
 the domain of photo forensics. In particular, artifacts introduced by the choice of the rounding operator used to quantize the DCT coefficients can be used to localize tampering and identify specific encoders.
 
-Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this work aims to provide a Python implementation of an **expectation maximization (EM) algorithm** to **localize inconsistencies** in these artifacts that arise from a variety of **image manipulations**. The resulting output map is computed as described in [\[2\]](https://doi.org/10.1109/WIFS.2017.8267641). Tests and results generated using 43 photos from a Canon EOS 5D Mark II camera, kindly provided by Andrea Mancini [\[3\]](https://www.biso.it/).
+Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this work aims to provide a Python implementation of an **expectation maximization (EM) algorithm** to **localize inconsistencies** in these artifacts that arise from a variety of **image manipulations**. The resulting output map is computed as described in [\[2\]](https://doi.org/10.1109/WIFS.2017.8267641). Tests and results generated using photos from a Canon EOS 5D Mark II camera, kindly provided by Andrea Mancini [\[3\]](https://www.biso.it/).
 
 *Based on a research by S. Agarwal and H. Farid (see [\[1\]](https://doi.org/10.1145/3369412.3395059)).
 
@@ -40,7 +40,7 @@ It is assumed that Python 3 is already installed on the desired system.
 
 ### Requirements
 
-The following Python packages are required in order to run this program. Please note that unless otherwise specified, versions are to be intended as minimum.
+The following Python packages are required in order to run this program. Please note that versions are to be intended as minimum, or the latest compatible.
 
 | Package | Version |
 | :------------ | :------------ |
@@ -51,7 +51,8 @@ The following Python packages are required in order to run this program. Please 
 | [NumPy](https://numpy.org/) | _latest_ |
 | [OpenCV](https://opencv.org/) | _latest_ |
 | [os](https://docs.python.org/3/library/os.html) | _latest_ |
-| [Pillow](https://pillow.readthedocs.io/en/stable/) | _latest_ |
+| [Pillow](https://pillow.readthedocs.io/en/stable/) | 8.2.0 |
+| [PyQt5](https://pypi.org/project/PyQt5/) | 5.9.2 |
 | [random](https://docs.python.org/3/library/random.html) | _latest_ |
 | [scikit-learn](https://scikit-learn.org/stable/) | _latest_ |
 | [SciPy](https://www.scipy.org/) | _latest_ |
@@ -89,7 +90,7 @@ python3 main.py "images/my_photo.jpg" --win_size=256 --stop_threshold=1e-2 --sav
 
 ### Manipulation
 
-This script generates **manipulated images** and their respective **ground truth masks** from a given directory (`path/to/images/`) in three specific subdirectories (`path/to/images/manip_jpeg`, `path/to/images/manip_png` and `path/to/images/manip_gt`), as described in [\[1\]](https://doi.org/10.1145/3369412.3395059).
+This script generates **manipulated images** and their respective **ground truth masks** from a given directory (`path/to/images/`) in three specific subdirectories (`path/to/images/manip_jpeg`, `path/to/images/manip_png`, `path/to/images/manip_jpeg/manip_gt` and `path/to/images/manip_png/manip_gt`), as described in [\[1\]](https://doi.org/10.1145/3369412.3395059).
 
 Specifically, for every original image the script generates **80 manipulated images** (ground truth masks excluded), one for each:
 
@@ -110,7 +111,7 @@ python3 manipulate.py "path/to/images/"
 
 ### Results
 
-TODO
+This script generates the plots shown in figures 6 and 7 of [\[1\]](https://doi.org/10.1145/3369412.3395059) (except for figure 7(d), since multiple cameras were unavailable) using the 
 
 ## Bibliography
 [\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114, DOI:[10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)
