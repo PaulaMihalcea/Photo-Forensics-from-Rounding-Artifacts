@@ -107,7 +107,7 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
     plt.xlim(0, 100)
     plt.ylim(0, 100)
     plt.axis('square')
-    plt.grid()
+    #plt.grid()
 
     # Axes labels
     plt.xlabel('False Positive (%)'
@@ -166,23 +166,6 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
         plt.show()
 
     return
-
-
-# Mean ROC curve utility
-def get_mean_roc(fprs, tprs):
-    mean_fpr = np.linspace(0, 1, 101)
-
-    tprs_interp = []
-
-    for i in range(0, len(tprs)):
-        tpr = np.interp(mean_fpr, fprs[i], tprs[i])
-        tpr[0] = 0.0
-        tprs_interp.append(tpr)
-
-    tprs_interp = np.array(tprs_interp)
-    mean_tpr = tprs_interp.mean(axis=0)
-
-    return mean_fpr, mean_tpr
 
 
 # Interpolate missing pixels (NaNs)

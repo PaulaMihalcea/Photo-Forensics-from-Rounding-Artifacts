@@ -77,6 +77,7 @@ def main(args):
     else:
         print('Elapsed time: {:.2f} s.'.format(end - start))
 
+    print(len(fpr), len(tpr))
     return output_map_norm, auc, fpr, tpr
 
 

@@ -45,31 +45,11 @@ def get_filename(file_path):
     return filename, extension
 
 
-# Get image information from filename
-def get_image_info(filename, extension):
-    # Split filename
-    el = filename.split('_')
-
-    # Extract information
-    if extension in ['.png']:
-        quality = None
-        win_size = int(el[-1])
-        manip = el[-2]
-    elif extension in ['.jpeg', '.jpg', '.jpe', '.jfif', '.jif']:
-        quality = int(el[-1])
-        win_size = int(el[-2])
-        manip = el[-3]
-    else:
-        raise ValueError('Invalid file extension. Extension can only be .png, .jpeg, .jpg, .jpe, .jfif or .jif.')
-
-    return win_size, manip, quality
-
-
 # Ground truth image path generator (from original image path)
 def get_img_ground_truth_path(img_path):
 
     filename, extension = get_filename(img_path)
-    if extension in ['jpg','jpeg', 'jpe', 'jfif', 'jif']:  # Exclude JPEG quality from filename in case of JPEG file with specified quality
+    if extension in ['jpg', 'jpeg', 'jpe', 'jfif', 'jif', 'JPG', 'JPEG', 'JPE', 'JFIF']:  # Exclude JPEG quality from filename in case of JPEG file with specified quality
         filename = filename.split('_')[:-1]
         img_ground_truth_name = ''
         for el in filename:
