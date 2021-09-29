@@ -7,7 +7,7 @@ import tqdm
 from argparse import Namespace
 from main import main
 from manipulate import get_manip_id
-from postprocessing import plot_roc
+from postprocessing import plot_roc, get_mean_roc
 from utils import get_filename, get_image_info
 
 
@@ -16,7 +16,7 @@ jpeg_dir_path = 'img/manip_jpeg/'
 png_dir_path = 'img/manip_png/'
 
 # Save/load data
-save = False
+save = True
 
 results_jpeg_path = 'results_jpeg.npy'
 fpr_jpeg_path = 'fpr_jpeg.npy'
@@ -35,7 +35,7 @@ png_file_list = [png_dir_path + img_file for img_file in os.listdir(png_dir_path
 if save:
     # Setup; uses default parameters
     args = Namespace()
-    args.win_size = 256
+    args.win_size = 64  # TODO
     args.stop_threshold = 1e-2
     args.prob_r_b_in_c1 = 0.3
     args.interpolate = False
@@ -77,31 +77,7 @@ if save:
         output_map, auc, fpr, tpr = main(args)
 
         # Append results
-        #results_jpeg.append([win_size, get_manip_id(manip), quality, auc])  # TODO
         results_jpeg.append([win_size, get_manip_id(manip), quality, auc, fpr, tpr])
-        # TODO
-        '''
-        if len(fpr_jpeg) == 0:
-            fpr_jpeg = fpr
-        else:
-            if len(fpr_jpeg) < len(fpr):  # Make sure that arrays are the same length
-                fpr_sum = np.zeros(len(fpr))
-                fpr_sum[:len(fpr_jpeg)] += fpr_jpeg
-            else:
-                fpr_sum = np.zeros(len(fpr_jpeg))
-                fpr_sum[:len(fpr)] += fpr
-            fpr_jpeg = fpr_sum
-            if len(tpr_jpeg) == 0:
-                tpr_jpeg = tpr
-            else:
-                if len(tpr_jpeg) < len(tpr):  # Make sure that arrays are the same length
-                    tpr_sum = np.zeros(len(tpr))
-                    tpr_sum[:len(tpr_jpeg)] += tpr_jpeg
-                else:
-                    tpr_sum = np.zeros(len(tpr_jpeg))
-                    tpr_sum[:len(fpr)] += tpr
-                tpr_jpeg = tpr_sum
-        '''
 
         # Update progress bar (again)
         progress_bar.update(1)
@@ -120,31 +96,7 @@ if save:
         output_map, auc, fpr, tpr = main(args)
 
         # Append results
-        #results_png.append([win_size, get_manip_id(manip), -1, auc])  # TODO
         results_png.append([win_size, get_manip_id(manip), -1, auc, fpr, tpr])
-        # TODO
-        '''
-        if len(fpr_png) == 0:
-            fpr_png = fpr
-        else:
-            if len(fpr_png) < len(fpr):  # Make sure that arrays are the same length
-                fpr_sum = np.zeros(len(fpr))
-                fpr_sum[:len(fpr_png)] += fpr_png
-            else:
-                fpr_sum = np.zeros(len(fpr_png))
-                fpr_sum[:len(fpr)] += fpr
-            fpr_png = fpr_sum
-            if len(tpr_png) == 0:
-                tpr_png = tpr
-            else:
-                if len(tpr_png) < len(tpr):  # Make sure that arrays are the same length
-                    tpr_sum = np.zeros(len(tpr))
-                    tpr_sum[:len(tpr_png)] += tpr_png
-                else:
-                    tpr_sum = np.zeros(len(tpr_png))
-                    tpr_sum[:len(fpr)] += tpr
-                tpr_png = tpr_sum
-        '''
 
         # Update progress bar (again)
         progress_bar.update(1)
@@ -153,57 +105,91 @@ if save:
 
     # Results as NumPy arrays
     results_jpeg = np.asarray(results_jpeg)
-    fpr_jpeg = np.asarray(fpr_jpeg)
-    tpr_jpeg = np.asarray(tpr_jpeg)
     results_png = np.asarray(results_png)
-    fpr_png = np.asarray(fpr_png)
-    tpr_png = np.asarray(tpr_png)
+
+    fprs_jpeg = np.stack(results_jpeg[:, 4])
+    fprs_jpeg_512 = np.stack(results_jpeg[results_jpeg[:, 0] == 512, 4])
+    fprs_jpeg_256 = np.stack(results_jpeg[results_jpeg[:, 0] == 256, 4])
+    fprs_jpeg_128 = np.stack(results_jpeg[results_jpeg[:, 0] == 128, 4])
+    fprs_jpeg_64 = np.stack(results_jpeg[results_jpeg[:, 0] == 64, 4])
+
+    tprs_jpeg = np.stack(results_jpeg[:, 5])
+    tprs_jpeg_512 = np.stack(results_jpeg[results_jpeg[:, 0] == 512, 5])
+    tprs_jpeg_256 = np.stack(results_jpeg[results_jpeg[:, 0] == 256, 5])
+    tprs_jpeg_128 = np.stack(results_jpeg[results_jpeg[:, 0] == 128, 5])
+    tprs_jpeg_64 = np.stack(results_jpeg[results_jpeg[:, 0] == 64, 5])
+
+    fprs_png = np.stack(results_png[:, 4])
+    fprs_png_512 = np.stack(results_png[results_png[:, 0] == 512, 4])
+    fprs_png_256 = np.stack(results_png[results_png[:, 0] == 256, 4])
+    fprs_png_128 = np.stack(results_png[results_png[:, 0] == 128, 4])
+    fprs_png_64 = np.stack(results_png[results_png[:, 0] == 64, 4])
+
+    tprs_png = np.stack(results_png[:, 5])
+    tprs_png_512 = np.stack(results_png[results_png[:, 0] == 512, 5])
+    tprs_png_256 = np.stack(results_png[results_png[:, 0] == 256, 5])
+    tprs_png_128 = np.stack(results_png[results_png[:, 0] == 128, 5])
+    tprs_png_64 = np.stack(results_png[results_png[:, 0] == 64, 5])
 
     # Save results
     if not os.path.exists('results/'):
         os.makedirs('results/')
 
     np.save('results/' + results_jpeg_path, results_jpeg)
-    np.save('results/' + fpr_jpeg_path, fpr_jpeg)
-    np.save('results/' + tpr_jpeg_path, tpr_jpeg)
     np.save('results/' + results_png_path, results_png)
-    np.save('results/' + fpr_png_path, fpr_png)
-    np.save('results/' + tpr_png_path, tpr_png)
 
 # Load results
 else:
-    results_jpeg = np.load('results/' + results_jpeg_path)
-    fpr_jpeg = np.load('results/' + fpr_jpeg_path)
-    tpr_jpeg = np.load('results/' + tpr_jpeg_path)
-    results_png = np.load('results/' + results_png_path)
-    fpr_png = np.load('results/' + fpr_png_path)
-    tpr_png = np.load('results/' + tpr_png_path)
+    results_jpeg = np.load('results/' + results_jpeg_path, allow_pickle=True)
+    results_png = np.load('results/' + results_png_path, allow_pickle=True)
 
-# ROC curve for all images
-mean_auc_512 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 512, 3], np.mean(results_png[results_png[:, 0] == 512, 3])])])
-mean_auc_256 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 256, 3], np.mean(results_png[results_png[:, 0] == 256, 3])])])
-mean_auc_128 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 128, 3], np.mean(results_png[results_png[:, 0] == 128, 3])])])
-mean_auc_64 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 64, 3], np.mean(results_png[results_png[:, 0] == 64, 3])])])
+    fprs_jpeg = np.stack(results_jpeg[:, 4])
+    fprs_jpeg_512 = np.stack(results_jpeg[results_jpeg[:, 0] == 512, 4])
+    fprs_jpeg_256 = np.stack(results_jpeg[results_jpeg[:, 0] == 256, 4])
+    fprs_jpeg_128 = np.stack(results_jpeg[results_jpeg[:, 0] == 128, 4])
+    fprs_jpeg_64 = np.stack(results_jpeg[results_jpeg[:, 0] == 64, 4])
 
-fpr_jpeg = fpr_jpeg / len(jpeg_file_list)
-tpr_jpeg = tpr_jpeg / len(jpeg_file_list)
-fpr_png = fpr_png / len(png_file_list)
-tpr_png = tpr_png / len(png_file_list)
+    tprs_jpeg = np.stack(results_jpeg[:, 5])
+    tprs_jpeg_512 = np.stack(results_jpeg[results_jpeg[:, 0] == 512, 5])
+    tprs_jpeg_256 = np.stack(results_jpeg[results_jpeg[:, 0] == 256, 5])
+    tprs_jpeg_128 = np.stack(results_jpeg[results_jpeg[:, 0] == 128, 5])
+    tprs_jpeg_64 = np.stack(results_jpeg[results_jpeg[:, 0] == 64, 5])
 
-# Make sure that arrays are the same length
-if len(fpr_jpeg) < len(fpr_png):
-    fpr_sum = np.zeros(len(fpr_png))
-    fpr_sum[:len(fpr_jpeg)] += fpr_jpeg
-else:
-    fpr_sum = np.zeros(len(fpr_jpeg))
-    fpr_sum[:len(fpr_png)] += fpr_png
-if len(tpr_jpeg) < len(tpr_png):
-    tpr_sum = np.zeros(len(tpr_png))
-    tpr_sum[:len(tpr_jpeg)] += tpr_jpeg
-else:
-    tpr_sum = np.zeros(len(tpr_jpeg))
-    tpr_sum[:len(tpr_png)] += tpr_png
+    fprs_png = np.stack(results_png[:, 4])
+    fprs_png_512 = np.stack(results_png[results_png[:, 0] == 512, 4])
+    fprs_png_256 = np.stack(results_png[results_png[:, 0] == 256, 4])
+    fprs_png_128 = np.stack(results_png[results_png[:, 0] == 128, 4])
+    fprs_png_64 = np.stack(results_png[results_png[:, 0] == 64, 4])
 
-print([mean_auc_512, mean_auc_256, mean_auc_128, mean_auc_64])
+    tprs_png = np.stack(results_png[:, 5])
+    tprs_png_512 = np.stack(results_png[results_png[:, 0] == 512, 5])
+    tprs_png_256 = np.stack(results_png[results_png[:, 0] == 256, 5])
+    tprs_png_128 = np.stack(results_png[results_png[:, 0] == 128, 5])
+    tprs_png_64 = np.stack(results_png[results_png[:, 0] == 64, 5])
 
-plot_roc(fpr_sum / 2, tpr_sum / 2, np.asarray([mean_auc_512, mean_auc_256, mean_auc_128, mean_auc_64]), show=False, save=True)
+# Mean AUC score
+auc_512 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 512, 3], np.mean(results_png[results_png[:, 0] == 512, 3])])])
+auc_256 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 256, 3], np.mean(results_png[results_png[:, 0] == 256, 3])])])
+auc_128 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 128, 3], np.mean(results_png[results_png[:, 0] == 128, 3])])])
+auc_64 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 64, 3], np.mean(results_png[results_png[:, 0] == 64, 3])])])
+
+# FPR, TPR for all images
+fprs = np.vstack([fprs_jpeg, fprs_png])
+fprs_512 = np.vstack([fprs_jpeg_512, fprs_png_512])
+fprs_256 = np.vstack([fprs_jpeg_256, fprs_png_256])
+fprs_128 = np.vstack([fprs_jpeg_128, fprs_png_128])
+fprs_64 = np.vstack([fprs_jpeg_64, fprs_png_64])
+
+tprs = np.vstack([tprs_jpeg, tprs_png])
+tprs_512 = np.vstack([tprs_jpeg_512, tprs_png_512])
+tprs_256 = np.vstack([tprs_jpeg_256, tprs_png_256])
+tprs_128 = np.vstack([tprs_jpeg_128, tprs_png_128])
+tprs_64 = np.vstack([tprs_jpeg_64, tprs_png_64])
+
+fpr, tpr = get_mean_roc(fprs, tprs)
+fpr_512, tpr_512 = get_mean_roc(fprs_512, tprs_512)
+fpr_256, tpr_256 = get_mean_roc(fprs_256, tprs_256)
+fpr_128, tpr_128 = get_mean_roc(fprs_128, tprs_128)
+fpr_64, tpr_64 = get_mean_roc(fprs_64, tprs_64)
+
+plot_roc([fpr_512, fpr_256, fpr_128, fpr_64], [tpr_512, tpr_256, tpr_128, tpr_64], np.asarray([auc_512, auc_256, auc_128, auc_64]), show=True, save=False)

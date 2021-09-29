@@ -6,6 +6,9 @@ from em import expectation_maximization
 from postprocessing import get_output_map, get_roc_auc, get_template_difference_plot, plot_roc
 from utils import load_image
 
+from functools import partialmethod
+tqdm.__init__ = partialmethod(tqdm.__init__, disable=True)  # Disable progress bar; for debug purposes only TODO
+
 
 def main(args):
 
@@ -65,6 +68,8 @@ def main(args):
     print('Summary')
     print('Filename: {}.'.format(img_name))
     print('Image size: ' + str(img.shape[1]) + 'x' + str(img.shape[0]) + ' px.')
+    print(fpr)
+    print(tpr)
     if auc is not None:
         print('AUC score: {:.2f}.'.format(auc))
     else:

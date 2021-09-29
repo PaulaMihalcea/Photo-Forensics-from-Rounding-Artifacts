@@ -95,7 +95,7 @@ def get_roc_auc(img_path, output_map):
         output_map = output_map.flatten()
 
         # ROC curve
-        fpr, tpr, _ = roc_curve(img_ground_truth, output_map)
+        fpr, tpr, _ = roc_curve(img_ground_truth, output_map, drop_intermediate=False)
 
         # AUC score
         try:
@@ -108,9 +108,6 @@ def get_roc_auc(img_path, output_map):
 
 # ROC curve & AUC score display
 def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, stop_threshold=None):
-    fpr = fpr * 100
-    tpr = tpr * 100
-
     # Base plot
     if not isinstance(auc, np.ndarray):
         auc_mean = auc
@@ -119,8 +116,11 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
         auc_mean = np.mean(auc)
         auc_label = str(auc[0])[:4] + ' (512) , ' + str(auc[1])[:4] + ' (256), ' + str(auc[2])[:4] + ' (128), ' + str(auc[3])[:4] + ' (64)'
 
-    display = RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=auc_mean)
-    display.plot()
+    if len(fpr) == 0:
+        plt.plot(fpr * 100, tpr * 100)
+    else:
+        for i in range(0, len(fpr)):
+            plt.plot(fpr[i] * 100, tpr[i] * 100)
 
     # Plot display options
     plt.xlim(0, 100)
@@ -141,7 +141,6 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
     plt.tick_params(direction='in', top=True, right=True)
 
     # Legend
-
     if win_size == 512:
         line = mlines.Line2D([], [], color='red', linestyle='dotted', linewidth=1, label=str(win_size))
         plt.gca().lines[0].set_color('red')
@@ -162,14 +161,27 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
         plt.gca().lines[0].set_color('black')
         plt.gca().lines[0].set_linestyle('solid')
         plt.gca().lines[0].set_linewidth(1)
-    else:
+    elif len(fpr) == 0:
         line = mlines.Line2D([], [], color='orange', linestyle='solid', linewidth=1, label=str(win_size))
         plt.gca().lines[0].set_color('orange')
         plt.gca().lines[0].set_linestyle('solid')
         plt.gca().lines[0].set_linewidth(1)
+    else:
+        plt.gca().lines[0].set_color('red')
+        plt.gca().lines[0].set_linestyle('dotted')
+        plt.gca().lines[0].set_linewidth(1)
+        plt.gca().lines[1].set_color('green')
+        plt.gca().lines[1].set_linestyle('dashed')
+        plt.gca().lines[1].set_linewidth(1)
+        plt.gca().lines[2].set_color('blue')
+        plt.gca().lines[2].set_linestyle('dashdot')
+        plt.gca().lines[2].set_linewidth(1)
+        plt.gca().lines[3].set_color('black')
+        plt.gca().lines[3].set_linestyle('solid')
+        plt.gca().lines[3].set_linewidth(1)
 
     if not isinstance(auc, np.ndarray):
-        plt.legend(edgecolor='black', fancybox=False, prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1, handles=[line])
+        plt.legend(edgecolor='black', fancybox=False, loc='lower right', prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1, handles=[line])
 
     else:
         plt.legend(edgecolor='black', fancybox=False, loc='lower right', prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1,
@@ -193,6 +205,23 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
         plt.savefig(res_path + '/' + filename + '_roc_plot.png')
 
     return
+
+
+# Mean ROC curve utility
+def get_mean_roc(fprs, tprs):
+    mean_fpr = np.linspace(0, 1, 101)
+
+    tprs_interp = []
+
+    for i in range(0, len(tprs)):
+        tpr = np.interp(mean_fpr, fprs[i], tprs[i])
+        tpr[0] = 0.0
+        tprs_interp.append(tpr)
+
+    tprs_interp = np.array(tprs_interp)
+    mean_tpr = tprs_interp.mean(axis=0)
+
+    return mean_fpr, mean_tpr
 
 
 # Interpolate missing pixels (NaNs)

@@ -85,6 +85,8 @@ def get_img_ground_truth_path(img_path):
     img_ground_truth_path += '/manip_gt/' + img_ground_truth_name
     img_ground_truth_path = img_ground_truth_path[1:]
 
+    print(img_ground_truth_path)
+
     return img_ground_truth_path
 
 
