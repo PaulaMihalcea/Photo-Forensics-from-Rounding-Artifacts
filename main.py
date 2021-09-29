@@ -50,7 +50,7 @@ def main(args):
 
     # Output map & difference plot
     progress_bar.set_description('Generating output map')
-    output_map = get_output_map(prob_b_in_c1_r, blocks_map, img.shape[1], img.shape[0], args.show, args.save, args.img_path, args.win_size, args.stop_threshold, args.interpolate)
+    output_map_norm, output_map = get_output_map(prob_b_in_c1_r, blocks_map, img.shape[1], img.shape[0], args.show, args.save, args.img_path, args.win_size, args.stop_threshold, args.interpolate)
     get_template_difference_plot(diff_history, args.show_diff_plot, args.save_diff_plot, args.img_path, args.win_size, args.stop_threshold)
     progress_bar.update(35)
 
@@ -68,8 +68,6 @@ def main(args):
     print('Summary')
     print('Filename: {}.'.format(img_name))
     print('Image size: ' + str(img.shape[1]) + 'x' + str(img.shape[0]) + ' px.')
-    print(fpr)
-    print(tpr)
     if auc is not None:
         print('AUC score: {:.2f}.'.format(auc))
     else:
@@ -79,7 +77,7 @@ def main(args):
     else:
         print('Elapsed time: {:.2f} s.'.format(end - start))
 
-    return output_map, auc, fpr, tpr
+    return output_map_norm, auc, fpr, tpr
 
 
 if __name__ == '__main__':
@@ -104,10 +102,10 @@ if __name__ == '__main__':
 
     # Set default arguments
     if args.win_size is None:
-        args.win_size = 256
+        args.win_size = 64
 
     if args.stop_threshold is None:
-        args.stop_threshold = 1e-2
+        args.stop_threshold = 1e-3
 
     if args.prob_r_b_in_c1 is None:
         args.prob_r_b_in_c1 = 0.3

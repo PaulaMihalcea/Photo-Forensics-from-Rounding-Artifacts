@@ -4,14 +4,14 @@ from decimal import Decimal
 
 
 # Load image
-def load_image(img_path, raise_IO=True):
+def load_image(img_path, raise_io=True):
     # Load image
     img = cv2.imread(img_path)
 
     # Check image correctness
     if img is not None:
         return img
-    elif raise_IO:
+    elif raise_io:
         raise IOError('Error while loading image: invalid image file or image file path.')
     else:
         return None
@@ -84,8 +84,6 @@ def get_img_ground_truth_path(img_path):
 
     img_ground_truth_path += '/manip_gt/' + img_ground_truth_name
     img_ground_truth_path = img_ground_truth_path[1:]
-
-    print(img_ground_truth_path)
 
     return img_ground_truth_path
 

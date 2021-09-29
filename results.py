@@ -58,7 +58,7 @@ if save:
     tpr_png = []
 
     # Progress bar
-    progress_bar = tqdm.tqdm(total=len(jpeg_file_list)*len(png_file_list))
+    progress_bar = tqdm.tqdm(total=len(jpeg_file_list)+len(png_file_list))
 
     # Main loop
     #sys.stdout = open(os.devnull, 'w')  # Suppress calls to print()  # TODO
@@ -144,13 +144,13 @@ else:
     results_png = np.load('results/' + results_png_path, allow_pickle=True)
 
     fprs_jpeg = np.stack(results_jpeg[:, 4])
-    fprs_jpeg_512 = np.stack(results_jpeg[results_jpeg[:, 0] == 512, 4])
+    fprs_jpeg_512 = np.stack(results_jpeg[(results_jpeg[:, 0] == 512) & (results_jpeg[:, 2] >= 90), 4])
     fprs_jpeg_256 = np.stack(results_jpeg[results_jpeg[:, 0] == 256, 4])
     fprs_jpeg_128 = np.stack(results_jpeg[results_jpeg[:, 0] == 128, 4])
     fprs_jpeg_64 = np.stack(results_jpeg[results_jpeg[:, 0] == 64, 4])
 
     tprs_jpeg = np.stack(results_jpeg[:, 5])
-    tprs_jpeg_512 = np.stack(results_jpeg[results_jpeg[:, 0] == 512, 5])
+    tprs_jpeg_512 = np.stack(results_jpeg[(results_jpeg[:, 0] == 512) & (results_jpeg[:, 2] >= 90), 5])
     tprs_jpeg_256 = np.stack(results_jpeg[results_jpeg[:, 0] == 256, 5])
     tprs_jpeg_128 = np.stack(results_jpeg[results_jpeg[:, 0] == 128, 5])
     tprs_jpeg_64 = np.stack(results_jpeg[results_jpeg[:, 0] == 64, 5])
@@ -168,10 +168,17 @@ else:
     tprs_png_64 = np.stack(results_png[results_png[:, 0] == 64, 5])
 
 # Mean AUC score
-auc_512 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 512, 3], np.mean(results_png[results_png[:, 0] == 512, 3])])])
-auc_256 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 256, 3], np.mean(results_png[results_png[:, 0] == 256, 3])])])
-auc_128 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 128, 3], np.mean(results_png[results_png[:, 0] == 128, 3])])])
-auc_64 = np.mean([np.mean([results_jpeg[results_jpeg[:, 0] == 64, 3], np.mean(results_png[results_png[:, 0] == 64, 3])])])
+auc_512 = np.mean([np.mean([results_jpeg[(results_jpeg[:, 0] == 512) & (results_jpeg[:, 2] >= 90), 3], np.mean(results_png[results_png[:, 0] == 512, 3])])])
+auc_256 = np.mean([np.mean([results_jpeg[(results_jpeg[:, 0] == 256) & (results_jpeg[:, 2] >= 90), 3], np.mean(results_png[results_png[:, 0] == 256, 3])])])
+auc_128 = np.mean([np.mean([results_jpeg[(results_jpeg[:, 0] == 128) & (results_jpeg[:, 2] >= 90), 3], np.mean(results_png[results_png[:, 0] == 128, 3])])])
+auc_64 = np.mean([np.mean([results_jpeg[(results_jpeg[:, 0] == 64) & (results_jpeg[:, 2] >= 90), 3], np.mean(results_png[results_png[:, 0] == 64, 3])])])
+
+
+dis = np.nanmean(np.where(results_png[results_png[:, 1] == 4, 3] != 0, results_png[results_png[:, 1] == 4, 3], np.nan))  # TODO
+#print(results_png[:, 0])
+#print(results_png[:, 1])
+#print()
+#print(results_png[:, 3])
 
 # FPR, TPR for all images
 fprs = np.vstack([fprs_jpeg, fprs_png])
@@ -193,3 +200,6 @@ fpr_128, tpr_128 = get_mean_roc(fprs_128, tprs_128)
 fpr_64, tpr_64 = get_mean_roc(fprs_64, tprs_64)
 
 plot_roc([fpr_512, fpr_256, fpr_128, fpr_64], [tpr_512, tpr_256, tpr_128, tpr_64], np.asarray([auc_512, auc_256, auc_128, auc_64]), show=True, save=False)
+
+
+# TODO fai ROC solo per png

@@ -30,14 +30,6 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=Fa
     else:  # ...or with a neutral probability (0.5)
         output_map = np.nan_to_num(output_map, nan=0.5)
 
-    '''
-    # Matplotlib output map plot (for debug purposes only)
-    plt.imshow(output_map)
-    plt.clim(0, 1)
-    plt.colorbar()
-    plt.show()
-    '''
-
     # Thresholding & normalization
     output_map_norm = np.where(output_map > 0.8, 255, 0).astype(np.uint8)  # Pixels with probability of being manipulated lower than 80% are masked
 
@@ -51,7 +43,7 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=Fa
         res_path = get_subfolder(img_path, win_size, stop_threshold)
         cv2.imwrite(res_path + '/' + filename + '.png', output_map_norm)
 
-    return output_map_norm
+    return output_map_norm, output_map
 
 
 # Plot difference between successive estimates of template c
@@ -78,7 +70,7 @@ def get_template_difference_plot(diff_history, show=False, save=False, img_path=
 # Main ROC & AUC function
 def get_roc_auc(img_path, output_map):
     # Load ground truth image
-    img_ground_truth = load_image(get_img_ground_truth_path(img_path), raise_IO=False)
+    img_ground_truth = load_image(get_img_ground_truth_path(img_path), raise_io=False)
 
     # No ground truth image exists
     if img_ground_truth is None:
@@ -109,18 +101,7 @@ def get_roc_auc(img_path, output_map):
 # ROC curve & AUC score display
 def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, stop_threshold=None):
     # Base plot
-    if not isinstance(auc, np.ndarray):
-        auc_mean = auc
-        auc_label = auc
-    else:
-        auc_mean = np.mean(auc)
-        auc_label = str(auc[0])[:4] + ' (512) , ' + str(auc[1])[:4] + ' (256), ' + str(auc[2])[:4] + ' (128), ' + str(auc[3])[:4] + ' (64)'
-
-    if len(fpr) == 0:
-        plt.plot(fpr * 100, tpr * 100)
-    else:
-        for i in range(0, len(fpr)):
-            plt.plot(fpr[i] * 100, tpr[i] * 100)
+    plt.plot(fpr * 100, tpr * 100)
 
     # Plot display options
     plt.xlim(0, 100)
@@ -131,7 +112,7 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
     # Axes labels
     plt.xlabel('False Positive (%)'
                '\n\n'
-               'AUC score: {}'.format(auc_label), fontname='Chapman-Regular', fontsize=13, labelpad=15)
+               'AUC score: {}'.format(auc), fontname='Chapman-Regular', fontsize=13, labelpad=15)
     plt.ylabel('True Positive (%)', fontname='Chapman-Regular', fontsize=13)
     plt.tight_layout()
 
@@ -161,48 +142,28 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
         plt.gca().lines[0].set_color('black')
         plt.gca().lines[0].set_linestyle('solid')
         plt.gca().lines[0].set_linewidth(1)
-    elif len(fpr) == 0:
+    else:
         line = mlines.Line2D([], [], color='orange', linestyle='solid', linewidth=1, label=str(win_size))
         plt.gca().lines[0].set_color('orange')
         plt.gca().lines[0].set_linestyle('solid')
         plt.gca().lines[0].set_linewidth(1)
-    else:
-        plt.gca().lines[0].set_color('red')
-        plt.gca().lines[0].set_linestyle('dotted')
-        plt.gca().lines[0].set_linewidth(1)
-        plt.gca().lines[1].set_color('green')
-        plt.gca().lines[1].set_linestyle('dashed')
-        plt.gca().lines[1].set_linewidth(1)
-        plt.gca().lines[2].set_color('blue')
-        plt.gca().lines[2].set_linestyle('dashdot')
-        plt.gca().lines[2].set_linewidth(1)
-        plt.gca().lines[3].set_color('black')
-        plt.gca().lines[3].set_linestyle('solid')
-        plt.gca().lines[3].set_linewidth(1)
 
-    if not isinstance(auc, np.ndarray):
         plt.legend(edgecolor='black', fancybox=False, loc='lower right', prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1, handles=[line])
-
-    else:
-        plt.legend(edgecolor='black', fancybox=False, loc='lower right', prop=fm.FontProperties(family='serif'), handlelength=1.5, handletextpad=0.1,
-                   handles=[mlines.Line2D([], [], color='red', linestyle='dotted', linewidth=1, label='512'),
-                            mlines.Line2D([], [], color='green', linestyle='dashed', linewidth=1, label='256'),
-                            mlines.Line2D([], [], color='blue', linestyle=(0, (3, 1, 1, 1)), linewidth=1, label='128'),
-                            mlines.Line2D([], [], color='black', linestyle='solid', linewidth=1, label='64')])
 
     # Show plot and/or save it to disk if requested
     if img_path != '':
         filename, _ = get_filename(img_path)
     else:
         filename = 'results'
-    if show:
-        plt.show()
+
     if save:
         if img_path != '':
             res_path = get_subfolder(img_path, win_size, stop_threshold)
         else:
             res_path = 'results'
         plt.savefig(res_path + '/' + filename + '_roc_plot.png')
+    if show:
+        plt.show()
 
     return
 

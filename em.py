@@ -54,7 +54,7 @@ def expectation_maximization(blocks, threshold, prob_r_b_in_c1):
     diff = np.ones((8, 8))  # Difference between successive estimates of c is an 8x8 matrix
 
     # First iteration
-    prob_b_in_c1_r = expectation(blocks, c, True)
+    prob_b_in_c1_r = expectation(blocks, c, prob_r_b_in_c1, first_iteration=True)
     c = maximization(blocks, prob_b_in_c1_r)
 
     # Main EM loop
