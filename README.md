@@ -1,4 +1,4 @@
-# Photo Forensics from Rounding Artifacts: a Python Implementation
+# Photo Forensics from Rounding Artifacts: a Python implementation
 ## Author: Paula Mihalcea
 #### Università degli Studi di Firenze
 
@@ -14,12 +14,19 @@ Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this
 Based on a research by S. Agarwal and H. Farid (see [\[1\]](https://doi.org/10.1145/3369412.3395059)).
 
 ## Contents
-1. [Installation](#installation)
+1. [GUI](#gui)
+2. [Installation](#installation)
     - [Requirements](#requirements)
     - [Testing](#testing)
-2. [Usage](#usage)
-3. [Bibliography](#bibliography)
-4. [License](#license)
+3. [Usage](#usage)
+4. [Bibliography](#bibliography)
+5. [License](#license)
+
+## GUI
+
+This algorithm has been added as a feature to **IEViewer**, a simple Python image viewer, providing a **neat graphical interface** to an otherwise nonintuitive script; in this version it employs the default settings, and does not use ground truth maps. Check it out before cloning this repository if you are only interested in a basic usage.
+   <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/screenshots/analyze_0.png" width="50%" height="50%"></p>
+    <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/screenshots/analyze_1.png" width="50%" height="50%"></p>
 
 ## Installation
 
