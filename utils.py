@@ -62,7 +62,7 @@ def get_img_ground_truth_path(img_path):
     for el in img_path.split('/')[:-1]:
         img_ground_truth_path += '/' + el
 
-    img_ground_truth_path += '/manip_gt/' + img_ground_truth_name
+    img_ground_truth_path += '/ground_truth/' + img_ground_truth_name
     img_ground_truth_path = img_ground_truth_path[1:]
 
     return img_ground_truth_path

@@ -6,9 +6,6 @@ from em import expectation_maximization
 from postprocessing import get_output_map, get_roc_auc, get_template_difference_plot, plot_roc
 from utils import load_image
 
-from functools import partialmethod
-tqdm.__init__ = partialmethod(tqdm.__init__, disable=True)  # Disable progress bar; for debug purposes only TODO
-
 
 def main(args):
 
