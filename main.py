@@ -122,7 +122,7 @@ if __name__ == '__main__':
         args.stop_threshold = 1e-3
 
     if args.prob_r_b_in_c1 is None:
-        args.prob_r_b_in_c1 = 0.5
+        args.prob_r_b_in_c1 = 0.3
 
     if args.interpolate == 'True':
         args.interpolate = True

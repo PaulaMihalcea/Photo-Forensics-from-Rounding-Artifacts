@@ -6,94 +6,7 @@ import time
 import tqdm
 from argparse import ArgumentParser
 from PIL import Image
-from utils import get_filename, get_image_size, load_image
-
-
-# Generate manipulated images
-def main(args):
-    # Welcome message
-    print('Photo Forensics from Rounding Artifacts: manipulation script')
-    print('Author: Paula Mihalcea')
-    print('Version: 1.0')
-    print('Based on a research by S. Agarwal and H. Farid. Details & source code at https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts.')
-    print()
-
-    start = time.time()
-
-    # Get file list
-    file_list = get_jpeg_png_file_list(args.dir_path)
-    progress_bar = tqdm.tqdm(total=len(file_list)*4*4*5)
-
-    # Parameters
-    manipulations = ['copy-move', 'median-filter', 'rotation', 'content-aware-fill']  # Manipulation type
-    roi_sizes = [512, 256, 128, 64]  # Manipulated region (ROI) size
-    jpeg_qualities = [(60, 70), (71, 80), (81, 90), (91, 100)]
-
-    # Generate image
-    for file in file_list:
-        # Parameters
-        img_path = args.dir_path + file
-        filename, extension = get_filename(img_path)
-        progress_bar.set_description('Processing image {}'.format(filename) + '.{}'.format(extension))
-
-        # Create subfolders
-        if not os.path.exists(args.dir_path + '/manip_jpeg/'):
-            os.makedirs(args.dir_path + '/manip_jpeg/')
-        if not os.path.exists(args.dir_path + '/manip_png/'):
-            os.makedirs(args.dir_path + '/manip_png/')
-        if not os.path.exists(args.dir_path + '/manip_jpeg/ground_truth/'):
-            os.makedirs(args.dir_path + '/manip_jpeg/ground_truth/')
-        if not os.path.exists(args.dir_path + '/manip_png/ground_truth/'):
-            os.makedirs(args.dir_path + '/manip_png/ground_truth/')
-
-        for manipulation in manipulations:
-            for roi_size in roi_sizes:
-                # Manipulation
-                try:
-                    manip_image, ground_truth = manipulate_image(img_path, manipulation, roi_size)  # Create a single manipulation of an image
-                except IOError:
-                    continue  # Ignore invalid images
-                else:  # Save the manipulated image in 5 different formats...
-                    for q in jpeg_qualities:  # ...JPEG with Q = [60, 70], JPEG with Q = [71, 80], JPEG with Q = [81, 90], JPEG with Q = [91, 100]...
-                        quality = random.randint(q[0], q[1])  # For each range of JPEG qualities, a random JPEG quality is chosen in the specified range
-                        cv2.imwrite(args.dir_path + '/manip_jpeg/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_{}'.format(quality) + '.jpeg', manip_image, [int(cv2.IMWRITE_JPEG_QUALITY), quality])  # JPEG
-                        cv2.imwrite(args.dir_path + '/manip_jpeg/ground_truth/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_gt' + '.png', ground_truth)  # Ground truth (PNG only)
-
-                cv2.imwrite(args.dir_path + '/manip_png/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '.png', manip_image)  # ...and PNG
-                cv2.imwrite(args.dir_path + '/manip_png/ground_truth/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_gt' + '.png', ground_truth)  # Ground truth
-
-                # Progress bar update
-                progress_bar.update(5)
-
-    end = time.time()
-
-    # Final message
-    print()
-    print('Summary')
-    print('Directory: {}'.format(args.dir_path))
-    print('Images manipulated: {}.'.format(len(file_list)))
-    print('Total generated images: {}.'.format(len(file_list)*4*4*5))
-    if (end - start) / 60**2 >= 1:
-        print('Elapsed time: {:.0f} h'.format((end - start) / 60**2) + ' {:.0f} m'.format((end - start) / 60) + ' {:.2f} s.'.format((end - start) % 60))
-    elif (end - start) / 60 >= 1:
-        print('Elapsed time: {:.0f} m'.format((end - start) / 60) + ' {:.2f} s.'.format((end - start) % 60))
-    else:
-        print('Elapsed time: {:.2f} s.'.format(end - start))
-
-    return
-
-
-# Get file list
-def get_jpeg_png_file_list(dir_path):
-    # Ensure folder path end with "/"
-    if args.dir_path[-1] != '/':
-        args.dir_path += '/'
-
-    # Only get JPEG and PNG images
-    valid_extensions = ['jpeg', 'jpg', 'jpe', 'jfif', 'jif', 'png', 'JPG', 'JPEG', 'JPE', 'JFIF', 'PNG']
-    file_list = [img_file for img_file in os.listdir(dir_path) for ext in valid_extensions if img_file.endswith(ext)]
-
-    return file_list
+from utils import get_filename, get_jpeg_file_list, get_image_size, get_png_file_list, load_image
 
 
 # Define random manipulation ROI
@@ -255,42 +168,87 @@ def content_aware_fill(img, x, y, roi_size, method=cv2.INPAINT_TELEA):
     return manip_img, ground_truth
 
 
-# Manipulation ID
-def get_manip_id(manip_name):
-    if manip_name == 'copy-move':
-        manip_id = 1
-    elif manip_name == 'median-filter':
-        manip_id = 2
-    elif manip_name == 'rotation':
-        manip_id = 3
-    elif manip_name == 'content-aware-fill':
-        manip_id = 4
+# Generate manipulated images
+def main(args):
+    # Welcome message
+    print('Photo Forensics from Rounding Artifacts: manipulation script')
+    print('Author: Paula Mihalcea')
+    print('Version: 1.0')
+    print('Based on a research by S. Agarwal and H. Farid. Details & source code at https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts.')
+    print()
+
+    start = time.time()
+
+    # Get file list
+    jpeg_file_list = get_jpeg_file_list(args.dir_path)
+    png_file_list = get_png_file_list(args.dir_path)
+    file_list = jpeg_file_list + png_file_list
+
+    progress_bar = tqdm.tqdm(total=len(file_list)*4*4*5)
+
+    # Parameters
+    manipulations = ['copy-move', 'median-filter', 'rotation', 'content-aware-fill']  # Manipulation type
+    roi_sizes = [512, 256, 128, 64]  # Manipulated region (ROI) size
+    jpeg_qualities = [(60, 70), (71, 80), (81, 90), (91, 100)]
+
+    # Generate image
+    for file in file_list:
+        # Parameters
+        img_path = args.dir_path + file
+        filename, extension = get_filename(img_path)
+        progress_bar.set_description('Processing image {}'.format(filename) + '.{}'.format(extension))
+
+        # Create subfolders
+        if not os.path.exists(args.dir_path + '/manip_jpeg/'):
+            os.makedirs(args.dir_path + '/manip_jpeg/')
+        if not os.path.exists(args.dir_path + '/manip_png/'):
+            os.makedirs(args.dir_path + '/manip_png/')
+        if not os.path.exists(args.dir_path + '/manip_jpeg/ground_truth/'):
+            os.makedirs(args.dir_path + '/manip_jpeg/ground_truth/')
+        if not os.path.exists(args.dir_path + '/manip_png/ground_truth/'):
+            os.makedirs(args.dir_path + '/manip_png/ground_truth/')
+
+        for manipulation in manipulations:
+            for roi_size in roi_sizes:
+                # Manipulation
+                try:
+                    manip_image, ground_truth = manipulate_image(img_path, manipulation, roi_size)  # Create a single manipulation of an image
+                except IOError:
+                    continue  # Ignore invalid images
+                else:  # Save the manipulated image in 5 different formats...
+                    for q in jpeg_qualities:  # ...JPEG with Q = [60, 70], JPEG with Q = [71, 80], JPEG with Q = [81, 90], JPEG with Q = [91, 100]...
+                        quality = random.randint(q[0], q[1])  # For each range of JPEG qualities, a random JPEG quality is chosen in the specified range
+                        cv2.imwrite(args.dir_path + '/manip_jpeg/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_{}'.format(quality) + '.jpeg', manip_image, [int(cv2.IMWRITE_JPEG_QUALITY), quality])  # JPEG
+                        cv2.imwrite(args.dir_path + '/manip_jpeg/ground_truth/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_gt' + '.png', ground_truth)  # Ground truth (PNG only)
+
+                cv2.imwrite(args.dir_path + '/manip_png/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '.png', manip_image)  # ...and PNG
+                cv2.imwrite(args.dir_path + '/manip_png/ground_truth/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_gt' + '.png', ground_truth)  # Ground truth
+
+                # Progress bar update
+                progress_bar.update(5)
+
+    end = time.time()
+
+    # Final message
+    print()
+    print('Summary')
+    print('Directory: {}'.format(args.dir_path))
+    print('Images manipulated: {}.'.format(len(file_list)))
+    print('Total generated images: {}.'.format(len(file_list)*4*4*5))
+    if (end - start) / 60**2 >= 1:
+        print('Elapsed time: {:.0f} h'.format((end - start) / 60**2) + ' {:.0f} m'.format((end - start) / 60) + ' {:.2f} s.'.format((end - start) % 60))
+    elif (end - start) / 60 >= 1:
+        print('Elapsed time: {:.0f} m'.format((end - start) / 60) + ' {:.2f} s.'.format((end - start) % 60))
     else:
-        raise ValueError('Invalid manipulation method. Possible values: "copy-move", "median-filter", "rotation", "content-aware-fill".')
+        print('Elapsed time: {:.2f} s.'.format(end - start))
 
-    return manip_id
-
-
-# Manipulation name
-def get_manip_name(manip_id):
-    if manip_id == 1:
-        manip_name = 'copy-move'
-    elif manip_id == 2:
-        manip_name = 'median-filter'
-    elif manip_id == 3:
-        manip_name = 'rotation'
-    elif manip_id == 4:
-        manip_name = 'content-aware-fill'
-    else:
-        raise ValueError('Invalid manipulation method. Possible values: 1, 2, 3, 4.')
-
-    return manip_name
+    return
 
 
 if __name__ == '__main__':
 
     # Initialize parser
-    parser = ArgumentParser(description='Manipulation script for the "Photo Forensics from Rounding Artifacts" project; generates manipulated images from a given directory (e.g. "path/to/images/") in a specific subdirectory (e.g. "path/to/images/manip") as described in the referenced paper.')
+    parser = ArgumentParser(description='Manipulation script for the "Photo Forensics from Rounding Artifacts" project; generates manipulated images from a given directory (e.g. "path/to/images/") in two specific subdirectories (e.g. "path/to/images/manip_jpeg" and "path/to/images/manip_png") as described in the referenced paper.')
 
     # Add parser arguments
     parser.add_argument('dir_path', help='Path of the directory containing the images to be manipulated.')
