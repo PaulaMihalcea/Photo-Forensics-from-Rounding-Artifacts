@@ -79,10 +79,13 @@ Optional arguments:
 - `--stop_threshold`: expectation-maximization algorithm stop threshold (default: `1e-2`);
 - `--prob_r_b_in_c1`: expectation-maximization algorithm probability of _r_ conditioned by _b_ belonging to _C<sub>1</sub>_ (default: `0.3`);
 - `--interpolate`: interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm, using the function from [\[3\]](https://stackoverflow.com/a/68558547), otherwise replace them with `0.5` (default: `False`). _Warning: slows down the program significantly_;
-- `--sh`: show the resulting output map (default: `True`);
-- `--sv`: save the resulting output map in the `results` folder (default: `False`);
-- `--sh_diff_plot`: show the plot of the difference between successive estimates of template _c_ (default: `False`);
-- `--sv_diff_plot`: save the plot of the difference between successive estimates of template _c_ in the `results` folder (default: `False`).
+- `--show`: show the resulting output map (default: `True`);
+- `--save`: save the resulting output map in the `results` folder (default: `False`);
+- `--show_roc_plot`: show the plot of the ROC curve (default: `False`);
+- `--save_roc_plot`: save the plot of the ROC curve in the `results` folder (default: `False`);
+- `--show_diff_plot`: show the plot of the difference between successive estimates of template _c_ (default: `False`);
+- `--save_diff_plot`: save the plot of the difference between successive estimates of template _c_ in the `results` folder (default: `False`);
+- `--verbose`: show progress in terminal (default: `True`).
 
 Example call with optional arguments:
 ```
@@ -97,4 +100,4 @@ python3 main.py "images/my_photo.jpg" --win_size=256 --stop_threshold=1e-2 --sav
 [\[3\]](https://stackoverflow.com/a/68558547) Sam De Meyer, **[interpolate missing values 2d python](https://stackoverflow.com/questions/37662180/interpolate-missing-values-2d-python)**, 2021
 
 ## License
-This work is licensed under a [Creative Commons “Attribution-NonCommercial-ShareAlike 4.0 International”](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) license. More details are available in the [LICENSE](./LICENSE) file. All rights regarding the theory of the implemented algorithm reserved to the original paper's authors. 
+This work is licensed under a [Creative Commons “Attribution-NonCommercial-ShareAlike 4.0 International”](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) license. More details are available in the [LICENSE](./LICENSE) file. All rights regarding the theory of the implemented algorithm reserved to the original paper's authors.
