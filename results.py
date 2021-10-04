@@ -1,6 +1,3 @@
-import cv2
-import matplotlib.pyplot as plt
-import numpy as np
 import os
 import pandas as pd
 import random
@@ -9,7 +6,6 @@ import tqdm
 from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from main import main as mm
-from postprocessing import plot_roc#, get_mean_roc  # TODO
 from utils import get_filename, get_file_list, get_last_directory
 
 
