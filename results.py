@@ -86,9 +86,9 @@ def main(args):
 
         timestamp = datetime.now().strftime('%Y_%m_%d_%H_%M')
 
-        results_path = 'results/results_' + get_last_directory(args.dir_path) + '_' + timestamp + '.csv'
-        results_path_fpr = 'results/results_' + get_last_directory(args.dir_path) + '_' + timestamp + '_fpr.csv'
-        results_path_tpr = 'results/results_' + get_last_directory(args.dir_path) + '_' + timestamp + '_tpr.csv'
+        results_path = 'results/results_' + get_last_directory(args.dir_path) + '_' + str(args.win_size) + '_' + timestamp + '.csv'
+        results_path_fpr = 'results/results_' + get_last_directory(args.dir_path) + '_' + str(args.win_size) + '_' + timestamp + '_fpr.csv'
+        results_path_tpr = 'results/results_' + get_last_directory(args.dir_path) + '_' + str(args.win_size) + '_' + timestamp + '_tpr.csv'
 
         results.to_csv(results_path, index=False)
         results_fpr.to_csv(results_path_fpr, index=False)
