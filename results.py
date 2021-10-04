@@ -33,6 +33,20 @@ def get_image_info(filename, extension):
     return manip_size, manip_type, quality
 
 
+# Get dimples strength from report file
+def get_dimples_strength(dimples_df, filename):
+    if dimples_df is not None:
+        dimples_strength = dimples_df[dimples_df.img_name == filename].dimples_strength.values
+        if len(dimples_strength) == 0:
+            dimples_strength = None
+        else:
+            dimples_strength = dimples_strength[0]
+    else:
+        dimples_strength = None
+
+    return dimples_strength
+
+
 def main(args):
     # Welcome message
     print('Photo Forensics from Rounding Artifacts: results script')
@@ -53,7 +67,10 @@ def main(args):
             os.makedirs('results/')
 
         # Dimples strength dataframe loading
-        dimples_df = pd.read_csv('results/report.csv')
+        if os.path.isfile('results/report.csv'):
+            dimples_df = pd.read_csv('results/report.csv')
+        else:
+            dimples_df = None
 
         # Dataframe creation
         results = pd.DataFrame(columns=['img_name', 'dimples_strength', 'format', 'quality', 'manip_type', 'manip_size', 'win_size', 'auc'])
@@ -108,34 +125,46 @@ def main(args):
 
         # Main loop
         for i in file_list:
-            # Image information
-            args_mm.img_path = i
+            # Basic image information
             filename, extension = get_filename(i)
-            manip_size, manip_type, quality = get_image_info(filename, extension)
-            dimples_strength = dimples_df[dimples_df.img_name == filename].dimples_strength.values[0]
 
-            # Update progress bar
-            progress_bar.set_description('Processing image {}'.format(filename + '.{}'.format(extension)))
+            try:  # Too broad exception clause? Definitely. Perfect for avoiding errors in a script that might be up and running for days? Absolutely.
+                # More image information
+                args_mm.img_path = args.dir_path + '/' + i
+                manip_size, manip_type, quality = get_image_info(filename, extension)
+                dimples_strength = get_dimples_strength(dimples_df, filename)
 
-            # Main EM algorithm
-            output_map, auc, fpr, tpr = mm(args_mm)
+                # Update progress bar
+                progress_bar.set_description('Processing image {}'.format(filename + '.{}'.format(extension)))
 
-            # Save results
-            results_dict = {'img_name': filename, 'dimples_strength': dimples_strength, 'format': extension, 'quality': quality, 'manipulation_type': manip_type, 'manip_size': manip_size, 'win_size': args.win_size, 'auc': auc}
-            results_fpr_dict = {'img_name': filename, 'fpr': fpr}
-            results_tpr_dict = {'img_name': filename, 'tpr': tpr}
+                # Main EM algorithm
+                _, auc, fpr, tpr = mm(args_mm)
 
-            results = pd.DataFrame(results_dict, index=[0])
-            results_fpr = pd.DataFrame(results_fpr_dict)
-            results_tpr = pd.DataFrame(results_tpr_dict)
+                # Save results
+                results_dict = {'img_name': filename, 'dimples_strength': dimples_strength, 'format': extension, 'quality': quality, 'manipulation_type': manip_type, 'manip_size': manip_size, 'win_size': args.win_size, 'auc': auc}
+                results_fpr_dict = {'img_name': filename, 'fpr': fpr}
+                results_tpr_dict = {'img_name': filename, 'tpr': tpr}
 
-            results.to_csv(results_path, mode='a', header=False)
-            results_fpr.to_csv(results_path_fpr, mode='a', header=False)
-            results_tpr.to_csv(results_path_tpr, mode='a', header=False)
+                results = pd.DataFrame(results_dict, index=[0])
+                results_fpr = pd.DataFrame(results_fpr_dict)
+                results_tpr = pd.DataFrame(results_tpr_dict)
 
-            # Update progress bar
-            progress_bar.update(1)
-            imgs_done += 1
+                results.to_csv(results_path, mode='a', header=False)
+                results_fpr.to_csv(results_path_fpr, mode='a', header=False)
+                results_tpr.to_csv(results_path_tpr, mode='a', header=False)
+
+                # Update progress bar
+                progress_bar.update(1)
+                imgs_done += 1
+
+            except Exception as e:
+                print('An exception happened while analyzing file' + filename + '.' + extension + ':')
+                print(getattr(e, 'message', repr(e)))
+
+                # Update progress bar nonetheless
+                progress_bar.update(1)
+
+                continue
 
         end = time.time()
 

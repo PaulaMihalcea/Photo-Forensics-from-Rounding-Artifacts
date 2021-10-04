@@ -29,6 +29,7 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=Fa
         output_map = interpolate_missing_pixels(output_map, output_mask, 'linear')
     else:  # ...or with a neutral probability (0.5)
         output_map = np.nan_to_num(output_map, nan=0.5)
+        output_map = np.round(output_map, 3)
 
     # Thresholding & normalization
     output_map_norm = np.where(output_map > 0.8, 255, 0).astype(np.uint8)  # Pixels with probability of being manipulated lower than 80% are masked
