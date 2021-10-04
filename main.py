@@ -3,7 +3,7 @@ import tqdm
 from argparse import ArgumentParser
 from preprocessing import get_average_window_blocks, luminance, mfr
 from em import expectation_maximization
-from postprocessing import get_output_map, get_roc_auc, get_template_difference_plot, plot_roc
+from postprocessing_no_sklearn import get_output_map, get_roc_auc, get_template_difference_plot, plot_roc
 from utils import load_image
 
 
@@ -67,7 +67,7 @@ def main(args):
     # Compute ROC curve and AUC score
     if args.verbose:
         progress_bar.set_description('Computing AUC score')
-    auc, fpr, tpr, thresholds = get_roc_auc(args.img_path, output_map)
+    auc, fpr, tpr = get_roc_auc(args.img_path, output_map)
     if (args.show_roc_plot or args.save_roc_plot) and auc != 0:
         plot_roc(fpr, tpr, auc, args.show_roc_plot, args.save_roc_plot, args.img_path, args.win_size, args.stop_threshold)
     if args.verbose:
@@ -90,7 +90,7 @@ def main(args):
         else:
             print('Elapsed time: {:.2f} s.'.format(end - start))
 
-    return output_map_norm, auc, fpr, tpr, thresholds
+    return output_map_norm, auc, fpr, tpr
 
 
 if __name__ == '__main__':

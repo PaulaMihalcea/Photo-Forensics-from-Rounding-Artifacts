@@ -136,7 +136,7 @@ Optional arguments:
 As mentioned, the script can also be used to create plots from existing results, assuming they have been generated with the previous command and exist as CSV files in the `results` subfolder:
 
 ```
-python3 results.py False
+python3 results.py False --res_path="results_file.csv"
 ```
 
 ### Amped report parsing script

@@ -17,20 +17,27 @@ from utils import get_filename, get_file_list, get_last_directory
 def get_image_info(filename, extension):
     # Split filename
     el = filename.split('_')
+    original_filename = ''
 
     # Extract information
     if extension in ['png', 'PNG']:
-        quality = None
+        for e in el[0:-2]:
+            original_filename = original_filename + '_' + e
+        original_filename = original_filename[1:]
+        quality = -1
         manip_size = int(el[-1])
         manip_type = el[-2]
     elif extension in ['jpeg', 'jpg', 'jpe', 'jfif', 'jif', 'JPEG', 'JPG', 'JPE', 'JFIF', 'JIF']:
+        for e in el[0:-3]:
+            original_filename = original_filename + '_' + e
+        original_filename = original_filename[1:]
         quality = int(el[-1])
         manip_size = int(el[-2])
         manip_type = el[-3]
     else:
         raise ValueError('Invalid file extension (allowed extensions: .png, .jpeg, .jpg, .jpe, .jfif or .jif.)')
 
-    return manip_size, manip_type, quality
+    return original_filename, manip_size, manip_type, quality
 
 
 # Get dimples strength from report file
@@ -76,19 +83,16 @@ def main(args):
         results = pd.DataFrame(columns=['img_name', 'dimples_strength', 'format', 'quality', 'manip_type', 'manip_size', 'win_size', 'auc'])
         results_fpr = pd.DataFrame(columns=['img_name', 'fpr'])
         results_tpr = pd.DataFrame(columns=['img_name', 'tpr'])
-        results_thr = pd.DataFrame(columns=['img_name', 'thresholds'])
 
         timestamp = datetime.now().strftime('%Y_%m_%d_%H_%M')
 
         results_path = 'results/results_' + get_last_directory(args.dir_path) + '_' + timestamp + '.csv'
         results_path_fpr = 'results/results_' + get_last_directory(args.dir_path) + '_' + timestamp + '_fpr.csv'
         results_path_tpr = 'results/results_' + get_last_directory(args.dir_path) + '_' + timestamp + '_tpr.csv'
-        results_path_thr = 'results/results_' + get_last_directory(args.dir_path) + '_' + timestamp + '_thresholds.csv'
 
         results.to_csv(results_path, index=False)
         results_fpr.to_csv(results_path_fpr, index=False)
         results_tpr.to_csv(results_path_tpr, index=False)
-        results_thr.to_csv(results_path_thr, index=False)
 
         '''
         img_name: Image name (without extension).
@@ -101,7 +105,6 @@ def main(args):
         auc: AUC score.
         fpr: False positive rate (FPR); saved in a separate file.
         tpr: True positive rate (TPR); saved in a separate file.
-        thresholds: ROC curve thresholds; saved in a separate file.
         '''
 
         # Main setup (uses default parameters)
@@ -135,30 +138,27 @@ def main(args):
             try:  # Too broad exception clause? Definitely. Perfect for avoiding errors in a script that might be up and running for days? Absolutely.
                 # More image information
                 args_mm.img_path = args.dir_path + '/' + i
-                manip_size, manip_type, quality = get_image_info(filename, extension)
-                dimples_strength = get_dimples_strength(dimples_df, filename)
+                original_filename, manip_size, manip_type, quality = get_image_info(filename, extension)
+                dimples_strength = get_dimples_strength(dimples_df, original_filename)
 
                 # Update progress bar
                 progress_bar.set_description('Processing image {}'.format(filename + '.{}'.format(extension)))
 
                 # Main EM algorithm
-                _, auc, fpr, tpr, thresholds = mm(args_mm)
+                _, auc, fpr, tpr = mm(args_mm)
 
                 # Save results
                 results_dict = {'img_name': filename, 'dimples_strength': dimples_strength, 'format': extension, 'quality': quality, 'manipulation_type': manip_type, 'manip_size': manip_size, 'win_size': args.win_size, 'auc': auc}
                 results_fpr_dict = {'img_name': filename, 'fpr': fpr}
                 results_tpr_dict = {'img_name': filename, 'tpr': tpr}
-                results_thr_dict = {'img_name': filename, 'thresholds': thresholds}
 
                 results = pd.DataFrame(results_dict, index=[0])
                 results_fpr = pd.DataFrame(results_fpr_dict)
                 results_tpr = pd.DataFrame(results_tpr_dict)
-                results_thr = pd.DataFrame(results_thr_dict)
 
                 results.to_csv(results_path, mode='a', header=False)
                 results_fpr.to_csv(results_path_fpr, mode='a', header=False)
                 results_tpr.to_csv(results_path_tpr, mode='a', header=False)
-                results_thr.to_csv(results_path_thr, mode='a', header=False)
 
                 # Update progress bar
                 progress_bar.update(1)

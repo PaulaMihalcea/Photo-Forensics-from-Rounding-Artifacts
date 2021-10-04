@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.font_manager as fm
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
-from sklearn.metrics import roc_curve, roc_auc_score, RocCurveDisplay
+from sklearn.metrics import auc
 from utils import get_filename, get_img_ground_truth_path, get_subfolder, load_image
 
 
@@ -75,7 +75,7 @@ def get_roc_auc(img_path, output_map):
 
     # No ground truth image exists
     if img_ground_truth is None:
-        return None, None, None
+        return None, None, None, None
 
     # Ground truth image exists
     else:
@@ -88,15 +88,20 @@ def get_roc_auc(img_path, output_map):
         output_map = output_map.flatten()
 
         # ROC curve
-        fpr, tpr, thresholds = roc_curve(img_ground_truth, output_map)
+        from sklearn.metrics import roc_curve as rc_sk, roc_auc_score  # TODO
+        fpr_sk, tpr_sk, _ = rc_sk(img_ground_truth, output_map, drop_intermediate=False)
+        auc_score_sk = auc(fpr_sk, tpr_sk)
+
+        fpr, tpr = roc_curve(img_ground_truth, output_map, np.linspace(0, 1, 50))
 
         # AUC score
         try:
-            auc = roc_auc_score(img_ground_truth, output_map)
+            auc_score = auc(fpr, tpr)
+            print(auc_score, auc_score_sk)
         except:
-            auc = 0
+            auc_score = 0
 
-        return auc, fpr, tpr, thresholds
+        return auc_score, fpr, tpr
 
 
 # ROC curve & AUC score display
@@ -108,7 +113,7 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
     plt.xlim(0, 100)
     plt.ylim(0, 100)
     plt.axis('square')
-    #plt.grid()
+    plt.grid()
 
     # Axes labels
     plt.xlabel('False Positive (%)'
@@ -167,6 +172,28 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
         plt.show()
 
     return
+
+
+# ROC curve
+def roc_curve(output_map, ground_truth, thresholds):
+    # TODO https://stackoverflow.com/questions/61321778/how-to-calculate-tpr-and-fpr-in-python-without-using-sklearn
+    # Initialize FPR & TPR arrays
+    fpr = np.empty_like(thresholds)
+    tpr = np.empty_like(thresholds)
+
+    # Compute FPR & TPR
+    for t in range(0, len(thresholds)):
+        y_pred = np.where(ground_truth >= thresholds[t], 1, 0)
+        fp = np.sum((y_pred == 1) & (output_map == 0))
+        tp = np.sum((y_pred == 1) & (output_map == 1))
+        fn = np.sum((y_pred == 0) & (output_map == 1))
+        tn = np.sum((y_pred == 0) & (output_map == 0))
+        fpr[t] = fp / (fp + tn)
+        tpr[t] = tp / (tp + fn)
+
+    print(len(fpr), len(tpr), len(thresholds))
+
+    return fpr, tpr
 
 
 # Interpolate missing pixels (NaNs)
