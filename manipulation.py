@@ -13,13 +13,13 @@ from utils import get_filename, get_file_list, get_image_size, load_image
 def manipulate_image(img_path, manipulation, roi_size):
     # Load image
     img = load_image(img_path)
-    img_height, img_width = get_image_size(img)
+    img_width, img_height = get_image_size(img)
 
     # Randomly choose manipulation ROI position
     x = random.randint(0, img_height - roi_size)
     y = random.randint(0, img_width - roi_size)
 
-    roi = (y, x, roi_size)
+    roi = (x, y, roi_size)
 
     # Apply manipulation
     # Copy-move

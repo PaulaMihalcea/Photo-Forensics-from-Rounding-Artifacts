@@ -88,7 +88,7 @@ def get_roc_auc(img_path, output_map):
         output_map = output_map.flatten()
 
         # ROC curve
-        fpr, tpr, _ = roc_curve(img_ground_truth, output_map, drop_intermediate=False)
+        fpr, tpr, thresholds = roc_curve(img_ground_truth, output_map)
 
         # AUC score
         try:
@@ -96,7 +96,7 @@ def get_roc_auc(img_path, output_map):
         except:
             auc = 0
 
-        return fpr, tpr, auc
+        return auc, fpr, tpr, thresholds
 
 
 # ROC curve & AUC score display

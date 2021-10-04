@@ -67,7 +67,7 @@ def main(args):
     # Compute ROC curve and AUC score
     if args.verbose:
         progress_bar.set_description('Computing AUC score')
-    fpr, tpr, auc = get_roc_auc(args.img_path, output_map)
+    auc, fpr, tpr, thresholds = get_roc_auc(args.img_path, output_map)
     if (args.show_roc_plot or args.save_roc_plot) and auc != 0:
         plot_roc(fpr, tpr, auc, args.show_roc_plot, args.save_roc_plot, args.img_path, args.win_size, args.stop_threshold)
     if args.verbose:
@@ -90,7 +90,7 @@ def main(args):
         else:
             print('Elapsed time: {:.2f} s.'.format(end - start))
 
-    return output_map_norm, auc, fpr, tpr
+    return output_map_norm, auc, fpr, tpr, thresholds
 
 
 if __name__ == '__main__':
@@ -122,7 +122,7 @@ if __name__ == '__main__':
         args.stop_threshold = 1e-3
 
     if args.prob_r_b_in_c1 is None:
-        args.prob_r_b_in_c1 = 0.3
+        args.prob_r_b_in_c1 = 0.5
 
     if args.interpolate == 'True':
         args.interpolate = True

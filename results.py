@@ -76,16 +76,19 @@ def main(args):
         results = pd.DataFrame(columns=['img_name', 'dimples_strength', 'format', 'quality', 'manip_type', 'manip_size', 'win_size', 'auc'])
         results_fpr = pd.DataFrame(columns=['img_name', 'fpr'])
         results_tpr = pd.DataFrame(columns=['img_name', 'tpr'])
+        results_thr = pd.DataFrame(columns=['img_name', 'thresholds'])
 
         timestamp = datetime.now().strftime('%Y_%m_%d_%H_%M')
 
         results_path = 'results/results_' + get_last_directory(args.dir_path) + '_' + timestamp + '.csv'
         results_path_fpr = 'results/results_' + get_last_directory(args.dir_path) + '_' + timestamp + '_fpr.csv'
         results_path_tpr = 'results/results_' + get_last_directory(args.dir_path) + '_' + timestamp + '_tpr.csv'
+        results_path_thr = 'results/results_' + get_last_directory(args.dir_path) + '_' + timestamp + '_thresholds.csv'
 
         results.to_csv(results_path, index=False)
         results_fpr.to_csv(results_path_fpr, index=False)
         results_tpr.to_csv(results_path_tpr, index=False)
+        results_thr.to_csv(results_path_thr, index=False)
 
         '''
         img_name: Image name (without extension).
@@ -98,6 +101,7 @@ def main(args):
         auc: AUC score.
         fpr: False positive rate (FPR); saved in a separate file.
         tpr: True positive rate (TPR); saved in a separate file.
+        thresholds: ROC curve thresholds; saved in a separate file.
         '''
 
         # Main setup (uses default parameters)
@@ -138,20 +142,23 @@ def main(args):
                 progress_bar.set_description('Processing image {}'.format(filename + '.{}'.format(extension)))
 
                 # Main EM algorithm
-                _, auc, fpr, tpr = mm(args_mm)
+                _, auc, fpr, tpr, thresholds = mm(args_mm)
 
                 # Save results
                 results_dict = {'img_name': filename, 'dimples_strength': dimples_strength, 'format': extension, 'quality': quality, 'manipulation_type': manip_type, 'manip_size': manip_size, 'win_size': args.win_size, 'auc': auc}
                 results_fpr_dict = {'img_name': filename, 'fpr': fpr}
                 results_tpr_dict = {'img_name': filename, 'tpr': tpr}
+                results_thr_dict = {'img_name': filename, 'thresholds': thresholds}
 
                 results = pd.DataFrame(results_dict, index=[0])
                 results_fpr = pd.DataFrame(results_fpr_dict)
                 results_tpr = pd.DataFrame(results_tpr_dict)
+                results_thr = pd.DataFrame(results_thr_dict)
 
                 results.to_csv(results_path, mode='a', header=False)
                 results_fpr.to_csv(results_path_fpr, mode='a', header=False)
                 results_tpr.to_csv(results_path_tpr, mode='a', header=False)
+                results_thr.to_csv(results_path_thr, mode='a', header=False)
 
                 # Update progress bar
                 progress_bar.update(1)
@@ -218,6 +225,13 @@ if __name__ == '__main__':
     parser.add_argument('-ws', '--win_size', type=int, help='Window size in pixel (default: 256). Note: must be a multiple of 8. Only needed if generate is True.')
 
     args = parser.parse_args()
+
+    # Ensure folder path ends with "/"
+    if args.dir_path[-1] != '/':
+        args.dir_path += '/'
+
+    if args.win_size is None:
+        args.win_size = 64
 
     # Run main script
     main(args)
