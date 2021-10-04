@@ -63,7 +63,6 @@ The following Python packages are required in order to run this program. Please 
 | [Pillow](https://pillow.readthedocs.io/en/stable/) | 8.2.0 |
 | [random](https://docs.python.org/3/library/random.html) | _latest_ |
 | [scikit-learn](https://scikit-learn.org/stable/) | _latest_ |
-| [SciPy](https://www.scipy.org/) | _latest_ |
 | [sys](https://docs.python.org/3/library/sys.html) | _latest_ |
 | [time](https://docs.python.org/3/library/time.html) | _latest_ |
 | [tqdm](https://github.com/tqdm/tqdm) | _latest_ |
