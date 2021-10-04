@@ -55,6 +55,7 @@ The following Python packages are required in order to run this program. Please 
 | [NumPy](https://numpy.org/) | _latest_ |
 | [OpenCV](https://opencv.org/) | _latest_ |
 | [os](https://docs.python.org/3/library/os.html) | _latest_ |
+| [pandas](https://pandas.pydata.org/) | _latest_ |
 | [Pillow](https://pillow.readthedocs.io/en/stable/) | 8.2.0 |
 | [random](https://docs.python.org/3/library/random.html) | _latest_ |
 | [scikit-learn](https://scikit-learn.org/stable/) | _latest_ |

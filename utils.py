@@ -83,27 +83,24 @@ def get_subfolder(img_path, win_size, stop_threshold):
     return res_path
 
 
-# Get JPEG file list
-def get_jpeg_file_list(dir_path):
-    # Ensure folder path end with "/"
+# Get JPEG and PNG file list
+def get_file_list(dir_path):
+    # Ensure folder path ends with "/"
     if dir_path[-1] != '/':
         dir_path += '/'
 
     # Only get JPEG and PNG images
-    valid_extensions = ['jpeg', 'jpg', 'jpe', 'jfif', 'jif', 'JPG', 'JPEG', 'JPE', 'JFIF']
+    valid_extensions = ['jpeg', 'jpg', 'jpe', 'jfif', 'jif', 'JPG', 'JPEG', 'JPE', 'JFIF', 'png', 'PNG']
     file_list = [img_file for img_file in os.listdir(dir_path) for ext in valid_extensions if img_file.endswith(ext)]
 
     return file_list
 
 
-# Get PNG file list
-def get_png_file_list(dir_path):
-    # Ensure folder path end with "/"
+# Get last directory in path
+def get_last_directory(dir_path):
     if dir_path[-1] != '/':
-        dir_path += '/'
+        last_directory = dir_path.split('/')[-1]
+    else:
+        last_directory = dir_path.split('/')[-2]
 
-    # Only get JPEG and PNG images
-    valid_extensions = ['png', 'PNG']
-    file_list = [img_file for img_file in os.listdir(dir_path) for ext in valid_extensions if img_file.endswith(ext)]
-
-    return file_list
+    return last_directory

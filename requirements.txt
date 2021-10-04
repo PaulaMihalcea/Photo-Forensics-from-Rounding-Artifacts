@@ -4,6 +4,7 @@ decimal
 matplotlib
 numpy
 os
+pandas
 pillow~=8.2.0
 python~=3.8
 random
