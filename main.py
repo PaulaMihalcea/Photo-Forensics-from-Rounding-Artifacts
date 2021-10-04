@@ -3,7 +3,7 @@ import tqdm
 from argparse import ArgumentParser
 from preprocessing import get_average_window_blocks, luminance, mfr
 from em import expectation_maximization
-from postprocessing_no_sklearn import get_output_map, get_roc_auc, get_template_difference_plot, plot_roc
+from postprocessing import get_output_map, get_roc_auc, get_template_difference_plot, plot_roc
 from utils import load_image
 
 

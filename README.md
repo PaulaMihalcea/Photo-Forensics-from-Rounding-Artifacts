@@ -139,6 +139,8 @@ As mentioned, the script can also be used to create plots from existing results,
 python3 results.py False --res_path="results_file.csv"
 ```
 
+All ROC curves in this project have been calculated with the function from [\[8\]](https://stackoverflow.com/a/61323665), in order to get a fixed number of thresholds and easily calculate the average ROC curve.
+
 ### Amped report parsing script
 
 This script parses an Amped Authenticate HTML report [\[7\]](https://ampedsoftware.com/authenticate) containing information about the dimples' strength of an image dataset, and saves its contents to a CSV file (`results/report.csv`) for easier indexing.  Only selects images containing dimples stronger than 15 with offset [0, 0] are selected.
@@ -164,6 +166,8 @@ After the creation of the CSV report, the program can be used to randomly select
 [\[6\]](https://docs.opencv.org/4.5.2/d4/da8/group__imgcodecs.html#gabbc7ef1aa2edfaa87772f1202d67e0ce) OpenCV, **imwrite()**, OpenCV Documentation
 
 [\[7\]](https://ampedsoftware.com/authenticate) Amped Software, **Amped Authenticate**, 09.2021
+
+[\[8\]](https://stackoverflow.com/a/61323665) Flavia Giammarino, **[How to calculate TPR and FPR in Python without using sklearn?](https://stackoverflow.com/a/61323665)**, 2020
 
 ## License
 This work is licensed under a [Creative Commons “Attribution-NonCommercial-ShareAlike 4.0 International”](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) license. More details are available in the [LICENSE](./LICENSE) file. All rights regarding the theory behind the EM algorithm reserved to the original paper's authors.

@@ -88,16 +88,11 @@ def get_roc_auc(img_path, output_map):
         output_map = output_map.flatten()
 
         # ROC curve
-        from sklearn.metrics import roc_curve as rc_sk, roc_auc_score  # TODO
-        fpr_sk, tpr_sk, _ = rc_sk(img_ground_truth, output_map, drop_intermediate=False)
-        auc_score_sk = auc(fpr_sk, tpr_sk)
-
         fpr, tpr = roc_curve(img_ground_truth, output_map, np.linspace(0, 1, 50))
 
         # AUC score
         try:
             auc_score = auc(fpr, tpr)
-            print(auc_score, auc_score_sk)
         except:
             auc_score = 0
 
@@ -175,8 +170,9 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
 
 
 # ROC curve
+# Function by StackOverflow user Flavia Giammarino:
+# https://stackoverflow.com/a/61323665
 def roc_curve(output_map, ground_truth, thresholds):
-    # TODO https://stackoverflow.com/questions/61321778/how-to-calculate-tpr-and-fpr-in-python-without-using-sklearn
     # Initialize FPR & TPR arrays
     fpr = np.empty_like(thresholds)
     tpr = np.empty_like(thresholds)
@@ -190,8 +186,6 @@ def roc_curve(output_map, ground_truth, thresholds):
         tn = np.sum((y_pred == 0) & (output_map == 0))
         fpr[t] = fp / (fp + tn)
         tpr[t] = tp / (tp + fn)
-
-    print(len(fpr), len(tpr), len(thresholds))
 
     return fpr, tpr
 
