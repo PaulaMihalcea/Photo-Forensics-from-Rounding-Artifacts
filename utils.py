@@ -91,7 +91,7 @@ def get_file_list(dir_path):
 
     # Only get JPEG and PNG images
     valid_extensions = ['jpeg', 'jpg', 'jpe', 'jfif', 'jif', 'JPG', 'JPEG', 'JPE', 'JFIF', 'png', 'PNG']
-    file_list = [img_file for img_file in os.listdir(dir_path) for ext in valid_extensions if img_file.endswith(ext)]
+    file_list = [img_file for img_file in os.listdir(dir_path) for ext in valid_extensions if img_file.endswith('.' + ext)]
 
     return file_list
 

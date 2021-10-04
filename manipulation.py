@@ -6,7 +6,7 @@ import time
 import tqdm
 from argparse import ArgumentParser
 from PIL import Image
-from utils import get_filename, get_jpeg_file_list, get_image_size, get_png_file_list, load_image
+from utils import get_filename, get_file_list, get_image_size, load_image
 
 
 # Define random manipulation ROI
@@ -180,9 +180,7 @@ def main(args):
     start = time.time()
 
     # Get file list
-    jpeg_file_list = get_jpeg_file_list(args.dir_path)
-    png_file_list = get_png_file_list(args.dir_path)
-    file_list = jpeg_file_list + png_file_list
+    file_list = get_file_list(args.dir_path)
 
     progress_bar = tqdm.tqdm(total=len(file_list)*4*4*5)
 
@@ -195,7 +193,7 @@ def main(args):
     for file in file_list:
         # Parameters
         img_path = args.dir_path + file
-        filename, extension = get_filename(img_path)
+        filename, extension = get_filename(file)
         progress_bar.set_description('Processing image {}'.format(filename) + '.{}'.format(extension))
 
         # Create subfolders
@@ -222,6 +220,7 @@ def main(args):
                         cv2.imwrite(args.dir_path + '/manip_jpeg/ground_truth/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_gt' + '.png', ground_truth)  # Ground truth (PNG only)
 
                 cv2.imwrite(args.dir_path + '/manip_png/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '.png', manip_image)  # ...and PNG
+                ciao = args.dir_path + '/manip_png/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '.png'
                 cv2.imwrite(args.dir_path + '/manip_png/ground_truth/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_gt' + '.png', ground_truth)  # Ground truth
 
                 # Progress bar update
@@ -254,6 +253,10 @@ if __name__ == '__main__':
     parser.add_argument('dir_path', help='Path of the directory containing the images to be manipulated.')
 
     args = parser.parse_args()
+
+    # Ensure folder path ends with "/"
+    if args.dir_path[-1] != '/':
+        args.dir_path += '/'
 
     # Run main script
     main(args)
