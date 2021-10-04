@@ -121,7 +121,7 @@ python3 manipulation.py "path/to/images/"
 
 ### Results
 
-This script generates the plots shown in figures 6 and 7 of [\[1\]](https://doi.org/10.1145/3369412.3395059) (except for figure _7(d)_) using images manipulated as explained in the same paper. It can be used to either analyze images in a given directory and save the results (as CSV files and PNG images), or to create the plots from existing CSV files.
+This script generates the plots shown in figures 6 and 7 of [\[1\]](https://doi.org/10.1145/3369412.3395059) (except for figure _7(d)_) using images manipulated as explained in the same paper. It can be used to either analyze images in a given directory and save the results (as CSV files and PNG images, respectively in a `results` and `plots` subfolder), or to create the plots from existing CSV files.
 
 In order to analyze all images and generate results, the script can be run with:
 
@@ -129,15 +129,14 @@ In order to analyze all images and generate results, the script can be run with:
 python3 results.py True --dir_path="path/to/images/"
 ```
 
-Otherwise, it can be used to load existing results with:
+Optional arguments:
+- `--win_size`: window size in pixel (default: `64`). Agarwal & Farid use `64`, `128` and `256`, for three different sets of experiments [\[1\]](https://doi.org/10.1145/3369412.3395059).
+
+As mentioned, the script can also be used to create plots from existing results, assuming they have been generated with the previous command and exist as CSV files in the `results` subfolder:
 
 ```
 python3 results.py False
 ```
-
-Optional arguments:
-- `--dir_path`: path of the directory containing the images to be analyzed (only needed to generate results);
-- `--win_size`: window size in pixel (default: `64`); [\[1\]](https://doi.org/10.1145/3369412.3395059) uses `64`, `128` and `256` for three different sets of experiments.
 
 ## Bibliography
 [\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114, DOI:[10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)
