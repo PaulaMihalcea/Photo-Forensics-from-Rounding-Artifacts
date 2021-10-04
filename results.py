@@ -107,8 +107,8 @@ def main(args):
         # Main setup (uses default parameters)
         args_mm = Namespace()
         args_mm.win_size = args.win_size
-        args_mm.stop_threshold = 1e-2
-        args_mm.prob_r_b_in_c1 = 0.3
+        args_mm.stop_threshold = 1e-3
+        args_mm.prob_r_b_in_c1 = 0.5
         args_mm.interpolate = False
         args_mm.show = False
         args_mm.save = False

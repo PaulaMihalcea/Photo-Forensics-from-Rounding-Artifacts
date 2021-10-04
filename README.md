@@ -11,7 +11,7 @@ the domain of photo forensics. In particular, artifacts introduced by the choice
 
 Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this work aims to provide a Python implementation of an **expectation maximization (EM) algorithm** to **localize inconsistencies** in these artifacts that arise from a variety of **image manipulations**. The resulting output map is computed as described in [\[2\]](https://doi.org/10.1109/WIFS.2017.8267641).
 
-Based on a research by S. Agarwal and H. Farid (see [\[1\]](https://doi.org/10.1145/3369412.3395059)).
+Based on a **research by S. Agarwal and H. Farid** (see [\[1\]](https://doi.org/10.1145/3369412.3395059)). Results generated using a dataset kindly provided by ing. Marco Fontani (Amped Software) through prof. Alessandro Piva (Università degli Studi di Firenze).
 
 ## Contents
 1. [GUI](#gui)
@@ -22,6 +22,7 @@ Based on a research by S. Agarwal and H. Farid (see [\[1\]](https://doi.org/10.1
    - [Main](#main)
    - [Manipulation](#manipulation)
    - [Results](#results)
+   - [Amped report parsing script](#amped-report-parsing-script)
 4. [Bibliography](#bibliography)
 5. [License](#license)
 
@@ -138,6 +139,17 @@ As mentioned, the script can also be used to create plots from existing results,
 python3 results.py False
 ```
 
+### Amped report parsing script
+
+This script parses an Amped Authenticate HTML report [\[7\]](https://ampedsoftware.com/authenticate) containing information about the dimples' strength of an image dataset, and saves its contents to a CSV file (`results/report.csv`) for easier indexing.  Only selects images containing dimples stronger than 15 with offset [0, 0] are selected.
+
+After the creation of the CSV report, the program can be used to randomly select _n_ images for each of three dimples strength ranges, in order to provide new dataset partitions for further data insight:
+- **low dimple strength**: \[15, 30\];
+- **medium dimple strength**: \[31, 45\];
+- **high dimple strength**: >= 45.
+
+**Note:** This is a highly situational script, and as such has not been optimized for command line execution: variables must be inserted manually into the code before execution. It has only been included for completeness' sake.
+
 ## Bibliography
 [\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114, DOI:[10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)
 
@@ -150,6 +162,8 @@ python3 results.py False
 [\[5\]](https://doi.org/10.1080/10867651.2004.10487596) Alexandru Telea, **An image inpainting technique based on the fast marching method**, Journal of graphics tools, 9(1):23–34, 2004, DOI:[10.1080/10867651.2004.10487596](https://doi.org/10.1080/10867651.2004.10487596)
 
 [\[6\]](https://docs.opencv.org/4.5.2/d4/da8/group__imgcodecs.html#gabbc7ef1aa2edfaa87772f1202d67e0ce) OpenCV, **imwrite()**, OpenCV Documentation
+
+[\[7\]](https://ampedsoftware.com/authenticate) Amped Software, **Amped Authenticate**, 09.2021
 
 ## License
 This work is licensed under a [Creative Commons “Attribution-NonCommercial-ShareAlike 4.0 International”](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) license. More details are available in the [LICENSE](./LICENSE) file. All rights regarding the theory of the implemented algorithm reserved to the original paper's authors.
