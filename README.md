@@ -11,7 +11,7 @@ the domain of photo forensics. In particular, artifacts introduced by the choice
 
 Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this work aims to provide a Python implementation of an **expectation maximization (EM) algorithm** to **localize inconsistencies** in these artifacts that arise from a variety of **image manipulations**. The resulting output map is computed as described in [\[2\]](https://doi.org/10.1109/WIFS.2017.8267641).
 
-Based on a **research by S. Agarwal and H. Farid** (see [\[1\]](https://doi.org/10.1145/3369412.3395059)). Results generated using a dataset kindly provided by ing. Marco Fontani (Amped Software) through prof. Alessandro Piva (Università degli Studi di Firenze).
+Based on a **research by S. Agarwal and H. Farid** (see [\[1\]](https://doi.org/10.1145/3369412.3395059)). Results generated using a dataset kindly provided by **ing. Marco Fontani** (Amped Software) through **prof. Alessandro Piva** (Università degli Studi di Firenze).
 
 ## Contents
 1. [GUI](#gui)
@@ -166,4 +166,4 @@ After the creation of the CSV report, the program can be used to randomly select
 [\[7\]](https://ampedsoftware.com/authenticate) Amped Software, **Amped Authenticate**, 09.2021
 
 ## License
-This work is licensed under a [Creative Commons “Attribution-NonCommercial-ShareAlike 4.0 International”](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) license. More details are available in the [LICENSE](./LICENSE) file. All rights regarding the theory of the implemented algorithm reserved to the original paper's authors.
+This work is licensed under a [Creative Commons “Attribution-NonCommercial-ShareAlike 4.0 International”](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) license. More details are available in the [LICENSE](./LICENSE) file. All rights regarding the theory behind the EM algorithm reserved to the original paper's authors.
