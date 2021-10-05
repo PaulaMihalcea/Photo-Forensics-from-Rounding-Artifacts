@@ -135,8 +135,12 @@ Optional arguments:
 As mentioned, the script can also be used to create plots from existing results, assuming they have been generated with the previous command and exist as CSV files in the `results` subfolder:
 
 ```
-python3 results.py False --res_path="results_file.csv"
+python3 results.py False --res_path="path/to/results/results_file.csv"
 ```
+
+Optional arguments:
+- `--show_plots`: show the results' plots (default: `True`);
+- `--save_plots`: save the results' plots in the results' folder (default: `True`).
 
 All ROC curves in this project have been calculated with the function from [\[8\]](https://stackoverflow.com/a/61323665), in order to get a fixed number of thresholds and easily calculate the average ROC curve.
 

@@ -18,7 +18,9 @@ def main(args):
         print()
 
         progress_bar = tqdm.tqdm(total=100)
-        start = time.time()
+
+    # Timing
+    start = time.time()
 
     # Load image
     img_name = args.img_path.split('/')[-1]
@@ -85,10 +87,17 @@ def main(args):
             print('AUC score: {:.2f}.'.format(auc))
         else:
             print('No ground truth image found; AUC score unavailable.')
-        if (end - start) / 60 >= 1:
-            print('Elapsed time: {:.0f} m'.format((end - start) / 60) + ' {:.2f} s.'.format((end - start) % 60))
+
+        # Elapsed time
+        hours, remaining_time = divmod(end - start, 3600)
+        minutes, seconds = divmod(remaining_time, 60)
+        if hours >= 1:
+            print(
+                'Elapsed time: {:.0f}h'.format(hours) + ' {:.0f}m'.format(minutes) + ' {:.2f}s.'.format(seconds))
+        elif minutes >= 1:
+            print('Elapsed time: {:.0f}m'.format(minutes) + ' {:.2f}s.'.format(seconds))
         else:
-            print('Elapsed time: {:.2f} s.'.format(end - start))
+            print('Elapsed time: {:.2f}s.'.format(seconds))
         print('Done.')
 
     return output_map_norm, auc, fpr, tpr

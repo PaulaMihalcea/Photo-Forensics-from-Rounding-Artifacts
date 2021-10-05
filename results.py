@@ -397,12 +397,16 @@ def main(args):
             print('Images analyzed: {}.'.format(imgs_tot))
         else:
             print('Images analyzed: {}/'.format(imgs_done) + '{} (missing images have generated errors).'.format(imgs_tot))
-        if (end - start) / 60 ** 2 >= 1:
-            print('Elapsed time: {:.0f} h'.format((end - start) / 60 ** 2) + ' {:.0f} m'.format((end - start) / 60) + ' {:.2f} s.'.format((end - start) % 60))
-        elif (end - start) / 60 >= 1:
-            print('Elapsed time: {:.0f} m'.format((end - start) / 60) + ' {:.2f} s.'.format((end - start) % 60))
+        # Elapsed time
+        hours, remaining_time = divmod(end - start, 3600)
+        minutes, seconds = divmod(remaining_time, 60)
+        if hours >= 1:
+            print(
+                'Elapsed time: {:.0f}h'.format(hours) + ' {:.0f}m'.format(minutes) + ' {:.2f}s.'.format(seconds))
+        elif minutes >= 1:
+            print('Elapsed time: {:.0f}m'.format(minutes) + ' {:.2f}s.'.format(seconds))
         else:
-            print('Elapsed time: {:.2f} s.'.format(end - start))
+            print('Elapsed time: {:.2f}s.'.format(seconds))
         print('Done.')
 
     else:
@@ -422,13 +426,17 @@ def main(args):
         print()
         print('Summary')
         print('Loaded data from {} images.'.format(len(results)))
-        if (end - start) / 60 ** 2 >= 1:
-            print('Elapsed time: {:.0f} h'.format((end - start) / 60 ** 2) + ' {:.0f} m'.format(
-                (end - start) / 60) + ' {:.2f} s.'.format((end - start) % 60))
-        elif (end - start) / 60 >= 1:
-            print('Elapsed time: {:.0f} m'.format((end - start) / 60) + ' {:.2f} s.'.format((end - start) % 60))
+
+        # Elapsed time
+        hours, remaining_time = divmod(end - start, 3600)
+        minutes, seconds = divmod(remaining_time, 60)
+        if hours >= 1:
+            print('Elapsed time: {:.0f}h'.format(hours) + ' {:.0f}m'.format(minutes) + ' {:.2f}s.'.format(seconds))
+        elif minutes >= 1:
+            print('Elapsed time: {:.0f}m'.format(minutes) + ' {:.2f}s.'.format(seconds))
         else:
-            print('Elapsed time: {:.2f} s.'.format(end - start))
+            print('Elapsed time: {:.2f}s.'.format(seconds))
+        print('Done.')
 
         pass
 
