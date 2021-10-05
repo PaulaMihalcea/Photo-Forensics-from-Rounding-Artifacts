@@ -211,7 +211,7 @@ def main(args):
                 # Manipulation
                 try:
                     manip_image, ground_truth = manipulate_image(img_path, manipulation, roi_size)  # Create a single manipulation of an image
-                except IOError:
+                except (IOError, ValueError):
                     continue  # Ignore invalid images
                 else:  # Save the manipulated image in 5 different formats...
                     for q in jpeg_qualities:  # ...JPEG with Q = [60, 70], JPEG with Q = [71, 80], JPEG with Q = [81, 90], JPEG with Q = [91, 100]...
@@ -220,7 +220,6 @@ def main(args):
                         cv2.imwrite(args.dir_path + '/manip_jpeg/ground_truth/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_gt' + '.png', ground_truth)  # Ground truth (PNG only)
 
                 cv2.imwrite(args.dir_path + '/manip_png/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '.png', manip_image)  # ...and PNG
-                ciao = args.dir_path + '/manip_png/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '.png'
                 cv2.imwrite(args.dir_path + '/manip_png/ground_truth/' + filename + '_' + manipulation + '_{}'.format(roi_size) + '_gt' + '.png', ground_truth)  # Ground truth
 
                 # Progress bar update
@@ -240,6 +239,7 @@ def main(args):
         print('Elapsed time: {:.0f} m'.format((end - start) / 60) + ' {:.2f} s.'.format((end - start) % 60))
     else:
         print('Elapsed time: {:.2f} s.'.format(end - start))
+    print('Done.')
 
     return
 

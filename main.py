@@ -89,6 +89,7 @@ def main(args):
             print('Elapsed time: {:.0f} m'.format((end - start) / 60) + ' {:.2f} s.'.format((end - start) % 60))
         else:
             print('Elapsed time: {:.2f} s.'.format(end - start))
+        print('Done.')
 
     return output_map_norm, auc, fpr, tpr
 
