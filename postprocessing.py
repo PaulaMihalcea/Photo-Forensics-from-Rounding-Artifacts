@@ -74,7 +74,7 @@ def get_roc_auc(img_path, output_map):
 
     # No ground truth image exists
     if img_ground_truth is None:
-        return None, None, None, None
+        return None, None, None
 
     # Ground truth image exists
     else:

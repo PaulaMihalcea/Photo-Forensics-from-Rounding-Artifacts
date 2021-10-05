@@ -458,6 +458,11 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    if args.generate == 'True':
+        args.generate = True
+    else:
+        args.generate = False
+
     if args.dir_path is not None:
         # Ensure folder path ends with "/"
         if args.dir_path[-1] != '/':
@@ -469,10 +474,6 @@ if __name__ == '__main__':
         args.win_size = 64
 
     if args.res_path is not None:
-        # Ensure folder path ends with "/"
-        if args.res_path[-1] != '/':
-            args.res_path += '/'
-
         # Check & adjust filename
         if not args.res_path.endswith('.csv') or not not args.res_path.endswith('.CSV'):
             args.res_path += '.csv'
