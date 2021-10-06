@@ -140,11 +140,6 @@ def plot_avg_roc(results_fpr, results_tpr, roc_64, roc_128, roc_256, roc_512):
 
 # Main results plot function
 def plot_results(results, results_fpr, results_tpr, results_filename, dimples_strength=False, show_plots=True, save_plots=True):
-    # Global plot settings
-    width = 0.19
-    diff = 0.05
-    plt.figure(figsize=(10, 6))
-
     # Main PNG & JPEG dataframes
     png = results[results['format'] == 'png']
     jpeg = results[(results['format'] == 'jpeg')]
@@ -158,6 +153,9 @@ def plot_results(results, results_fpr, results_tpr, results_filename, dimples_st
     roc_512 = png[png['manip_size'] == 512].append(jpeg[(jpeg['manip_size'] == 512) & (jpeg['quality'] >= 91)])
 
     # Plot
+    width = 0.19
+    diff = 0.05
+    plt.figure(figsize=(10, 6))
     plot_avg_roc(results_fpr, results_tpr, roc_64, roc_128, roc_256, roc_512)
 
     # Save/show plot
@@ -182,6 +180,9 @@ def plot_results(results, results_fpr, results_tpr, results_filename, dimples_st
     content_aware_fill_means = get_manip_size_partition_auc_mean(content_aware_fill)
 
     # Plot
+    width = 0.19
+    diff = 0.05
+    plt.figure(figsize=(10, 6))
     manip_type_index = np.arange(4)
     plt.bar(manip_type_index, [copy_move_means[0], median_filter_means[0], rotate_means[0], content_aware_fill_means[0]], width - diff, color='#ffffff', edgecolor='black')
     plt.bar(manip_type_index + width, [copy_move_means[1], median_filter_means[1], rotate_means[1], content_aware_fill_means[1]], width - diff, color='#c2c2c2', edgecolor='black')
@@ -218,6 +219,9 @@ def plot_results(results, results_fpr, results_tpr, results_filename, dimples_st
     win_size_64_means = get_manip_size_partition_auc_mean(win_size_64)
 
     # Plot
+    width = 0.19
+    diff = 0.05
+    plt.figure(figsize=(10, 6))
     win_size_index = np.arange(3)
     plt.bar(win_size_index, [win_size_256_means[0], win_size_128_means[0], win_size_64_means[0]], width - diff, color='#ffffff', edgecolor='black')
     plt.bar(win_size_index + width, [win_size_256_means[1], win_size_128_means[1], win_size_64_means[1]], width - diff, color='#c2c2c2', edgecolor='black')
@@ -257,6 +261,9 @@ def plot_results(results, results_fpr, results_tpr, results_filename, dimples_st
     jpeg_91_means = get_manip_size_partition_auc_mean(jpeg_91)
 
     # Plot
+    width = 0.19
+    diff = 0.05
+    plt.figure(figsize=(10, 6))
     jpeg_index = np.arange(4)
     plt.bar(jpeg_index, [jpeg_60_means[0], jpeg_71_means[0], jpeg_81_means[0], jpeg_91_means[0]], width - diff, color='#ffffff', edgecolor='black')
     plt.bar(jpeg_index + width, [jpeg_60_means[1], jpeg_71_means[1], jpeg_81_means[1], jpeg_91_means[1]], width - diff, color='#c2c2c2', edgecolor='black')
@@ -293,6 +300,9 @@ def plot_results(results, results_fpr, results_tpr, results_filename, dimples_st
         roc_512_lo = png[(png['manip_size'] == 512) & (png['dimples_strength'] >= 15) & (png['dimples_strength'] < 30)].append(jpeg[(jpeg['manip_size'] == 512) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 15) & (jpeg['dimples_strength'] < 30)])
 
         # Plot
+        width = 0.19
+        diff = 0.05
+        plt.figure(figsize=(10, 6))
         plot_avg_roc(results_fpr, results_tpr, roc_64_lo, roc_128_lo, roc_256_lo, roc_512_lo)
 
         # Save/show plot
@@ -311,6 +321,9 @@ def plot_results(results, results_fpr, results_tpr, results_filename, dimples_st
         roc_512_md = png[(png['manip_size'] == 512) & (png['dimples_strength'] >= 30) & (png['dimples_strength'] < 45)].append(jpeg[(jpeg['manip_size'] == 512) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 30) & (jpeg['dimples_strength'] < 45)])
 
         # Plot
+        width = 0.19
+        diff = 0.05
+        plt.figure(figsize=(10, 6))
         plot_avg_roc(results_fpr, results_tpr, roc_64_md, roc_128_md, roc_256_md, roc_512_md)
 
         # Save/show plot
@@ -329,6 +342,9 @@ def plot_results(results, results_fpr, results_tpr, results_filename, dimples_st
         roc_512_hi = png[(png['manip_size'] == 512) & (png['dimples_strength'] >= 45)].append(jpeg[(jpeg['manip_size'] == 512) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 45)])
 
         # Plot
+        width = 0.19
+        diff = 0.05
+        plt.figure(figsize=(10, 6))
         plot_avg_roc(results_fpr, results_tpr, roc_64_hi, roc_128_hi, roc_256_hi, roc_512_hi)
 
         # Save/show plot
