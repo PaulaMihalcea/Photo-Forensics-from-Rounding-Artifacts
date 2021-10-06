@@ -167,36 +167,36 @@ All tests were generated using a dataset kindly provided by **ing. Marco Fontani
 
 ### Results
 
-<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_plot.png" width="90%" height="90%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_plot.png" width="110%" height="110%"></p>
 
-<p align="center">Average ROC by manipulation size.</p>
+**<p align="center">Average ROC by manipulation size.</p>**
 
 <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_manip_type_plot.png" width="80%" height="80%"></p>
 <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/legend_manip_size.png" width="40%" height="40%"></p>
 
-<p align="center">AUC by manipulation type.</p>
+**<p align="center">AUC by manipulation type.</p>**
 
 <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_win_size_plot.png" width="80%" height="80%"></p>
 <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/legend_manip_size.png" width="40%" height="40%"></p>
 
-<p align="center">AUC by EM algorithm window size.</p>
+**<p align="center">AUC by EM algorithm window size.</p>**
 
 <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_jpeg_quality_plot.png" width="80%" height="80%"></p>
 <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/legend_manip_size.png" width="40%" height="40%"></p>
 
-<p align="center">AUC by JPEG quality.</p>
+**<p align="center">AUC by JPEG quality.</p>**
 
-<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_dimples_lo_plot.png" width="90%" height="90%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_dimples_lo_plot.png" width="110%" height="110%"></p>
 
-<p align="center">Low strength dimples average ROC by manipulation size.</p>
+**<p align="center">Low strength dimples average ROC by manipulation size.</p>**
 
-<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_dimples_md_plot.png" width="90%" height="90%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_dimples_md_plot.png" width="110%" height="110%"></p>
 
-<p align="center">Medium strength dimples average ROC by manipulation size.</p>
+**<p align="center">Medium strength dimples average ROC by manipulation size.</p>**
 
-<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_dimples_hi_plot.png" width="90%" height="90%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_dimples_hi_plot.png" width="110%" height="110%"></p>
 
-<p align="center">High strength dimples average ROC by manipulation size.</p>
+**<p align="center">High strength dimples average ROC by manipulation size.</p>**
 
 ## Bibliography
 [\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114, DOI:[10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)
