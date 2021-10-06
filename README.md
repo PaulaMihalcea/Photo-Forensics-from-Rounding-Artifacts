@@ -167,35 +167,35 @@ All tests were generated using a dataset kindly provided by **ing. Marco Fontani
 
 ### Results
 
-<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_roc_plot.png" width="25%" height="25%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_plot.png" width="25%" height="25%"></p>
 
 <p align="center">Average ROC by manipulation size.</p>
 
-<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_manip_type_plot.png" width="25%" height="25%"></p>
-<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_manip_type_plot.png" width="25%" height="25%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
 
 <p align="center">AUC by manipulation type.</p>
 
-<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_win_size_plot.png" width="25%" height="25%"></p>
-<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_win_size_plot.png" width="25%" height="25%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
 
 <p align="center">AUC by EM algorithm window size.</p>
 
-<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_jpeg_quality_plot.png" width="25%" height="25%"></p>
-<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_jpeg_quality_plot.png" width="25%" height="25%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
 
 <p align="center">AUC by JPEG quality.</p>
 
-<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_dimples_lo_plot.png" width="25%" height="25%"></p>
-<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_dimples_lo_plot.png" width="25%" height="25%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
 
 <p align="center">Low strength dimples average ROC by manipulation size.</p>
 
-<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_dimples_md_plot.png" width="25%" height="25%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_dimples_md_plot.png" width="25%" height="25%"></p>
 
 <p align="center">Medium strength dimples average ROC by manipulation size.</p>
 
-<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_dimples_hi_plot.png" width="50%" height="50%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_dimples_hi_plot.png" width="50%" height="50%"></p>
 
 <p align="center">High strength dimples average ROC by manipulation size.</p>
 
