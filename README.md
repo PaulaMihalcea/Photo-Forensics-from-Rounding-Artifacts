@@ -188,15 +188,15 @@ All tests were generated using a dataset kindly provided by **ing. Marco Fontani
 
 <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_dimples_lo_plot.png" width="130%" height="130%"></p>
 
-**<p align="center">Low strength dimples average ROC by manipulation size.</p>**
+**<p align="center">Low strength dimples average ROC & AUC by manipulation size.</p>**
 
 <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_dimples_md_plot.png" width="130%" height="130%"></p>
 
-**<p align="center">Medium strength dimples average ROC by manipulation size.</p>**
+**<p align="center">Medium strength dimples average ROC & AUC by manipulation size.</p>**
 
 <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/results/results_roc_dimples_hi_plot.png" width="130%" height="130%"></p>
 
-**<p align="center">High strength dimples average ROC by manipulation size.</p>**
+**<p align="center">High strength dimples average ROC & AUC by manipulation size.</p>**
 
 ## Bibliography
 [\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114, DOI:[10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)
