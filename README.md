@@ -11,7 +11,7 @@ the domain of photo forensics. In particular, artifacts introduced by the choice
 
 Following the research in [\[1\]](https://doi.org/10.1145/3369412.3395059), this work aims to provide a Python implementation of an **expectation maximization (EM) algorithm** to **localize inconsistencies** in these artifacts that arise from a variety of **image manipulations**. The resulting output map is computed as described in [\[2\]](https://doi.org/10.1109/WIFS.2017.8267641).
 
-Based on a **research by S. Agarwal and H. Farid** (see [\[1\]](https://doi.org/10.1145/3369412.3395059)). Results generated using a dataset kindly provided by **ing. Marco Fontani** (Amped Software) through **prof. Alessandro Piva** (Università degli Studi di Firenze).
+Based on a **research by S. Agarwal and H. Farid** (see [\[1\]](https://doi.org/10.1145/3369412.3395059)).
 
 ## Contents
 1. [GUI](#gui)
@@ -19,12 +19,14 @@ Based on a **research by S. Agarwal and H. Farid** (see [\[1\]](https://doi.org/
     - [Requirements](#requirements)
     - [Testing](#testing)
 3. [Usage](#usage)
-   - [Main](#main)
-   - [Manipulation](#manipulation)
-   - [Results](#results)
+   - [Main script](#main-script)
+   - [Manipulation script](#manipulation-script)
+   - [Results script](#results-script)
    - [Amped report parsing script](#amped-report-parsing-script)
-4. [Bibliography](#bibliography)
-5. [License](#license)
+4. [Testing](#testing)
+   - [Results](#results)
+5. [Bibliography](#bibliography)
+6. [License](#license)
 
 ## GUI
 
@@ -55,24 +57,24 @@ The following Python packages are required in order to run this program. Please 
 | [Python](https://www.python.org/) | 3.8 |
 | [argparse](https://docs.python.org/3/library/argparse.html) | _latest_ |
 | [decimal](https://docs.python.org/3/library/decimal.html) | _latest_ |
-| [Matplotlib](https://matplotlib.org/) | _latest_ |
-| [NumPy](https://numpy.org/) | _latest_ |
+| [Matplotlib](https://matplotlib.org/) | 3.4.3 |
+| [NumPy](https://numpy.org/) | 1.20.3 |
 | [OpenCV](https://opencv.org/) | _latest_ |
 | [os](https://docs.python.org/3/library/os.html) | _latest_ |
-| [pandas](https://pandas.pydata.org/) | _latest_ |
+| [pandas](https://pandas.pydata.org/) | 1.3.3 |
 | [Pillow](https://pillow.readthedocs.io/en/stable/) | 8.2.0 |
 | [random](https://docs.python.org/3/library/random.html) | _latest_ |
-| [scikit-learn](https://scikit-learn.org/stable/) | _latest_ |
+| [scikit-learn](https://scikit-learn.org/stable/) | 1.0 |
 | [sys](https://docs.python.org/3/library/sys.html) | _latest_ |
 | [time](https://docs.python.org/3/library/time.html) | _latest_ |
-| [tqdm](https://github.com/tqdm/tqdm) | _latest_ |
+| [tqdm](https://github.com/tqdm/tqdm) | 4.62.3 |
 
 ### Testing
 This project has been written and tested using [Python 3.8](https://www.python.org/downloads/release/python-380/) on a Windows 10 Pro machine.
 
 ## Usage
 
-### Main
+### Main script
 
 Run from a terminal specifying the path to the image to be analyzed, as follows:
 
@@ -98,7 +100,7 @@ Example call with optional arguments:
 python3 main.py "images/my_photo.jpg" --win_size=256 --stop_threshold=1e-2 --save=True
 ```
 
-### Manipulation
+### Manipulation script
 
 This script generates **manipulated images** and their respective **ground truth masks** from a given directory (`path/to/images/`) in four subdirectories (`path/to/images/manip_jpeg`, `path/to/images/manip_png`, `path/to/images/manip_jpeg/ground_truth` and `path/to/images/manip_png/ground_truth`), as described in [\[1\]](https://doi.org/10.1145/3369412.3395059).
 
@@ -119,11 +121,13 @@ The script can be run with:
 python3 manipulation.py "path/to/images/"
 ```
 
-### Results
+### Results script
 
-This script generates the plots shown in figures 6 and 7 of [\[1\]](https://doi.org/10.1145/3369412.3395059) (except for figure _7(d)_) using images manipulated as explained in the same paper. It can be used to either analyze images in a given directory and save the results (as CSV files and PNG images, respectively in a `results` and `plots` subfolder), or to create the plots from existing CSV files.
+This script generates the plots shown in figures 6 and 7 of [\[1\]](https://doi.org/10.1145/3369412.3395059) (except for figure _7(d)_) using images manipulated as explained in the same paper. It can be used to either analyze images in a given directory and save the results as CSV files in a `results` subfolder, or to create the plots from existing CSV files.
 
-In order to analyze all images and generate results, the script can be run with:
+Along with the figures mentioned, this code also creates three additional plots showing the mean ROC curve by dimples strength, assuming that this information is available.
+
+In order to analyze all images and generate CSV result files, the script can be run with:
 
 ```
 python3 results.py True --dir_path="path/to/images/"
@@ -142,7 +146,7 @@ Optional arguments:
 - `--show_plots`: show the results' plots (default: `True`);
 - `--save_plots`: save the results' plots in the results' folder (default: `True`).
 
-All ROC curves in this project have been calculated with the function from [\[8\]](https://stackoverflow.com/a/61323665), in order to get a fixed number of thresholds and easily calculate the average ROC curve.
+All ROC curves in this project have been calculated with a specially optimized version of the function from [\[8\]](https://stackoverflow.com/a/61323665), in order to get a fixed number of thresholds and easily calculate the average ROC curve.
 
 ### Amped report parsing script
 
@@ -154,6 +158,46 @@ After the creation of the CSV report, the program can be used to randomly select
 - **high dimple strength**: >= 45.
 
 **Note:** This is a highly situational script, and as such has not been optimized for command line execution: variables must be inserted manually into the code before execution. It has only been included for completeness' sake.
+
+## Testing
+This project has been successfully tested on the following platforms:
+- Windows 10 Pro.
+
+All tests were generated using a dataset kindly provided by **ing. Marco Fontani** (Amped Software) through **prof. Alessandro Piva** (Università degli Studi di Firenze).
+
+### Results
+
+<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_roc_plot.png" width="25%" height="25%"></p>
+
+<p align="center">Average ROC by manipulation size.</p>
+
+<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_manip_type_plot.png" width="25%" height="25%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
+
+<p align="center">AUC by manipulation type.</p>
+
+<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_win_size_plot.png" width="25%" height="25%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
+
+<p align="center">AUC by EM algorithm window size.</p>
+
+<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_jpeg_quality_plot.png" width="25%" height="25%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
+
+<p align="center">AUC by JPEG quality.</p>
+
+<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_dimples_lo_plot.png" width="25%" height="25%"></p>
+<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/legend_manip_size.png" width="50%" height="50%"></p>
+
+<p align="center">Low strength dimples average ROC by manipulation size.</p>
+
+<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_dimples_md_plot.png" width="25%" height="25%"></p>
+
+<p align="center">Medium strength dimples average ROC by manipulation size.</p>
+
+<p align="center"><img src="https://github.com/PaulaMihalcea/IEViewer/blob/master/results/results_dimples_hi_plot.png" width="50%" height="50%"></p>
+
+<p align="center">High strength dimples average ROC by manipulation size.</p>
 
 ## Bibliography
 [\[1\]](https://doi.org/10.1145/3369412.3395059) Shruti Agarwal and Hany Farid. 2020. **Photo Forensics From Rounding Artifacts.** In Proceedings of the 2020 ACM Workshop on Information Hiding and Multimedia Security (IH&MMSec '20). Association for Computing Machinery, New York, NY, USA, 103–114, DOI:[10.1145/3369412.3395059](https://doi.org/10.1145/3369412.3395059)

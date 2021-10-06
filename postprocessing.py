@@ -169,8 +169,9 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
 
 
 # ROC curve
-# Function by StackOverflow user Flavia Giammarino:
+# Original function by StackOverflow user Flavia Giammarino:
 # https://stackoverflow.com/a/61323665
+# Optimized by Paula Mihalcea
 def roc_curve(output_map, ground_truth, thresholds):
     # Initialize FPR & TPR arrays
     fpr = np.empty_like(thresholds)
