@@ -294,10 +294,10 @@ def plot_results(results, results_fpr, results_tpr, results_filename, dimples_st
     if dimples_strength:
 
         # Average ROC by dimples strength: low intensity (15-30)
-        roc_64_lo = png[(png['manip_size'] == 64) & (png['dimples_strength'] >= 15) & (png['dimples_strength'] < 30)].append(jpeg[(jpeg['manip_size'] == 64) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 15) & (jpeg['dimples_strength'] < 30)])
-        roc_128_lo = png[(png['manip_size'] == 128) & (png['dimples_strength'] >= 15) & (png['dimples_strength'] < 30)].append(jpeg[(jpeg['manip_size'] == 128) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 15) & (jpeg['dimples_strength'] < 30)])
-        roc_256_lo = png[(png['manip_size'] == 256) & (png['dimples_strength'] >= 15) & (png['dimples_strength'] < 30)].append(jpeg[(jpeg['manip_size'] == 256) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 15) & (jpeg['dimples_strength'] < 30)])
-        roc_512_lo = png[(png['manip_size'] == 512) & (png['dimples_strength'] >= 15) & (png['dimples_strength'] < 30)].append(jpeg[(jpeg['manip_size'] == 512) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 15) & (jpeg['dimples_strength'] < 30)])
+        roc_64_lo = roc_64[(roc_64['dimples_strength'] >= 15) & (roc_64['dimples_strength'] < 30)]
+        roc_128_lo = roc_128[(roc_128['dimples_strength'] >= 15) & (roc_128['dimples_strength'] < 30)]
+        roc_256_lo = roc_256[(roc_256['dimples_strength'] >= 15) & (roc_256['dimples_strength'] < 30)]
+        roc_512_lo = roc_512[(roc_512['dimples_strength'] >= 15) & (roc_512['dimples_strength'] < 30)]
 
         # Plot
         width = 0.19
@@ -315,10 +315,10 @@ def plot_results(results, results_fpr, results_tpr, results_filename, dimples_st
         # ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
 
         # Average ROC by dimples strength: medium intensity (30-45)
-        roc_64_md = png[(png['manip_size'] == 64) & (png['dimples_strength'] >= 30) & (png['dimples_strength'] < 45)].append(jpeg[(jpeg['manip_size'] == 64) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 30) & (jpeg['dimples_strength'] < 45)])
-        roc_128_md = png[(png['manip_size'] == 128) & (png['dimples_strength'] >= 30) & (png['dimples_strength'] < 45)].append(jpeg[(jpeg['manip_size'] == 128) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 30) & (jpeg['dimples_strength'] < 45)])
-        roc_256_md = png[(png['manip_size'] == 256) & (png['dimples_strength'] >= 30) & (png['dimples_strength'] < 45)].append(jpeg[(jpeg['manip_size'] == 256) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 30) & (jpeg['dimples_strength'] < 45)])
-        roc_512_md = png[(png['manip_size'] == 512) & (png['dimples_strength'] >= 30) & (png['dimples_strength'] < 45)].append(jpeg[(jpeg['manip_size'] == 512) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 30) & (jpeg['dimples_strength'] < 45)])
+        roc_64_md = roc_64[(roc_64['dimples_strength'] >= 30) & (roc_64['dimples_strength'] < 45)]
+        roc_128_md = roc_128[(roc_128['dimples_strength'] >= 30) & (roc_128['dimples_strength'] < 45)]
+        roc_256_md = roc_256[(roc_256['dimples_strength'] >= 30) & (roc_256['dimples_strength'] < 45)]
+        roc_512_md = roc_512[(roc_512['dimples_strength'] >= 30) & (roc_512['dimples_strength'] < 45)]
 
         # Plot
         width = 0.19
@@ -336,10 +336,10 @@ def plot_results(results, results_fpr, results_tpr, results_filename, dimples_st
         # ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
 
         # Average ROC by dimples strength: high intensity (45+)
-        roc_64_hi = png[(png['manip_size'] == 64) & (png['dimples_strength'] >= 45)].append(jpeg[(jpeg['manip_size'] == 64) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 45)])
-        roc_128_hi = png[(png['manip_size'] == 128) & (png['dimples_strength'] >= 45)].append(jpeg[(jpeg['manip_size'] == 128) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 45)])
-        roc_256_hi = png[(png['manip_size'] == 256) & (png['dimples_strength'] >= 45)].append(jpeg[(jpeg['manip_size'] == 256) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 45)])
-        roc_512_hi = png[(png['manip_size'] == 512) & (png['dimples_strength'] >= 45)].append(jpeg[(jpeg['manip_size'] == 512) & (jpeg['quality'] >= 91) & (jpeg['dimples_strength'] >= 45)])
+        roc_64_hi = roc_64[roc_64['dimples_strength'] >= 45]
+        roc_128_hi = roc_128[roc_128['dimples_strength'] >= 45]
+        roc_256_hi = roc_256[roc_256['dimples_strength'] >= 45]
+        roc_512_hi = roc_512[roc_512['dimples_strength'] >= 45]
 
         # Plot
         width = 0.19
@@ -361,7 +361,6 @@ def main(args):
     print('Author: Paula Mihalcea')
     print('Version: 1.0')
     print('Based on a research by S. Agarwal and H. Farid. Details & source code at https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts.')
-    print()
 
     # Dimples strength dataframe loading
     if os.path.isfile('results/report.csv'):
