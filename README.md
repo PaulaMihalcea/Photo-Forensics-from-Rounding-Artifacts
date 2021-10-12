@@ -30,7 +30,7 @@ Based on a **research by S. Agarwal and H. Farid** (see [\[1\]](https://doi.org/
 
 ## GUI
 
-This algorithm has been added as a feature to **IEViewer**, a simple Python image viewer, providing a **neat graphical interface** to an otherwise nonintuitive script; in this version it employs the default settings, and does not use ground truth maps. Check it out before cloning this repository if you are only interested in a basic usage.
+This algorithm has been added as a feature to **[IEViewer](https://github.com/PaulaMihalcea/IEViewer)** [\[9\]](https://github.com/PaulaMihalcea/IEViewer), providing a **neat graphical interface** to an otherwise nonintuitive script; in this version it employs the default settings, and does not use ground truth maps. Check it out before cloning this repository if you are only interested in a basic usage.
    <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/screenshots/analyze_0.png" width="50%" height="50%"></p>
     <p align="center"><img src="https://github.com/PaulaMihalcea/Photo-Forensics-from-Rounding-Artifacts/blob/master/screenshots/analyze_1.png" width="50%" height="50%"></p>
 
@@ -214,6 +214,8 @@ All tests were generated using a dataset kindly provided by **ing. Marco Fontani
 [\[7\]](https://ampedsoftware.com/authenticate) Amped Software, **Amped Authenticate**, 09.2021
 
 [\[8\]](https://stackoverflow.com/a/61323665) Flavia Giammarino, **[How to calculate TPR and FPR in Python without using sklearn?](https://stackoverflow.com/a/61323665)**, 2020
+
+[\[9\]](https://github.com/PaulaMihalcea/IEViewer) Paula Mihalcea, **[IEViewer](https://github.com/PaulaMihalcea/IEViewer)**, 2021
 
 ## License
 This work is licensed under a [Creative Commons “Attribution-NonCommercial-ShareAlike 4.0 International”](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) license. More details are available in the [LICENSE](./LICENSE) file. All rights regarding the theory behind the EM algorithm reserved to the original paper's authors.
