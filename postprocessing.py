@@ -32,6 +32,7 @@ def get_output_map(prob_b_in_c1_r, blocks_map, img_w, img_h, show=False, save=Fa
 
     # Thresholding & normalization
     output_map_norm = np.where(output_map > 0.8, 255, 0).astype(np.uint8)  # Pixels with probability of being manipulated lower than 80% are masked
+    # output_map_norm = output_map  # Uncomment for quick output map debug
 
     # Show output map and/or save it to disk if requested
     filename, extension = get_filename(img_path)
