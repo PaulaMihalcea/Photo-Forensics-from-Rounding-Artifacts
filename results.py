@@ -9,6 +9,7 @@ import time
 import tqdm
 from argparse import ArgumentParser, Namespace
 from datetime import datetime
+from sklearn.metrics import auc
 from main import main as mm
 from utils import get_filename, get_file_list, get_last_directory
 
