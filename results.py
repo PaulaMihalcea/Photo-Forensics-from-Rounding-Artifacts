@@ -86,7 +86,7 @@ def plot_avg_roc(results_fpr, results_tpr, roc_64, roc_128, roc_256, roc_512):
     roc_512_tpr_mean = np.sort(tpr[roc_512['img_name']].mean())
 
     # Average AUC
-    avg_auc = [roc_512['auc'].mean(skipna=True), roc_256['auc'].mean(skipna=True), roc_128['auc'].mean(skipna=True), roc_64['auc'].mean(skipna=True)]
+    avg_auc = [auc(roc_512_fpr_mean, roc_512_tpr_mean), auc(roc_256_fpr_mean, roc_256_tpr_mean), auc(roc_128_fpr_mean, roc_128_tpr_mean), auc(roc_64_fpr_mean, roc_64_tpr_mean)]
 
     # Base plot
     plt.plot(roc_512_fpr_mean * 100, roc_512_tpr_mean * 100)
