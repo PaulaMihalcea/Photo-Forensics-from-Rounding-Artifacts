@@ -89,6 +89,7 @@ Optional arguments:
 - `--interpolate`: interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm, using the function from [\[3\]](https://stackoverflow.com/a/68558547), otherwise replace them with `0.5` (default: `False`). _Warning: slows down the program significantly_;
 - `--show`: show the resulting output map (default: `True`);
 - `--save`: save the resulting output map in the `results` folder (default: `False`);
+- `--roc_type`: choose the ROC function to use, between `custom` and `sklearn` (default: `sklearn`);
 - `--show_roc_plot`: show the plot of the ROC curve (default: `False`);
 - `--save_roc_plot`: save the plot of the ROC curve in the `results` folder (default: `False`);
 - `--show_diff_plot`: show the plot of the difference between successive estimates of template _c_ (default: `False`);

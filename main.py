@@ -69,7 +69,7 @@ def main(args):
     # Compute ROC curve and AUC score
     if args.verbose:
         progress_bar.set_description('Computing AUC score')
-    auc, fpr, tpr = get_roc_auc(args.img_path, output_map)
+    auc, fpr, tpr, thr = get_roc_auc(args.img_path, output_map, roc_type=args.roc_type)
     if (args.show_roc_plot or args.save_roc_plot) and auc != 0:
         plot_roc(fpr, tpr, auc, args.show_roc_plot, args.save_roc_plot, args.img_path, args.win_size, args.stop_threshold)
     if args.verbose:
@@ -100,7 +100,7 @@ def main(args):
             print('Elapsed time: {:.2f}s.'.format(seconds))
         print('Done.')
 
-    return output_map_norm, auc, fpr, tpr
+    return output_map_norm, auc, fpr, tpr, thr
 
 
 if __name__ == '__main__':
@@ -116,6 +116,7 @@ if __name__ == '__main__':
     parser.add_argument('-int', '--interpolate', type=float, help='Interpolate missing pixel values, aka NaNs generated from divisions in the EM algorithm (default: False). Warning: slows down the program significantly.')
     parser.add_argument('-sh', '--show', help='Show the resulting output map (default: True).')
     parser.add_argument('-sv', '--save', help='Save the resulting output map in the \'results\' folder (default: False).')
+    parser.add_argument('-roc', '--roc_type', help='Choose the ROC function to use, between "custom" and "sklearn" (default: "sklearn").')
     parser.add_argument('-shroc', '--show_roc_plot', help='Show the plot of the ROC curve (default: False).')
     parser.add_argument('-svroc', '--save_roc_plot', help='Save the plot of the ROC curve in the \'results\' folder (default: False).')
     parser.add_argument('-shdiff', '--show_diff_plot', help='Show the plot of the difference between successive estimates of template c (default: False).')
@@ -148,6 +149,9 @@ if __name__ == '__main__':
         args.save = True
     else:
         args.save = False
+
+    if args.roc_type != 'custom':
+        args.roc_type = 'sklearn'
 
     if args.show_roc_plot == 'True':
         args.show_roc_plot = True

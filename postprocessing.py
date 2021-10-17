@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.font_manager as fm
 import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
-from sklearn.metrics import auc
+from sklearn.metrics import auc, roc_curve, roc_auc_score
 from utils import get_filename, get_img_ground_truth_path, get_subfolder, load_image
 
 
@@ -69,13 +69,13 @@ def get_template_difference_plot(diff_history, show=False, save=False, img_path=
 
 
 # Main ROC & AUC function
-def get_roc_auc(img_path, output_map):
+def get_roc_auc(img_path, output_map, roc_type):
     # Load ground truth image
     img_ground_truth = load_image(get_img_ground_truth_path(img_path), raise_io=False)
 
     # No ground truth image exists
     if img_ground_truth is None:
-        return None, None, None
+        return None, None, None, None
 
     # Ground truth image exists
     else:
@@ -88,15 +88,26 @@ def get_roc_auc(img_path, output_map):
         output_map = output_map.flatten()
 
         # ROC curve
-        fpr, tpr = roc_curve(img_ground_truth, output_map, np.linspace(0, 1, 50))
+        if roc_type == 'custom':
+            fpr, tpr = roc_curve_custom(img_ground_truth, output_map, np.linspace(0, 1, 50))
+            thr = None
+        elif roc_type == 'sklearn':
+            fpr, tpr, thr = roc_curve(img_ground_truth, output_map)
+        else:
+            raise ValueError('Invalid ROC function name. ROC curve function can only be "custom" or "sklearn".')
 
         # AUC score
         try:
-            auc_score = auc(fpr, tpr)
+            if roc_type == 'custom':
+                auc_score = auc(fpr, tpr)
+            elif roc_type == 'sklearn':
+                auc_score = roc_auc_score(img_ground_truth, output_map)
+            else:
+                raise ValueError('Invalid ROC function name. ROC curve function can only be "custom" or "sklearn".')
         except:
             auc_score = 0
 
-        return auc_score, fpr, tpr
+        return auc_score, fpr, tpr, thr
 
 
 # ROC curve & AUC score display
@@ -173,7 +184,7 @@ def plot_roc(fpr, tpr, auc, show=False, save=False, img_path='', win_size=None, 
 # Original function by StackOverflow user Flavia Giammarino:
 # https://stackoverflow.com/a/61323665
 # Optimized by Paula Mihalcea
-def roc_curve(output_map, ground_truth, thresholds):
+def roc_curve_custom(output_map, ground_truth, thresholds):
     # Initialize FPR & TPR arrays
     fpr = np.empty_like(thresholds)
     tpr = np.empty_like(thresholds)

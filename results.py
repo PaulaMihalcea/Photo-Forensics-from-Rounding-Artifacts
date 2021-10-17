@@ -77,17 +77,64 @@ def plot_avg_roc(results_fpr, results_tpr, roc_64, roc_128, roc_256, roc_512):
     tpr = results_tpr.groupby('img_name')['tpr'].apply(np.array)
 
     # Get mean curves
-    roc_64_fpr_mean = np.sort(fpr[roc_64['img_name']].mean())
-    roc_64_tpr_mean = np.sort(tpr[roc_64['img_name']].mean())
-    roc_128_fpr_mean = np.sort(fpr[roc_128['img_name']].mean())
-    roc_128_tpr_mean = np.sort(tpr[roc_128['img_name']].mean())
-    roc_256_fpr_mean = np.sort(fpr[roc_256['img_name']].mean())
-    roc_256_tpr_mean = np.sort(tpr[roc_256['img_name']].mean())
-    roc_512_fpr_mean = np.sort(fpr[roc_512['img_name']].mean())
-    roc_512_tpr_mean = np.sort(tpr[roc_512['img_name']].mean())
+    roc_512_fpr = fpr[roc_512['img_name']].to_numpy()
+    roc_512_tpr = tpr[roc_512['img_name']].to_numpy()
+    roc_512_fpr_all = np.unique(np.concatenate(roc_512_fpr))
+    roc_512_tpr_mean = np.zeros_like(roc_512_fpr_all)
+    for i in range(len(roc_512_fpr)):
+        roc_512_tpr_mean += np.interp(roc_512_fpr_all, roc_512_fpr[i], roc_512_tpr[i], left=0, right=1)
+    roc_512_tpr_mean /= len(roc_512_tpr)
+    roc_512_fpr_mean = roc_512_fpr_all
+    roc_512_fpr_mean = np.insert(roc_512_fpr_mean, 0, 0)
+    roc_512_tpr_mean = np.insert(roc_512_tpr_mean, 0, 0)
+    roc_512_fpr_mean = np.insert(roc_512_fpr_mean, len(roc_512_fpr_mean) - 1, 1)
+    roc_512_tpr_mean = np.insert(roc_512_tpr_mean, len(roc_512_tpr_mean) - 1, 1)
+
+    roc_256_fpr = fpr[roc_256['img_name']].to_numpy()
+    roc_256_tpr = tpr[roc_256['img_name']].to_numpy()
+    roc_256_fpr_all = np.unique(np.concatenate(roc_256_fpr))
+    roc_256_tpr_mean = np.zeros_like(roc_256_fpr_all)
+    for i in range(len(roc_256_fpr)):
+        roc_256_tpr_mean += np.interp(roc_256_fpr_all, roc_256_fpr[i], roc_256_tpr[i], left=0, right=1)
+    roc_256_tpr_mean /= len(roc_256_tpr)
+    roc_256_fpr_mean = roc_256_fpr_all
+    roc_256_tpr_mean = roc_256_tpr_mean
+    roc_256_fpr_mean = np.insert(roc_256_fpr_mean, 0, 0)
+    roc_256_tpr_mean = np.insert(roc_256_tpr_mean, 0, 0)
+    roc_256_fpr_mean = np.insert(roc_256_fpr_mean, len(roc_256_fpr_mean) - 1, 1)
+    roc_256_tpr_mean = np.insert(roc_256_tpr_mean, len(roc_256_tpr_mean) - 1, 1)
+
+    roc_128_fpr = fpr[roc_128['img_name']].to_numpy()
+    roc_128_tpr = tpr[roc_128['img_name']].to_numpy()
+    roc_128_fpr_all = np.unique(np.concatenate(roc_128_fpr))
+    roc_128_tpr_mean = np.zeros_like(roc_128_fpr_all)
+    for i in range(len(roc_128_fpr)):
+        roc_128_tpr_mean += np.interp(roc_128_fpr_all, roc_128_fpr[i], roc_128_tpr[i], left=0, right=1)
+    roc_128_tpr_mean /= len(roc_128_tpr)
+    roc_128_fpr_mean = roc_128_fpr_all
+    roc_128_tpr_mean = roc_128_tpr_mean
+    roc_128_fpr_mean = np.insert(roc_128_fpr_mean, 0, 0)
+    roc_128_tpr_mean = np.insert(roc_128_tpr_mean, 0, 0)
+    roc_128_fpr_mean = np.insert(roc_128_fpr_mean, len(roc_128_fpr_mean) - 1, 1)
+    roc_128_tpr_mean = np.insert(roc_128_tpr_mean, len(roc_128_tpr_mean) - 1, 1)
+
+    roc_64_fpr = fpr[roc_64['img_name']].to_numpy()
+    roc_64_tpr = tpr[roc_64['img_name']].to_numpy()
+    roc_64_fpr_all = np.unique(np.concatenate(roc_64_fpr))
+    roc_64_tpr_mean = np.zeros_like(roc_64_fpr_all)
+    for i in range(len(roc_64_fpr)):
+        roc_64_tpr_mean += np.interp(roc_64_fpr_all, roc_64_fpr[i], roc_64_tpr[i], left=0, right=1)
+    roc_64_tpr_mean /= len(roc_64_tpr)
+    roc_64_fpr_mean = roc_64_fpr_all
+    roc_64_tpr_mean = roc_64_tpr_mean
+    roc_64_fpr_mean = np.insert(roc_64_fpr_mean, 0, 0)
+    roc_64_tpr_mean = np.insert(roc_64_tpr_mean, 0, 0)
+    roc_64_fpr_mean = np.insert(roc_64_fpr_mean, len(roc_64_fpr_mean) - 1, 1)
+    roc_64_tpr_mean = np.insert(roc_64_tpr_mean, len(roc_64_tpr_mean) - 1, 1)
 
     # Average AUC
     avg_auc = [auc(roc_512_fpr_mean, roc_512_tpr_mean), auc(roc_256_fpr_mean, roc_256_tpr_mean), auc(roc_128_fpr_mean, roc_128_tpr_mean), auc(roc_64_fpr_mean, roc_64_tpr_mean)]
+    # avg_auc = [roc_512['auc'].mean(skipna=True), roc_256['auc'].mean(skipna=True),roc_128['auc'].mean(skipna=True),roc_64['auc'].mean(skipna=True)]  # Get mean AUC from single AUC values instead of average ROC curve; for debug purposes only
 
     # Base plot
     plt.plot(roc_512_fpr_mean * 100, roc_512_tpr_mean * 100)
@@ -376,16 +423,19 @@ def main(args):
         results = pd.DataFrame(columns=['img_name', 'dimples_strength', 'format', 'quality', 'manip_type', 'manip_size', 'win_size', 'auc'])
         results_fpr = pd.DataFrame(columns=['img_name', 'fpr'])
         results_tpr = pd.DataFrame(columns=['img_name', 'tpr'])
+        results_thr = pd.DataFrame(columns=['img_name', 'thr'])
 
         timestamp = datetime.now().strftime('%Y_%m_%d_%H_%M')
 
         results_path = 'results/results_' + get_last_directory(args.dir_path) + '_' + str(args.win_size) + '_' + timestamp + '.csv'
         results_path_fpr = 'results/results_' + get_last_directory(args.dir_path) + '_' + str(args.win_size) + '_' + timestamp + '_fpr.csv'
         results_path_tpr = 'results/results_' + get_last_directory(args.dir_path) + '_' + str(args.win_size) + '_' + timestamp + '_tpr.csv'
+        results_path_thr = 'results/results_' + get_last_directory(args.dir_path) + '_' + str(args.win_size) + '_' + timestamp + '_thr.csv'
 
         results.to_csv(results_path, index=False)
         results_fpr.to_csv(results_path_fpr, index=False)
         results_tpr.to_csv(results_path_tpr, index=False)
+        results_thr.to_csv(results_path_thr, index=False)
 
         '''
         img_name: Image name (without extension).
@@ -408,6 +458,7 @@ def main(args):
         args_mm.interpolate = False
         args_mm.show = False
         args_mm.save = False
+        args_mm.roc_type = args.roc_type
         args_mm.show_roc_plot = False
         args_mm.save_roc_plot = False
         args_mm.show_diff_plot = False
@@ -438,20 +489,23 @@ def main(args):
                 progress_bar.set_description('Processing image {}'.format(filename + '.{}'.format(extension)))
 
                 # Main EM algorithm
-                _, auc, fpr, tpr = mm(args_mm)
+                _, auc, fpr, tpr, thr = mm(args_mm)
 
                 # Save results
                 results_dict = {'img_name': filename, 'dimples_strength': dimples_strength, 'format': extension, 'quality': quality, 'manipulation_type': manip_type, 'manip_size': manip_size, 'win_size': args.win_size, 'auc': auc}
                 results_fpr_dict = {'img_name': filename, 'fpr': fpr}
                 results_tpr_dict = {'img_name': filename, 'tpr': tpr}
+                results_thr_dict = {'img_name': filename, 'thr': thr}
 
                 results = pd.DataFrame(results_dict, index=[0])
                 results_fpr = pd.DataFrame(results_fpr_dict)
                 results_tpr = pd.DataFrame(results_tpr_dict)
+                results_thr = pd.DataFrame(results_thr_dict)
 
                 results.to_csv(results_path, mode='a', header=False)
                 results_fpr.to_csv(results_path_fpr, mode='a', header=False)
                 results_tpr.to_csv(results_path_tpr, mode='a', header=False)
+                results_thr.to_csv(results_path_thr, mode='a', header=False)
 
                 # Update progress bar
                 progress_bar.update(1)
@@ -537,6 +591,7 @@ if __name__ == '__main__':
     parser.add_argument('-rpath', '--res_path', help='Path of the CSV results file to be loaded. Only needed if generate is False.')
     parser.add_argument('-shpl', '--show_plots', help='Show the results\' plots (default: True).')
     parser.add_argument('-svpl', '--save_plots', help='Save the results\' plots in the results\' folder (default: True).')
+    parser.add_argument('-roc', '--roc_type', help='Choose the ROC function to use, between "custom" and "sklearn" (default: "sklearn").')
 
     args = parser.parse_args()
 
@@ -573,6 +628,9 @@ if __name__ == '__main__':
         args.save_plots = False
     else:
         args.save_plots = True
+
+    if args.roc_type != 'custom':
+        args.roc_type = 'sklearn'
 
     # Run main script
     main(args)
