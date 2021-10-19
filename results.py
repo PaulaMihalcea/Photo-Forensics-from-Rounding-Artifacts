@@ -134,7 +134,7 @@ def plot_avg_roc(results_fpr, results_tpr, roc_64, roc_128, roc_256, roc_512):
 
     # Average AUC
     avg_auc = [auc(roc_512_fpr_mean, roc_512_tpr_mean), auc(roc_256_fpr_mean, roc_256_tpr_mean), auc(roc_128_fpr_mean, roc_128_tpr_mean), auc(roc_64_fpr_mean, roc_64_tpr_mean)]
-    # avg_auc = [roc_512['auc'].mean(skipna=True), roc_256['auc'].mean(skipna=True),roc_128['auc'].mean(skipna=True),roc_64['auc'].mean(skipna=True)]  # Get mean AUC from single AUC values instead of average ROC curve; for debug purposes only
+    avg_auc = [roc_512['auc'].mean(skipna=True), roc_256['auc'].mean(skipna=True), roc_128['auc'].mean(skipna=True), roc_64['auc'].mean(skipna=True)]  # Get mean AUC from single AUC values instead of average ROC curve; for debug purposes only
 
     # Base plot
     plt.plot(roc_512_fpr_mean * 100, roc_512_tpr_mean * 100)
